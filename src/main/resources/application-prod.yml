@@ -16,3 +16,4 @@ spring:
           lob:
             non_contextual_creation: true
         dialect: org.hibernate.dialect.PostgreSQL94Dialect
+    open-in-view: false
