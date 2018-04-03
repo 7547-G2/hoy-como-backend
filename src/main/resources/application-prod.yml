@@ -1,9 +1,11 @@
 spring:
   datasource:
-    url: jdbc:postgresql://localhost:5432/testdb
     driver-class-name: org.postgresql.Driver
-    username: postgres
-    password: 1
+    maxActive: 10
+    maxIdle: 5
+    minIdle: 2
+    initialSize: 5
+    removeAbandoned: true
   jpa:
     properties:
       hibernate:
@@ -11,6 +13,3 @@ spring:
           lob:
             non_contextual_creation: true
         dialect: org.hibernate.dialect.PostgreSQL94Dialect
-
-server:
-  port: 8089
