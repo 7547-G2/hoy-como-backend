@@ -1,7 +1,7 @@
 package ar.uba.fi.hoycomobackend.integration;
 
 import ar.uba.fi.hoycomobackend.App;
-import ar.uba.fi.hoycomobackend.entity.Comercio;
+import ar.uba.fi.hoycomobackend.entity.comercio.Comercio;
 import ar.uba.fi.hoycomobackend.repository.ComercioRepository;
 import org.junit.Test;
 import org.junit.runner.RunWith;

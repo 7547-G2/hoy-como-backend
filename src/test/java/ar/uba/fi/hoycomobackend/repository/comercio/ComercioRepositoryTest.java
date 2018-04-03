@@ -1,12 +1,15 @@
-package ar.uba.fi.hoycomobackend.repository;
+package ar.uba.fi.hoycomobackend.repository.comercio;
 
-import ar.uba.fi.hoycomobackend.entity.Comercio;
+import ar.uba.fi.hoycomobackend.entity.comercio.Comercio;
+import ar.uba.fi.hoycomobackend.repository.ComercioRepository;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import org.springframework.test.context.junit4.SpringRunner;
+
+import java.util.List;
 
 import static org.assertj.core.api.Java6Assertions.assertThat;
 
@@ -19,20 +22,25 @@ public class ComercioRepositoryTest {
     private TestEntityManager entityManager;
 
     @Autowired
-    private ComercioRepository employeeRepository;
+    private ComercioRepository comercioRepository;
 
     @Test
     public void whenFindByNombre_thenReturnComercio() {
         // given
-        Comercio comercio = createComercio("comercio");
+        String nombreComercio = "comercio";
+        Comercio comercio = createComercio(nombreComercio);
+        entityManager.persist(comercio);
+        comercio = createComercio("segundoComercio");
         entityManager.persist(comercio);
         entityManager.flush();
 
         // when
-        Comercio found = employeeRepository.findByNombre(comercio.getNombre());
+        List<Comercio> comercioList = comercioRepository.findByNombre(nombreComercio);
 
         // then
-        assertThat(found.getNombre()).isEqualTo(comercio.getNombre());
+        assertThat(comercioList).hasSize(1);
+        Comercio found = comercioList.get(0);
+        assertThat(found.getNombre()).isEqualTo(nombreComercio);
     }
 
     private Comercio createComercio(String nombre) {
