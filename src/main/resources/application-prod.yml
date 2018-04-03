@@ -12,10 +12,10 @@ spring:
   jpa:
     properties:
       hibernate:
-        default_schema: public
+        show-sql: true
+        hbm2ddl: create
         jdbc:
           lob:
             non_contextual_creation: true
         dialect: org.hibernate.dialect.PostgreSQL94Dialect
     open-in-view: false
-    show-sql: true
