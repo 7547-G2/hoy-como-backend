@@ -10,7 +10,7 @@ import org.springframework.context.annotation.Profile;
 import javax.sql.DataSource;
 
 
-@Configuration
+/*@Configuration
 @Profile("prod")
 public class DatabaseConfiguration {
     @Bean
@@ -19,4 +19,4 @@ public class DatabaseConfiguration {
     public DataSource dataSource() {
         return DataSourceBuilder.create().build();
     }
-}
+}*/
