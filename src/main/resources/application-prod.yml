@@ -10,10 +10,10 @@ spring:
     username: ${SPRING_DATASOURCE_USERNAME}
     password: ${SPRING_DATASOURCE_PASSWORD}
   jpa:
+    hibernate:
+      ddl-auto: create-drop
     properties:
       hibernate:
-        show-sql: true
-        hbm2ddl: create
         jdbc:
           lob:
             non_contextual_creation: true
