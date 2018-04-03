@@ -1,8 +1,5 @@
 spring:
   profiles:
-    active: dev
+    active: prod
   application:
     name: hoy-como-backend
-server:
-  port: 8080
-

@@ -1,6 +1,6 @@
 package ar.uba.fi.hoycomobackend.controller;
 
-import ar.uba.fi.hoycomobackend.entity.Comercio;
+import ar.uba.fi.hoycomobackend.entity.comercio.Comercio;
 import ar.uba.fi.hoycomobackend.service.ComercioService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
