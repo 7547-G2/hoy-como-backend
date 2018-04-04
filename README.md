@@ -8,7 +8,7 @@ Luego ejecutar
 psql -U postgres -h localhost
 ```
 
-Ingresar contraseña para el usuario postgres. Luego en el prompt de PostgreSQL ejecutar lo siguiente:
+Ingresar contraseña para el mobileUser postgres. Luego en el prompt de PostgreSQL ejecutar lo siguiente:
 ```
 postgres=# create database testdb;
 ```

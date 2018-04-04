@@ -16,7 +16,7 @@ public class SwaggerConfiguration {
     public Docket api() {
         return new Docket(DocumentationType.SWAGGER_2)
                 .select()
-                .apis(RequestHandlerSelectors.basePackage("ar.uba.fi.hoycomobackend.controller"))
+                .apis(RequestHandlerSelectors.basePackage("ar.uba.fi.hoycomobackend.api.controller"))
                 .paths(PathSelectors.regex("/.*"))
                 .build();
     }

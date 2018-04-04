@@ -1,7 +1,8 @@
 package ar.uba.fi.hoycomobackend.entity;
 
+import ar.uba.fi.hoycomobackend.api.dto.MobileUserDto;
 import ar.uba.fi.hoycomobackend.entity.comercio.Comercio;
-import ar.uba.fi.hoycomobackend.entity.usuario.Usuario;
+import ar.uba.fi.hoycomobackend.entity.mobileuser.MobileUser;
 
 public class EntityTestBuilder {
 
@@ -12,13 +13,21 @@ public class EntityTestBuilder {
         return comercio;
     }
 
-    public static Usuario createUsuario(String nombre, String apellido, String mail) {
-        Usuario usuario = new Usuario();
-        usuario.setDeactivated(false);
-        usuario.setNombre(nombre);
-        usuario.setApellido(apellido);
-        usuario.setEmail(mail);
+    public static MobileUser createMobileUser(String username, String firstName, String lastName) {
+        MobileUser mobileUser = new MobileUser();
+        mobileUser.setUsername(username);
+        mobileUser.setFirstName(firstName);
+        mobileUser.setLastName(lastName);
 
-        return usuario;
+        return mobileUser;
+    }
+
+    public static MobileUserDto createMobileUserDto(String username, String firstName, String lastName) {
+        MobileUserDto mobileUserDto = new MobileUserDto();
+        mobileUserDto.setUsername(username);
+        mobileUserDto.setFirstName(firstName);
+        mobileUserDto.setLastName(lastName);
+
+        return mobileUserDto;
     }
 }

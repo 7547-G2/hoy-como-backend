@@ -1,0 +1,19 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/testdb
+    driver-class-name: org.postgresql.Driver
+    username: postgres
+    password: 1
+  jpa:
+    open-in-view: false
+    properties:
+      hibernate:
+        jdbc:
+          lob:
+            non_contextual_creation: true
+        dialect: org.hibernate.dialect.PostgreSQL94Dialect
+    hibernate:
+      ddl-auto: update
+    generate-ddl: true
+server:
+  port: 8080

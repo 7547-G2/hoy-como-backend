@@ -1,4 +1,4 @@
-package ar.uba.fi.hoycomobackend.service;
+package ar.uba.fi.hoycomobackend.api.service;
 
 import ar.uba.fi.hoycomobackend.entity.comercio.Comercio;
 import ar.uba.fi.hoycomobackend.repository.ComercioRepository;

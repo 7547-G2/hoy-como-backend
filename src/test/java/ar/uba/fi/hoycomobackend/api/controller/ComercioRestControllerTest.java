@@ -1,7 +1,7 @@
-package ar.uba.fi.hoycomobackend.controller;
+package ar.uba.fi.hoycomobackend.api.controller;
 
+import ar.uba.fi.hoycomobackend.api.service.ComercioService;
 import ar.uba.fi.hoycomobackend.entity.comercio.Comercio;
-import ar.uba.fi.hoycomobackend.service.ComercioService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,8 +15,8 @@ import java.util.Arrays;
 import java.util.List;
 
 import static ar.uba.fi.hoycomobackend.entity.EntityTestBuilder.createComercio;
-import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.Matchers.hasSize;
 import static org.mockito.BDDMockito.given;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
