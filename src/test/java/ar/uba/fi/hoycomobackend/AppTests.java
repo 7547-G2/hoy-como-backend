@@ -11,7 +11,7 @@ public class AppTests {
 
     @Test
     public void contextLoads() {
-        String[] args = new String[]{"--spring.main.web-environment=false"};
+        String[] args = new String[]{"--spring.profiles.active=dev"};
         App.main(args);
     }
 
