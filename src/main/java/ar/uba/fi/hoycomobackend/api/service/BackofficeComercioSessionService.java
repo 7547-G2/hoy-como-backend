@@ -5,6 +5,8 @@ import ar.uba.fi.hoycomobackend.api.dto.TokenDto;
 import ar.uba.fi.hoycomobackend.entity.backoffice.comercio.BackofficeComercioSession;
 import ar.uba.fi.hoycomobackend.repository.BackofficeComercioSessionRepository;
 import ar.uba.fi.hoycomobackend.utils.TokenGenerator;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -14,13 +16,29 @@ import java.util.Optional;
 public class BackofficeComercioSessionService {
 
     private BackofficeComercioSessionRepository backofficeComercioSessionRepository;
+    private ObjectMapper objectMapper;
 
     @Autowired
-    public BackofficeComercioSessionService(BackofficeComercioSessionRepository backofficeComercioSessionRepository) {
+    public BackofficeComercioSessionService(BackofficeComercioSessionRepository backofficeComercioSessionRepository, ObjectMapper objectMapper) {
         this.backofficeComercioSessionRepository = backofficeComercioSessionRepository;
+        this.objectMapper = objectMapper;
     }
 
-    public Optional<TokenDto> getTokenFromSession(BackofficeComercioSessionDto backofficeComercioSessionDto) {
+    public String getTokenFromSession(BackofficeComercioSessionDto backofficeComercioSessionDto) throws JsonProcessingException {
+
+        Optional<TokenDto> tokenOptional = generateToken(backofficeComercioSessionDto);
+        String response;
+        if (tokenOptional.isPresent()) {
+            TokenDto tokenDto = tokenOptional.get();
+            response = objectMapper.writeValueAsString(tokenDto);
+        } else {
+            response = objectMapper.writeValueAsString("Datos incorrectos");
+        }
+
+        return response;
+    }
+
+    private Optional<TokenDto> generateToken(BackofficeComercioSessionDto backofficeComercioSessionDto) {
         Optional<BackofficeComercioSession> matchingValidUser = getMatchingValidUser(backofficeComercioSessionDto);
         if(matchingValidUser.isPresent()) {
             BackofficeComercioSession backofficeComercioSession = matchingValidUser.get();
@@ -36,7 +54,7 @@ public class BackofficeComercioSessionService {
     }
 
     private TokenDto createToken() {
-        TokenDto tokenDto = createToken(); new TokenDto();
+        TokenDto tokenDto = new TokenDto();
         String token = TokenGenerator.createToken();
         tokenDto.setToken(token);
 
