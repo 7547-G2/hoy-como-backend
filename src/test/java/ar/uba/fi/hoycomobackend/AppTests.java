@@ -11,6 +11,8 @@ public class AppTests {
 
     @Test
     public void contextLoads() {
+        String[] args = new String[]{"--spring.main.web-environment=false"};
+        App.main(args);
     }
 
 }

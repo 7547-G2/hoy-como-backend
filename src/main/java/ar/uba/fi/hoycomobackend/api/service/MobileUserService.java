@@ -43,7 +43,7 @@ public class MobileUserService {
     public MobileUserDto getMobileUserById(Long id) {
         LOGGER.info("Getting MobileUser by id: {}", id);
         Optional<MobileUser> mobileUser = mobileUserRepository.getMobileUserById(id);
-        MobileUserDto mobileUserDto = modelMapper.map(mobileUser, MobileUserDto.class);
+        MobileUserDto mobileUserDto = modelMapper.map(mobileUser.get(), MobileUserDto.class);
 
         return mobileUserDto;
     }
