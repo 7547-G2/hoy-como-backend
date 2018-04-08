@@ -1,7 +1,6 @@
 package ar.uba.fi.hoycomobackend.entity.comercio;
 
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.validation.constraints.Size;
@@ -11,24 +10,40 @@ import javax.validation.constraints.Size;
 public class Comercio {
 
     @Id
-    @GeneratedValue
-    private Long id;
+    private String email;
 
-    @Size(min = 3, max = 20)
+    @Size(min = 3, max = 128)
     private String nombre;
-
-    private String direccion;
+    private String razonSocial;
+    private String calle;
+    private Integer numeroCalle;
+    private String codigoPostal;
     private String tipo;
-    private String descripcion;
-    //TODO view how to store a photo
-    // private String foto;
+    private String token;
+    private String password;
 
-    public Long getId() {
-        return id;
+    public String getPassword() {
+        return password;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public String getToken() {
+        return token;
+    }
+
+    public void setToken(String token) {
+        this.token = token;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     public String getNombre() {
@@ -39,12 +54,36 @@ public class Comercio {
         this.nombre = nombre;
     }
 
-    public String getDireccion() {
-        return direccion;
+    public String getRazonSocial() {
+        return razonSocial;
     }
 
-    public void setDireccion(String direccion) {
-        this.direccion = direccion;
+    public void setRazonSocial(String razonSocial) {
+        this.razonSocial = razonSocial;
+    }
+
+    public String getCalle() {
+        return calle;
+    }
+
+    public void setCalle(String calle) {
+        this.calle = calle;
+    }
+
+    public Integer getNumeroCalle() {
+        return numeroCalle;
+    }
+
+    public void setNumeroCalle(Integer numeroCalle) {
+        this.numeroCalle = numeroCalle;
+    }
+
+    public String getCodigoPostal() {
+        return codigoPostal;
+    }
+
+    public void setCodigoPostal(String codigoPostal) {
+        this.codigoPostal = codigoPostal;
     }
 
     public String getTipo() {
@@ -53,13 +92,5 @@ public class Comercio {
 
     public void setTipo(String tipo) {
         this.tipo = tipo;
-    }
-
-    public String getDescripcion() {
-        return descripcion;
-    }
-
-    public void setDescripcion(String descripcion) {
-        this.descripcion = descripcion;
     }
 }

@@ -6,8 +6,9 @@ import ar.uba.fi.hoycomobackend.entity.mobileuser.MobileUser;
 
 public class EntityTestBuilder {
 
-    public static Comercio createComercio(String nombre) {
+    public static Comercio createComercio(String email, String nombre) {
         Comercio comercio = new Comercio();
+        comercio.setEmail(email);
         comercio.setNombre(nombre);
 
         return comercio;
