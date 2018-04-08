@@ -24,4 +24,8 @@ public class ComercioService {
     public List<Comercio> getAllComercios() {
         return comercioRepository.findAll();
     }
+
+    public void addComercio(Comercio comercio) {
+        comercioRepository.saveAndFlush(comercio);
+    }
 }
