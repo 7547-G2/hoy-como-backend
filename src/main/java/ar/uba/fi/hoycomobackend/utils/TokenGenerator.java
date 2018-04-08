@@ -1,13 +1,21 @@
 package ar.uba.fi.hoycomobackend.utils;
 
+import org.springframework.stereotype.Component;
+
 import java.security.SecureRandom;
 
+@Component
 public class TokenGenerator {
 
-    public static String createToken() {
-        SecureRandom random = new SecureRandom();
+    private SecureRandom secureRandom;
+
+    public TokenGenerator() {
+        this.secureRandom = new SecureRandom();
+    }
+
+    public String createToken() {
         byte bytes[] = new byte[20];
-        random.nextBytes(bytes);
+        secureRandom.nextBytes(bytes);
         return bytes.toString();
     }
 }

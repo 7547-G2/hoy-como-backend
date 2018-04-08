@@ -18,12 +18,13 @@ import static org.assertj.core.api.Java6Assertions.assertThat;
 public class ComercioServiceTest {
 
     private static String COMERCIO_NOMBRE = "comercio";
+    private static String COMERCIO_EMAIL = "email";
     private static ComercioRepository comercioRepository = Mockito.mock(ComercioRepository.class);
     private ComercioService comercioService = new ComercioService(comercioRepository);
 
     @Before
     public void setUp() {
-        List<Comercio> comercioList = Arrays.asList(createComercio(COMERCIO_NOMBRE));
+        List<Comercio> comercioList = Arrays.asList(createComercio(COMERCIO_EMAIL, COMERCIO_NOMBRE));
 
         Mockito.when(comercioRepository.findByNombre(COMERCIO_NOMBRE)).thenReturn(comercioList);
     }

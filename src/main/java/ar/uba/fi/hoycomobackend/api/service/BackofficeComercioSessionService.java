@@ -2,8 +2,8 @@ package ar.uba.fi.hoycomobackend.api.service;
 
 import ar.uba.fi.hoycomobackend.api.dto.BackofficeComercioSessionDto;
 import ar.uba.fi.hoycomobackend.api.dto.TokenDto;
-import ar.uba.fi.hoycomobackend.entity.backoffice.comercio.BackofficeComercioSession;
-import ar.uba.fi.hoycomobackend.repository.BackofficeComercioSessionRepository;
+import ar.uba.fi.hoycomobackend.entity.comercio.Comercio;
+import ar.uba.fi.hoycomobackend.repository.ComercioRepository;
 import ar.uba.fi.hoycomobackend.utils.TokenGenerator;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -15,13 +15,15 @@ import java.util.Optional;
 @Service
 public class BackofficeComercioSessionService {
 
-    private BackofficeComercioSessionRepository backofficeComercioSessionRepository;
+    private ComercioRepository comercioRepository;
     private ObjectMapper objectMapper;
+    private TokenGenerator tokenGenerator;
 
     @Autowired
-    public BackofficeComercioSessionService(BackofficeComercioSessionRepository backofficeComercioSessionRepository, ObjectMapper objectMapper) {
-        this.backofficeComercioSessionRepository = backofficeComercioSessionRepository;
+    public BackofficeComercioSessionService(ComercioRepository comercioRepository, ObjectMapper objectMapper, TokenGenerator tokenGenerator) {
+        this.comercioRepository = comercioRepository;
         this.objectMapper = objectMapper;
+        this.tokenGenerator = tokenGenerator;
     }
 
     public String getTokenFromSession(BackofficeComercioSessionDto backofficeComercioSessionDto) throws JsonProcessingException {
@@ -39,13 +41,13 @@ public class BackofficeComercioSessionService {
     }
 
     private Optional<TokenDto> generateToken(BackofficeComercioSessionDto backofficeComercioSessionDto) {
-        Optional<BackofficeComercioSession> matchingValidUser = getMatchingValidUser(backofficeComercioSessionDto);
-        if(matchingValidUser.isPresent()) {
-            BackofficeComercioSession backofficeComercioSession = matchingValidUser.get();
+        Optional<Comercio> matchingValidComercio = getMatchingValidComercio(backofficeComercioSessionDto);
+        if(matchingValidComercio.isPresent()) {
+            Comercio comercio = matchingValidComercio.get();
             TokenDto tokenDto = createToken();
             String token = tokenDto.getToken();
-            backofficeComercioSession.setToken(token);
-            backofficeComercioSessionRepository.save(backofficeComercioSession);
+            comercio.setToken(token);
+            comercioRepository.save(comercio);
 
             return Optional.of(tokenDto);
         } else {
@@ -55,21 +57,21 @@ public class BackofficeComercioSessionService {
 
     private TokenDto createToken() {
         TokenDto tokenDto = new TokenDto();
-        String token = TokenGenerator.createToken();
+        String token = tokenGenerator.createToken();
         tokenDto.setToken(token);
 
         return tokenDto;
     }
 
-    private Optional<BackofficeComercioSession> getMatchingValidUser(BackofficeComercioSessionDto backofficeComercioSessionDto) {
+    private Optional<Comercio> getMatchingValidComercio(BackofficeComercioSessionDto backofficeComercioSessionDto) {
         String givenEmail = backofficeComercioSessionDto.getEmail();
         String givenPassword = backofficeComercioSessionDto.getPassword();
-        Optional<BackofficeComercioSession> backofficeComercioSession = backofficeComercioSessionRepository.getBackofficeComercioSessionByEmail(givenEmail);
+        Optional<Comercio> comercio = comercioRepository.getComercioByEmail(givenEmail);
 
-        if (backofficeComercioSession.isPresent() &&
-                backofficeComercioSession.get().getEmail().equals(givenEmail) &&
-                backofficeComercioSession.get().getPassword().equals(givenPassword)) {
-            return backofficeComercioSession;
+        if (comercio.isPresent() &&
+                comercio.get().getEmail().equals(givenEmail) &&
+                comercio.get().getPassword().equals(givenPassword)) {
+            return comercio;
         } else {
             return Optional.empty();
         }
