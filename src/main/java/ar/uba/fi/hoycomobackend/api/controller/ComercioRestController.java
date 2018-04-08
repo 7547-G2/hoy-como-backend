@@ -3,9 +3,7 @@ package ar.uba.fi.hoycomobackend.api.controller;
 import ar.uba.fi.hoycomobackend.api.service.ComercioService;
 import ar.uba.fi.hoycomobackend.entity.comercio.Comercio;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -23,5 +21,10 @@ public class ComercioRestController {
     @GetMapping(value = "/comercios", produces = {"application/json"})
     public List<Comercio> getAllComercios() {
         return comercioService.getAllComercios();
+    }
+
+    @PostMapping(value = "/comercios", consumes = {"application/json"})
+    public void addComercio(@RequestBody Comercio comercio) {
+        comercioService.addComercio(comercio);
     }
 }
