@@ -27,9 +27,9 @@ public class ComercioRepositoryTest {
     public void whenFindByNombre_thenReturnComercio() {
         // given
         String nombreComercio = "nombreComercio";
-        Comercio comercio = createComercio(1L, "email", nombreComercio);
+        Comercio comercio = createComercio("email", nombreComercio);
         entityManager.persist(comercio);
-        comercio = createComercio(2L, "anotherEmail", "segundoComercio");
+        comercio = createComercio("anotherEmail", "segundoComercio");
         entityManager.persist(comercio);
         entityManager.flush();
 

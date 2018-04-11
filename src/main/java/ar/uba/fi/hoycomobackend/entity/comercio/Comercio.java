@@ -1,5 +1,6 @@
 package ar.uba.fi.hoycomobackend.entity.comercio;
 
+import ar.uba.fi.hoycomobackend.entity.Address;
 import ar.uba.fi.hoycomobackend.entity.mobileuser.MobileUser;
 
 import javax.persistence.*;
@@ -12,20 +13,21 @@ public class Comercio {
 
     @Id
     @Column(name = "id")
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     @Column(name = "email", unique = true)
     private String email;
     @Size(min = 3, max = 128)
     private String nombre;
     private String razonSocial;
-    private String calle;
-    private Integer numeroCalle;
-    private String codigoPostal;
     private String tipo;
     private String token;
     private String password;
     @ManyToMany(mappedBy = "favoriteComercios")
     private List<MobileUser> mobileUserList;
+    @OneToOne
+    @JoinColumn(name = "address_id")
+    private Address address;
 
     public Long getId() {
         return id;
@@ -83,35 +85,19 @@ public class Comercio {
         this.razonSocial = razonSocial;
     }
 
-    public String getCalle() {
-        return calle;
-    }
-
-    public void setCalle(String calle) {
-        this.calle = calle;
-    }
-
-    public Integer getNumeroCalle() {
-        return numeroCalle;
-    }
-
-    public void setNumeroCalle(Integer numeroCalle) {
-        this.numeroCalle = numeroCalle;
-    }
-
-    public String getCodigoPostal() {
-        return codigoPostal;
-    }
-
-    public void setCodigoPostal(String codigoPostal) {
-        this.codigoPostal = codigoPostal;
-    }
-
     public String getTipo() {
         return tipo;
     }
 
     public void setTipo(String tipo) {
         this.tipo = tipo;
+    }
+
+    public Address getAddress() {
+        return address;
+    }
+
+    public void setAddress(Address address) {
+        this.address = address;
     }
 }
