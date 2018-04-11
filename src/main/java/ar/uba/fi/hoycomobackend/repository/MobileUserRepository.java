@@ -7,5 +7,5 @@ import java.util.Optional;
 
 public interface MobileUserRepository extends JpaRepository<MobileUser, Long> {
 
-    Optional<MobileUser> getMobileUserById(Long id);
+    Optional<MobileUser> getMobileUserByFacebookId(Long facebookId);
 }

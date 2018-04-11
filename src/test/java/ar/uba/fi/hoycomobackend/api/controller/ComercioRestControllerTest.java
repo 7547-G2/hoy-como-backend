@@ -35,7 +35,7 @@ public class ComercioRestControllerTest {
 
     @Test
     public void givenComercios_whenGetComercios_thenReturnJsonArray() throws Exception {
-        Comercio comercio = createComercio("email", "comercio");
+        Comercio comercio = createComercio(1L, "email", "comercio");
 
         List<Comercio> allComercios = Arrays.asList(comercio);
 

@@ -1,17 +1,17 @@
 package ar.uba.fi.hoycomobackend.api.dto;
 
 public class MobileUserDto {
-    private long id;
+    private long facebookId;
     private String username;
     private String firstName;
     private String lastName;
 
-    public long getId() {
-        return id;
+    public long getFacebookId() {
+        return facebookId;
     }
 
-    public void setId(long id) {
-        this.id = id;
+    public void setFacebookId(long facebookId) {
+        this.facebookId = facebookId;
     }
 
     public String getUsername() {

@@ -2,14 +2,14 @@ package ar.uba.fi.hoycomobackend.api.controller;
 
 import ar.uba.fi.hoycomobackend.api.dto.MobileUserDto;
 import ar.uba.fi.hoycomobackend.api.service.MobileUserService;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
-@RequestMapping("/api")
+@RequestMapping(value = "/api", produces = {"application/json"}, consumes = {"application/json"})
 public class MobileUserRestController {
 
     private MobileUserService mobileUserService;
@@ -19,23 +19,33 @@ public class MobileUserRestController {
         this.mobileUserService = mobileUserService;
     }
 
-    @GetMapping(value = "/mobileUser", produces = {"application/json"})
+    @GetMapping(value = "/mobileUser")
     public List<MobileUserDto> getAllMobileUsers() {
         return mobileUserService.getMobileUserList();
     }
 
-    @GetMapping(value = "/mobileUser/{id}", produces = {"application/json"})
+    @GetMapping(value = "/mobileUser/{id}")
     public MobileUserDto getMobileUserById(@PathVariable("id") Long id) {
         return mobileUserService.getMobileUserById(id);
     }
 
     @GetMapping("/mobileUser/{id}/authorized")
-    public ResponseEntity getMobileUserAuthorized(@PathVariable("id") Long id) {
+    public String getMobileUserAuthorized(@PathVariable("id") Long id) {
         return mobileUserService.getMobileUserAuthorizedById(id);
     }
 
     @PostMapping(value = "/mobileUser")
     public void addMobileUser(@RequestBody MobileUserDto mobileUser) {
         mobileUserService.addMobileUser(mobileUser);
+    }
+
+    @PostMapping(value = "/mobileUser/{mobileUserFacebookId}/favorite/{comercioId}")
+    public String addFavoriteComercioToMobileUser(@PathVariable("mobileUserFacebookId") Long mobileUserFacebookId, @PathVariable("comercioId") Long comercioId) {
+        return mobileUserService.addFavoriteComercioToMobileUser(mobileUserFacebookId, comercioId);
+    }
+
+    @GetMapping(value = "/mobileUser/{id}/favorites")
+    public String getMobileUserFavorites(@PathVariable("id") Long id) throws JsonProcessingException {
+        return mobileUserService.getMobileUserFavorites(id);
     }
 }
