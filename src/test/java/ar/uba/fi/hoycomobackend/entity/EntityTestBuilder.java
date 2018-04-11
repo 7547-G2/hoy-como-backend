@@ -6,11 +6,17 @@ import ar.uba.fi.hoycomobackend.entity.mobileuser.MobileUser;
 
 public class EntityTestBuilder {
 
-    public static Comercio createComercio(Long id, String email, String nombre) {
+    public static Comercio createComercio(String email, String nombre) {
         Comercio comercio = new Comercio();
-        comercio.setId(id);
         comercio.setEmail(email);
         comercio.setNombre(nombre);
+
+        return comercio;
+    }
+
+    public static Comercio createComercio(Long id, String email, String nombre) {
+        Comercio comercio = createComercio(email, nombre);
+        comercio.setId(id);
 
         return comercio;
     }

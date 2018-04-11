@@ -1,6 +1,7 @@
 package ar.uba.fi.hoycomobackend.entity.mobileuser;
 
 
+import ar.uba.fi.hoycomobackend.entity.Address;
 import ar.uba.fi.hoycomobackend.entity.comercio.Comercio;
 
 import javax.persistence.*;
@@ -24,7 +25,9 @@ public class MobileUser {
             joinColumns = {@JoinColumn(name = "mobileuser_facebookId")},
             inverseJoinColumns = {@JoinColumn(name = "comercio_id")})
     private List<Comercio> favoriteComercios;
-
+    @OneToOne
+    @JoinColumn(name = "address_id")
+    private Address address;
 
     public List<Comercio> getFavoriteComercios() {
         return favoriteComercios;
@@ -73,5 +76,13 @@ public class MobileUser {
 
     public void setAuthorized(Boolean deactivated) {
         this.authorized = deactivated;
+    }
+
+    public Address getAddress() {
+        return address;
+    }
+
+    public void setAddress(Address address) {
+        this.address = address;
     }
 }
