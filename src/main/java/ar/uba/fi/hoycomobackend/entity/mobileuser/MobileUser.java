@@ -1,25 +1,46 @@
 package ar.uba.fi.hoycomobackend.entity.mobileuser;
 
 
+import ar.uba.fi.hoycomobackend.entity.comercio.Comercio;
+
 import javax.persistence.*;
+import java.util.List;
 
 @Entity
 @Table(name = "mobileuser")
 public class MobileUser {
 
     @Id
-    @GeneratedValue
-    private Long id;
+    @Column(name = "facebookId")
+    private Long facebookId;
 
     private String username;
     private String firstName;
     private String lastName;
     @Column(name = "authorized")
     private Boolean authorized = true;
+    @ManyToMany(cascade = CascadeType.ALL)
+    @JoinTable(name = "mobileuser_comercio",
+            joinColumns = {@JoinColumn(name = "mobileuser_facebookId")},
+            inverseJoinColumns = {@JoinColumn(name = "comercio_id")})
+    private List<Comercio> favoriteComercios;
 
 
-    public Long getId() {
-        return id;
+    public List<Comercio> getFavoriteComercios() {
+        return favoriteComercios;
+    }
+
+    public void setFavoriteComercios(List<Comercio> favoriteComercios) {
+        this.favoriteComercios = favoriteComercios;
+    }
+
+
+    public Long getFacebookId() {
+        return facebookId;
+    }
+
+    public void setFacebookId(Long facebookId) {
+        this.facebookId = facebookId;
     }
 
     public String getUsername() {

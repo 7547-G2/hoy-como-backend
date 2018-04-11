@@ -8,8 +8,11 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public interface ComercioRepository extends JpaRepository<Comercio, String> {
+public interface ComercioRepository extends JpaRepository<Comercio, Long> {
 
     List<Comercio> findByNombre(String nombre);
+
     Optional<Comercio> getComercioByEmail(String email);
+
+    Optional<Comercio> getComercioById(Long id);
 }

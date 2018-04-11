@@ -18,7 +18,7 @@ import static org.assertj.core.api.Java6Assertions.assertThat;
 @DataJpaTest
 public class ComercioRepositoryTest {
 
-        @Autowired
+    @Autowired
     private TestEntityManager entityManager;
     @Autowired
     private ComercioRepository comercioRepository;
@@ -27,9 +27,9 @@ public class ComercioRepositoryTest {
     public void whenFindByNombre_thenReturnComercio() {
         // given
         String nombreComercio = "nombreComercio";
-        Comercio comercio = createComercio("email", nombreComercio);
+        Comercio comercio = createComercio(1L, "email", nombreComercio);
         entityManager.persist(comercio);
-        comercio = createComercio("anotherEmail", "segundoComercio");
+        comercio = createComercio(2L, "anotherEmail", "segundoComercio");
         entityManager.persist(comercio);
         entityManager.flush();
 

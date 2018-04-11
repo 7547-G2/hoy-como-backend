@@ -1,17 +1,20 @@
 package ar.uba.fi.hoycomobackend.entity.comercio;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import ar.uba.fi.hoycomobackend.entity.mobileuser.MobileUser;
+
+import javax.persistence.*;
 import javax.validation.constraints.Size;
+import java.util.List;
 
 @Entity
 @Table(name = "comercio")
 public class Comercio {
 
     @Id
+    @Column(name = "id")
+    private Long id;
+    @Column(name = "email", unique = true)
     private String email;
-
     @Size(min = 3, max = 128)
     private String nombre;
     private String razonSocial;
@@ -21,6 +24,24 @@ public class Comercio {
     private String tipo;
     private String token;
     private String password;
+    @ManyToMany(mappedBy = "favoriteComercios")
+    private List<MobileUser> mobileUserList;
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public List<MobileUser> getMobileUserList() {
+        return mobileUserList;
+    }
+
+    public void setMobileUserList(List<MobileUser> mobileUserList) {
+        this.mobileUserList = mobileUserList;
+    }
 
     public String getPassword() {
         return password;

@@ -33,7 +33,7 @@ public class ComercioRestControllerIntegrationTest {
     @Test
     public void givenEmployees_whenGetEmployees_thenStatus200() throws Exception {
 
-        createTestComercio("email", "comercio");
+        createTestComercio(1L, "email", "comercio");
 
         mockMvc.perform(get("/api/comercios")
                 .contentType(MediaType.APPLICATION_JSON))
@@ -43,8 +43,8 @@ public class ComercioRestControllerIntegrationTest {
                 .andExpect(jsonPath("$[0].nombre", is("comercio")));
     }
 
-    private void createTestComercio(String email, String nombre) {
-        Comercio comercio = createComercio(email, nombre);
+    private void createTestComercio(Long id, String email, String nombre) {
+        Comercio comercio = createComercio(id, email, nombre);
         comercioRepository.saveAndFlush(comercio);
     }
 }

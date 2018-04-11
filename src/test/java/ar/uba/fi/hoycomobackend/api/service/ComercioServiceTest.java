@@ -4,9 +4,7 @@ import ar.uba.fi.hoycomobackend.entity.comercio.Comercio;
 import ar.uba.fi.hoycomobackend.repository.ComercioRepository;
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 import org.mockito.Mockito;
-import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.Arrays;
 import java.util.List;
@@ -14,9 +12,9 @@ import java.util.List;
 import static ar.uba.fi.hoycomobackend.entity.EntityTestBuilder.createComercio;
 import static org.assertj.core.api.Java6Assertions.assertThat;
 
-@RunWith(SpringRunner.class)
 public class ComercioServiceTest {
 
+    private static Long COMERCIO_ID = 1L;
     private static String COMERCIO_NOMBRE = "comercio";
     private static String COMERCIO_EMAIL = "email";
     private static ComercioRepository comercioRepository = Mockito.mock(ComercioRepository.class);
@@ -24,7 +22,7 @@ public class ComercioServiceTest {
 
     @Before
     public void setUp() {
-        List<Comercio> comercioList = Arrays.asList(createComercio(COMERCIO_EMAIL, COMERCIO_NOMBRE));
+        List<Comercio> comercioList = Arrays.asList(createComercio(COMERCIO_ID, COMERCIO_EMAIL, COMERCIO_NOMBRE));
 
         Mockito.when(comercioRepository.findByNombre(COMERCIO_NOMBRE)).thenReturn(comercioList);
     }

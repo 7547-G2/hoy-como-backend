@@ -8,9 +8,7 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -39,7 +37,7 @@ public class MobileUserRestControllerTest {
 
     @Test
     public void whenGetMobileUserList_thenReturnJsonArray() throws Exception {
-        MobileUserDto mobileUserDto = createMobileUserDto("username", "firstName",  "lastName");
+        MobileUserDto mobileUserDto = createMobileUserDto(1L, "username", "firstName", "lastName");
 
         List<MobileUserDto> allMobileUserDto = Arrays.asList(mobileUserDto);
 
@@ -56,7 +54,7 @@ public class MobileUserRestControllerTest {
 
     @Test
     public void whenGetMobileUserById_thenReturnJsonArray() throws Exception {
-        MobileUserDto mobileUserDto = createMobileUserDto("username", "firstName",  "lastName");
+        MobileUserDto mobileUserDto = createMobileUserDto(1L, "username", "firstName", "lastName");
 
         given(mobileUserService.getMobileUserById(1L)).willReturn(mobileUserDto);
 
@@ -71,7 +69,7 @@ public class MobileUserRestControllerTest {
     @Test
     public void whenAddMobileUser_thenReturnOk() throws Exception {
         ObjectMapper mapper = new ObjectMapper();
-        MobileUserDto mobileUserDto = createMobileUserDto("username", "firstName",  "lastName");
+        MobileUserDto mobileUserDto = createMobileUserDto(1L, "username", "firstName", "lastName");
 
         mockMvc.perform(post(MOBILE_USER_API)
                 .contentType(MediaType.APPLICATION_JSON)
@@ -81,7 +79,7 @@ public class MobileUserRestControllerTest {
 
     @Test
     public void whengetMobileUserAuthorizedById_mobileUserAuthorized_thenReturnResponseEntity() throws Exception {
-        given(mobileUserService.getMobileUserAuthorizedById(1L)).willReturn(new ResponseEntity(HttpStatus.OK));
+        given(mobileUserService.getMobileUserAuthorizedById(1L)).willReturn("ok");
 
         mockMvc.perform(get(MOBILE_USER_API + "/1/authorized")
                 .contentType(MediaType.APPLICATION_JSON))

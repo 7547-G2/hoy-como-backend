@@ -42,7 +42,7 @@ public class BackofficeComercioSessionService {
 
     private Optional<TokenDto> generateToken(BackofficeComercioSessionDto backofficeComercioSessionDto) {
         Optional<Comercio> matchingValidComercio = getMatchingValidComercio(backofficeComercioSessionDto);
-        if(matchingValidComercio.isPresent()) {
+        if (matchingValidComercio.isPresent()) {
             Comercio comercio = matchingValidComercio.get();
             TokenDto tokenDto = createToken();
             String token = tokenDto.getToken();
