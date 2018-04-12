@@ -5,20 +5,24 @@ import ar.uba.fi.hoycomobackend.repository.ComercioRepository;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
+import org.modelmapper.ModelMapper;
 
+import java.lang.reflect.Type;
 import java.util.Arrays;
 import java.util.List;
 
 import static ar.uba.fi.hoycomobackend.entity.EntityTestBuilder.createComercio;
-import static org.assertj.core.api.Java6Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.verify;
 
 public class ComercioServiceTest {
 
     private static Long COMERCIO_ID = 1L;
     private static String COMERCIO_NOMBRE = "comercio";
     private static String COMERCIO_EMAIL = "email";
-    private static ComercioRepository comercioRepository = Mockito.mock(ComercioRepository.class);
-    private ComercioService comercioService = new ComercioService(comercioRepository);
+    private ComercioRepository comercioRepository = Mockito.mock(ComercioRepository.class);
+    private ModelMapper modelMapper = Mockito.mock(ModelMapper.class);
+    private ComercioService comercioService = new ComercioService(comercioRepository, modelMapper);
 
     @Before
     public void setUp() {
@@ -29,9 +33,9 @@ public class ComercioServiceTest {
 
     @Test
     public void whenValidName_thenComercioShouldBeFound() {
-        List<Comercio> comercioList = comercioService.getComercioByNombre(COMERCIO_NOMBRE);
-        Comercio found = comercioList.get(0);
+        comercioService.getComercioByNombre(COMERCIO_NOMBRE);
 
-        assertThat(found.getNombre()).isEqualTo(COMERCIO_NOMBRE);
+        verify(comercioRepository).findByNombre(COMERCIO_NOMBRE);
+        verify(modelMapper).map(any(List.class), any(Type.class));
     }
 }

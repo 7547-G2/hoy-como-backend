@@ -1,7 +1,7 @@
 package ar.uba.fi.hoycomobackend.api.controller;
 
+import ar.uba.fi.hoycomobackend.api.dto.ComercioDto;
 import ar.uba.fi.hoycomobackend.api.service.ComercioService;
-import ar.uba.fi.hoycomobackend.entity.comercio.Comercio;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -19,12 +19,12 @@ public class ComercioRestController {
     }
 
     @GetMapping(value = "/comercios", produces = {"application/json"})
-    public List<Comercio> getAllComercios() {
+    public List<ComercioDto> getAllComercios() {
         return comercioService.getAllComercios();
     }
 
     @PostMapping(value = "/comercios", consumes = {"application/json"})
-    public void addComercio(@RequestBody Comercio comercio) {
-        comercioService.addComercio(comercio);
+    public String addComercio(@RequestBody ComercioDto comercioDto) {
+        return comercioService.addComercio(comercioDto);
     }
 }

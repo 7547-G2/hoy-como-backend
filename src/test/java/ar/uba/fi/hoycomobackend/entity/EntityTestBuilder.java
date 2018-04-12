@@ -1,5 +1,6 @@
 package ar.uba.fi.hoycomobackend.entity;
 
+import ar.uba.fi.hoycomobackend.api.dto.ComercioDto;
 import ar.uba.fi.hoycomobackend.api.dto.MobileUserDto;
 import ar.uba.fi.hoycomobackend.entity.comercio.Comercio;
 import ar.uba.fi.hoycomobackend.entity.mobileuser.MobileUser;
@@ -19,6 +20,15 @@ public class EntityTestBuilder {
         comercio.setId(id);
 
         return comercio;
+    }
+
+    public static ComercioDto createComercioDto(Long id, String email, String nombre) {
+        ComercioDto comercioDto = new ComercioDto();
+        comercioDto.setId(id);
+        comercioDto.setEmail(email);
+        comercioDto.setNombre(nombre);
+
+        return comercioDto;
     }
 
     public static MobileUser createMobileUser(Long facebookId, String username, String firstName, String lastName) {
