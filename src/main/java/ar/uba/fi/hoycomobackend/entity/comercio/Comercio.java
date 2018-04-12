@@ -25,7 +25,7 @@ public class Comercio {
     private String password;
     @ManyToMany(mappedBy = "favoriteComercios")
     private List<MobileUser> mobileUserList;
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "address_id")
     private Address address;
 

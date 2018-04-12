@@ -1,7 +1,7 @@
 package ar.uba.fi.hoycomobackend.api.controller;
 
+import ar.uba.fi.hoycomobackend.api.dto.ComercioDto;
 import ar.uba.fi.hoycomobackend.api.service.ComercioService;
-import ar.uba.fi.hoycomobackend.entity.comercio.Comercio;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,7 +14,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import java.util.Arrays;
 import java.util.List;
 
-import static ar.uba.fi.hoycomobackend.entity.EntityTestBuilder.createComercio;
+import static ar.uba.fi.hoycomobackend.entity.EntityTestBuilder.createComercioDto;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.Matchers.hasSize;
 import static org.mockito.BDDMockito.given;
@@ -35,9 +35,9 @@ public class ComercioRestControllerTest {
 
     @Test
     public void givenComercios_whenGetComercios_thenReturnJsonArray() throws Exception {
-        Comercio comercio = createComercio(1L, "email", "comercio");
+        ComercioDto comercioDto = createComercioDto(1L, "email", "comercio");
 
-        List<Comercio> allComercios = Arrays.asList(comercio);
+        List<ComercioDto> allComercios = Arrays.asList(comercioDto);
 
         given(comercioService.getAllComercios()).willReturn(allComercios);
 
@@ -45,6 +45,6 @@ public class ComercioRestControllerTest {
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$", hasSize(1)))
-                .andExpect(jsonPath("$[0].nombre", is(comercio.getNombre())));
+                .andExpect(jsonPath("$[0].nombre", is(comercioDto.getNombre())));
     }
 }
