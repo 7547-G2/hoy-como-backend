@@ -1,7 +1,9 @@
 package ar.uba.fi.hoycomobackend.api.service;
 
+import ar.uba.fi.hoycomobackend.api.dto.AddressDto;
 import ar.uba.fi.hoycomobackend.api.dto.MobileUserDto;
 import ar.uba.fi.hoycomobackend.api.dto.MobileUserFavoritesDto;
+import ar.uba.fi.hoycomobackend.entity.Address;
 import ar.uba.fi.hoycomobackend.entity.comercio.Comercio;
 import ar.uba.fi.hoycomobackend.entity.mobileuser.MobileUser;
 import ar.uba.fi.hoycomobackend.repository.ComercioRepository;
@@ -26,6 +28,7 @@ public class MobileUserService {
     private static String AUTHORIZED_USER_MESSAGE = "El usuario está habilitado";
     private static String UNAUTHORIZED_USER_MESSAGE = "El usuario está deshabilitado";
     private static String NON_EXISTANT_USER_MESSAGE = "No existe el usuario";
+    private static String ADDRESS_ADDED_SUCCESSFUL = "Se agregó dirección exitosamente";
 
     private MobileUserRepository mobileUserRepository;
     private ComercioRepository comercioRepository;
@@ -115,6 +118,24 @@ public class MobileUserService {
         } else {
             response = "No existe el usuario";
         }
+
+        return response;
+    }
+
+    public String addAddressToMobileUser(Long mobileUserFacebookId, AddressDto addressDto) {
+        LOGGER.info("Getting mobile user with id: {}", mobileUserFacebookId);
+        Optional<MobileUser> mobileUserOptional = mobileUserRepository.getMobileUserByFacebookId(mobileUserFacebookId);
+
+        String response;
+        if (mobileUserOptional.isPresent()) {
+            MobileUser mobileUser = mobileUserOptional.get();
+            Address address = modelMapper.map(addressDto, Address.class);
+            mobileUser.setAddress(address);
+
+            mobileUserRepository.saveAndFlush(mobileUser);
+            response = ADDRESS_ADDED_SUCCESSFUL;
+        } else
+            response = NON_EXISTANT_USER_MESSAGE;
 
         return response;
     }
