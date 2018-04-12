@@ -50,10 +50,9 @@ public class MobileUserRestController {
         return mobileUserService.addFavoriteComercioToMobileUser(mobileUserFacebookId, comercioId);
     }
 
-    @PostMapping(value = "/mobileUser/{id}/address")
-    public String addAddressToMobileUser(@PathVariable("id") Long id, @RequestBody AddressDto addressDto) {
+    @PutMapping(value = "/mobileUser/{mobileUserFacebookId}/address")
+    public String addAddressToMobileUser(@PathVariable("mobileUserFacebookId") Long mobileUserFacebookId, @RequestBody AddressDto addressDto) {
         //TODO implement this method
-        return "";
-        //return mobileUserService.addAddressToMobileUser(id, addressDto);
+        return mobileUserService.addAddressToMobileUser(mobileUserFacebookId, addressDto);
     }
 }

@@ -25,7 +25,7 @@ public class MobileUser {
             joinColumns = {@JoinColumn(name = "mobileuser_facebookId")},
             inverseJoinColumns = {@JoinColumn(name = "comercio_id")})
     private List<Comercio> favoriteComercios;
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "address_id")
     private Address address;
 
