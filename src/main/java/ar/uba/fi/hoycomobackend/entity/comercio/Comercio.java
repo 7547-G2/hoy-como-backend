@@ -23,9 +23,9 @@ public class Comercio {
     private String tipo;
     private String token;
     private String password;
-    @ManyToMany(mappedBy = "favoriteComercios")
+    @ManyToMany(fetch = FetchType.EAGER, mappedBy = "favoriteComercios")
     private List<MobileUser> mobileUserList;
-    @OneToOne(cascade = CascadeType.ALL)
+    @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinColumn(name = "address_id")
     private Address address;
 

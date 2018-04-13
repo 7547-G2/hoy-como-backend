@@ -20,12 +20,12 @@ public class MobileUser {
     private String lastName;
     @Column(name = "authorized")
     private Boolean authorized = true;
-    @ManyToMany(cascade = CascadeType.ALL)
+    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinTable(name = "mobileuser_comercio",
             joinColumns = {@JoinColumn(name = "mobileuser_facebookId")},
             inverseJoinColumns = {@JoinColumn(name = "comercio_id")})
     private List<Comercio> favoriteComercios;
-    @OneToOne(cascade = CascadeType.ALL)
+    @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinColumn(name = "address_id")
     private Address address;
 

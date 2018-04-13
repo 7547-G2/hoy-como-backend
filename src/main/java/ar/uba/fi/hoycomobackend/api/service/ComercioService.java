@@ -1,10 +1,13 @@
 package ar.uba.fi.hoycomobackend.api.service;
 
+import ar.uba.fi.hoycomobackend.api.dto.AddressDto;
 import ar.uba.fi.hoycomobackend.api.dto.ComercioDto;
+import ar.uba.fi.hoycomobackend.entity.Address;
 import ar.uba.fi.hoycomobackend.entity.comercio.Comercio;
 import ar.uba.fi.hoycomobackend.repository.ComercioRepository;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
+import org.modelmapper.convention.MatchingStrategies;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,6 +52,9 @@ public class ComercioService {
     public String addComercio(ComercioDto comercioDto) {
         LOGGER.info("Adding a new Comercio");
         Comercio comercio = modelMapper.map(comercioDto, Comercio.class);
+        AddressDto addressDto = comercioDto.getAddressDto();
+        Address address = modelMapper.map(addressDto, Address.class);
+        comercio.setAddress(address);
         String response;
         try {
             comercioRepository.saveAndFlush(comercio);
