@@ -17,3 +17,4 @@ postgres=# create database testdb;
 Luego modificar el archivo hoy-como-backend/src/main/resources/application-dev.yml
 
 Cambiar el password por el seteado en la instalación (default "1").
+
