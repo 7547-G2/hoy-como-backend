@@ -16,9 +16,9 @@ public class Address {
     private String postalCode;
     private String floor;
     private String department;
-    @OneToOne(fetch = FetchType.EAGER, mappedBy = "address")
+    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "address")
     private Comercio comercio;
-    @OneToOne(fetch = FetchType.EAGER, mappedBy = "address")
+    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "address")
     private MobileUser mobileUser;
 
     public Long getId() {

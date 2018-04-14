@@ -5,6 +5,7 @@ public class MobileUserDto {
     private String username;
     private String firstName;
     private String lastName;
+    private AddressDto addressDto;
 
     public long getFacebookId() {
         return facebookId;
@@ -36,5 +37,13 @@ public class MobileUserDto {
 
     public void setLastName(String lastName) {
         this.lastName = lastName;
+    }
+
+    public AddressDto getAddressDto() {
+        return addressDto;
+    }
+
+    public void setAddressDto(AddressDto address) {
+        this.addressDto = address;
     }
 }

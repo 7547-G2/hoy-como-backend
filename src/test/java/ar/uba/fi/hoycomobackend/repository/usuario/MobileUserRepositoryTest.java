@@ -11,7 +11,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.Optional;
 
-import static ar.uba.fi.hoycomobackend.entity.EntityTestBuilder.createMobileUser;
+import static ar.uba.fi.hoycomobackend.entity.DataTestBuilder.createMobileUser;
 import static org.assertj.core.api.Java6Assertions.assertThat;
 
 @RunWith(SpringRunner.class)

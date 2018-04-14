@@ -18,7 +18,7 @@ public class ComercioRestController {
         this.comercioService = comercioService;
     }
 
-    @GetMapping(value = "/comercios", produces = {"application/json"})
+    @GetMapping(value = {"/comercios", "/mobileUser/comercios"}, produces = {"application/json"})
     public List<ComercioDto> getAllComercios() {
         return comercioService.getAllComercios();
     }

@@ -18,6 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.lang.reflect.Type;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -29,6 +30,8 @@ public class MobileUserService {
     private static String UNAUTHORIZED_USER_MESSAGE = "El usuario está deshabilitado";
     private static String NON_EXISTANT_USER_MESSAGE = "No existe el usuario";
     private static String ADDRESS_ADDED_SUCCESSFUL = "Se agregó dirección exitosamente";
+    private static String MOBILE_USER_ADDED_SUCCESSFUL = "Se agregó usuario exitosamente";
+    private static String MOBILE_USER_ADD_UNSUCCESSFUL = "Datos incorrectos al cargar usuario";
 
     private MobileUserRepository mobileUserRepository;
     private ComercioRepository comercioRepository;
@@ -46,9 +49,14 @@ public class MobileUserService {
     public List<MobileUserDto> getMobileUserList() {
         LOGGER.info("Getting all Usuarios from database.");
         List<MobileUser> mobileUserList = mobileUserRepository.findAll();
-        Type listType = new TypeToken<List<MobileUserDto>>() {
-        }.getType();
-        List<MobileUserDto> mobileUserDtoList = modelMapper.map(mobileUserList, listType);
+        List<MobileUserDto> mobileUserDtoList = new ArrayList<>();
+        for (MobileUser mobileUser : mobileUserList) {
+            Address address = mobileUser.getAddress();
+            AddressDto addressDto = modelMapper.map(address, AddressDto.class);
+            MobileUserDto mobileUserDto = modelMapper.map(mobileUser, MobileUserDto.class);
+            mobileUserDto.setAddressDto(addressDto);
+            mobileUserDtoList.add(mobileUserDto);
+        }
 
         return mobileUserDtoList;
     }
@@ -61,11 +69,19 @@ public class MobileUserService {
         return mobileUserDto;
     }
 
-    public void addMobileUser(MobileUserDto mobileUserDto) {
+    public String addMobileUser(MobileUserDto mobileUserDto) {
         LOGGER.info("Adding new MobileUser: {}", mobileUserDto);
+        AddressDto addressDto = mobileUserDto.getAddressDto();
+        Address address = modelMapper.map(addressDto, Address.class);
         MobileUser mobileUser = modelMapper.map(mobileUserDto, MobileUser.class);
-
-        mobileUserRepository.saveAndFlush(mobileUser);
+        mobileUser.setAddress(address);
+        try {
+            mobileUserRepository.saveAndFlush(mobileUser);
+            return MOBILE_USER_ADDED_SUCCESSFUL;
+        } catch (RuntimeException e) {
+            LOGGER.info("Error while adding new mobile user: {}", e.getMessage());
+        }
+        return MOBILE_USER_ADD_UNSUCCESSFUL;
     }
 
     public String getMobileUserAuthorizedById(Long id) {

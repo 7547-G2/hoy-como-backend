@@ -14,7 +14,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import java.util.Arrays;
 import java.util.List;
 
-import static ar.uba.fi.hoycomobackend.entity.EntityTestBuilder.createComercioDto;
+import static ar.uba.fi.hoycomobackend.entity.DataTestBuilder.createComercioDto;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.Matchers.hasSize;
 import static org.mockito.BDDMockito.given;

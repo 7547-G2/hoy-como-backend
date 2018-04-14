@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping(value = "/api", produces = {"application/json"})
+@RequestMapping(value = "/api")
 public class MobileUserRestController {
 
     private MobileUserService mobileUserService;
@@ -36,8 +36,8 @@ public class MobileUserRestController {
     }
 
     @PostMapping(value = "/mobileUser")
-    public void addMobileUser(@RequestBody MobileUserDto mobileUser) {
-        mobileUserService.addMobileUser(mobileUser);
+    public String addMobileUser(@RequestBody MobileUserDto mobileUser) {
+        return mobileUserService.addMobileUser(mobileUser);
     }
 
     @GetMapping(value = "/mobileUser/{id}/favorites")
@@ -52,7 +52,6 @@ public class MobileUserRestController {
 
     @PutMapping(value = "/mobileUser/{mobileUserFacebookId}/address")
     public String addAddressToMobileUser(@PathVariable("mobileUserFacebookId") Long mobileUserFacebookId, @RequestBody AddressDto addressDto) {
-        //TODO implement this method
         return mobileUserService.addAddressToMobileUser(mobileUserFacebookId, addressDto);
     }
 }
