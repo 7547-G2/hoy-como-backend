@@ -15,7 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import static ar.uba.fi.hoycomobackend.entity.EntityTestBuilder.createMobileUser;
+import static ar.uba.fi.hoycomobackend.entity.DataTestBuilder.createMobileUser;
 import static org.assertj.core.api.Java6Assertions.assertThat;
 import static org.mockito.Mockito.*;
 
@@ -26,23 +26,6 @@ public class MobileUserServiceTest {
     private ModelMapper modelMapper = Mockito.mock(ModelMapper.class);
     private ObjectMapper objectMapper = Mockito.mock(ObjectMapper.class);
     private MobileUserService mobileUserService = new MobileUserService(mobileUserRepository, comercioRepository, modelMapper, objectMapper);
-
-    @Test
-    public void getMobileUserList_returnsMobileUserList() {
-        MobileUser firstMobileUser = createMobileUser(1L, "username", "firstName", "lastName");
-        MobileUser secondMobileUser = createMobileUser(2L, "username", "firstName", "lastName");
-        List<MobileUser> mobileUserList = new ArrayList<>();
-        mobileUserList.add(firstMobileUser);
-        mobileUserList.add(secondMobileUser);
-        when(mobileUserRepository.findAll()).thenReturn(mobileUserList);
-        Type listType = new TypeToken<List<MobileUserDto>>() {
-        }.getType();
-
-        mobileUserService.getMobileUserList();
-
-        verify(mobileUserRepository, times(1)).findAll();
-        verify(modelMapper, times(1)).map(mobileUserList, listType);
-    }
 
     @Test
     public void getMobileUserById_returnsMobileUserDto() {

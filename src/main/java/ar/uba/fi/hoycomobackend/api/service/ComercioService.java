@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.lang.reflect.Type;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -34,18 +35,28 @@ public class ComercioService {
     public List<ComercioDto> getComercioByNombre(String nombre) {
         LOGGER.info("Getting all Comercios with name: {}", nombre);
         List<Comercio> comercioList = comercioRepository.findByNombre(nombre);
-        Type listType = new TypeToken<List<ComercioDto>>() {
-        }.getType();
-        List<ComercioDto> comercioDtoList = modelMapper.map(comercioList, listType);
+        List<ComercioDto> comercioDtoList = getComercioDtos(comercioList);
+
         return comercioDtoList;
     }
 
     public List<ComercioDto> getAllComercios() {
         LOGGER.info("Getting all Comercios");
         List<Comercio> comercioList = comercioRepository.findAll();
-        Type listType = new TypeToken<List<ComercioDto>>() {
-        }.getType();
-        List<ComercioDto> comercioDtoList = modelMapper.map(comercioList, listType);
+        List<ComercioDto> comercioDtoList = getComercioDtos(comercioList);
+
+        return comercioDtoList;
+    }
+
+    private List<ComercioDto> getComercioDtos(List<Comercio> comercioList) {
+        List<ComercioDto> comercioDtoList = new ArrayList<>();
+        for (Comercio comercio : comercioList) {
+            Address address = comercio.getAddress();
+            AddressDto addressDto = modelMapper.map(address, AddressDto.class);
+            ComercioDto comercioDto = modelMapper.map(comercio, ComercioDto.class);
+            comercioDto.setAddressDto(addressDto);
+            comercioDtoList.add(comercioDto);
+        }
         return comercioDtoList;
     }
 
