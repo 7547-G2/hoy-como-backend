@@ -68,7 +68,7 @@ public class MobileUserRestControllerIntegrationTest {
     }
 
     @Test
-    public void gettingNewlyCreateMobileUserTest() throws Exception {
+    public void gettingNewlyCreatedMobileUserTest() throws Exception {
         createPostNewMobileUser();
 
         mockMvc.perform(get("/api/mobileUser")
@@ -84,6 +84,25 @@ public class MobileUserRestControllerIntegrationTest {
                 .andExpect(jsonPath("$[0].addressDto.postalCode", is(POSTAL_CODE)))
                 .andExpect(jsonPath("$[0].addressDto.floor", is(FLOOR)))
                 .andExpect(jsonPath("$[0].addressDto.department", is(DEPARTMENT)));
+    }
+
+    @Test
+    public void gettingNewlyCreatedMobileUserByIdTest() throws Exception {
+        createPostNewMobileUser();
+
+        mockMvc.perform(get("/api/mobileUser/1")
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(content()
+                        .contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.facebookId", is(FACEBOOK_ID.intValue())))
+                .andExpect(jsonPath("$.username", is(USER_NAME)))
+                .andExpect(jsonPath("$.firstName", is(FIRST_NAME)))
+                .andExpect(jsonPath("$.lastName", is(LAST_NAME)))
+                .andExpect(jsonPath("$.addressDto.street", is(STREET)))
+                .andExpect(jsonPath("$.addressDto.postalCode", is(POSTAL_CODE)))
+                .andExpect(jsonPath("$.addressDto.floor", is(FLOOR)))
+                .andExpect(jsonPath("$.addressDto.department", is(DEPARTMENT)));
     }
 
     @Test
