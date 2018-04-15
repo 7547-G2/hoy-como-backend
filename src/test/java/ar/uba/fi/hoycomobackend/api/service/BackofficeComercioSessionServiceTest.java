@@ -1,6 +1,7 @@
 package ar.uba.fi.hoycomobackend.api.service;
 
 import ar.uba.fi.hoycomobackend.api.dto.BackofficeComercioSessionDto;
+import ar.uba.fi.hoycomobackend.api.dto.ErrorMessage;
 import ar.uba.fi.hoycomobackend.api.dto.TokenDto;
 import ar.uba.fi.hoycomobackend.entity.Comercio;
 import ar.uba.fi.hoycomobackend.repository.ComercioRepository;
@@ -58,7 +59,8 @@ public class BackofficeComercioSessionServiceTest {
         ResponseEntity response = backofficeComercioSessionService.getTokenFromSession(backofficeComercioSessionDto);
 
         assertThat(response.getStatusCodeValue()).isEqualTo(404);
-        assertThat(response.getBody()).isEqualTo("No se encontró ningún comercio con email: " + SESSION_EMAIL);
-
+        ErrorMessage errorMessage = (ErrorMessage)response.getBody();
+        String errorMessageContent = errorMessage.getErrorMessage();
+        assertThat(errorMessageContent).isEqualTo("No se encontró ningún comercio con email: " + SESSION_EMAIL);
     }
 }
