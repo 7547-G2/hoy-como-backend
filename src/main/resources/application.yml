@@ -3,6 +3,3 @@ spring:
     active: prod
   application:
     name: hoy-como-backend
-management:
-  security:
-    enabled: false
