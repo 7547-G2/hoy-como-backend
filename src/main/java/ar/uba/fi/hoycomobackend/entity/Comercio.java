@@ -1,8 +1,4 @@
-package ar.uba.fi.hoycomobackend.entity.comercio;
-
-import ar.uba.fi.hoycomobackend.entity.Address;
-import ar.uba.fi.hoycomobackend.entity.Plato;
-import ar.uba.fi.hoycomobackend.entity.mobileuser.MobileUser;
+package ar.uba.fi.hoycomobackend.entity;
 
 import javax.persistence.*;
 import javax.validation.constraints.Size;
@@ -24,12 +20,15 @@ public class Comercio {
     private String tipo;
     private String token;
     private String password;
+    private String imagenLogo;
+    @Column(columnDefinition = "varchar(128) default 'deshabilitado'")
+    private String estado;
     @ManyToMany(fetch = FetchType.EAGER, mappedBy = "favoriteComercios")
     private Set<MobileUser> mobileUserList;
     @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinColumn(name = "address_id")
     private Address address;
-    @OneToMany(mappedBy = "comercio", cascade = CascadeType.ALL)
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "comercio", cascade = CascadeType.ALL)
     private Set<Plato> platos;
 
     public Long getId() {
@@ -110,5 +109,21 @@ public class Comercio {
 
     public void setPlatos(Set<Plato> platos) {
         this.platos = platos;
+    }
+
+    public String getImagenLogo() {
+        return imagenLogo;
+    }
+
+    public void setImagenLogo(String imagenLogo) {
+        this.imagenLogo = imagenLogo;
+    }
+
+    public String getEstado() {
+        return estado;
+    }
+
+    public void setEstado(String estado) {
+        this.estado = estado;
     }
 }

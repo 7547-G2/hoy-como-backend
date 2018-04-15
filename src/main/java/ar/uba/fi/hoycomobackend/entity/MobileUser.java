@@ -1,8 +1,5 @@
-package ar.uba.fi.hoycomobackend.entity.mobileuser;
+package ar.uba.fi.hoycomobackend.entity;
 
-
-import ar.uba.fi.hoycomobackend.entity.Address;
-import ar.uba.fi.hoycomobackend.entity.comercio.Comercio;
 
 import javax.persistence.*;
 import java.util.List;
@@ -14,7 +11,6 @@ public class MobileUser {
     @Id
     @Column(name = "facebookId")
     private Long facebookId;
-
     private String username;
     private String firstName;
     private String lastName;

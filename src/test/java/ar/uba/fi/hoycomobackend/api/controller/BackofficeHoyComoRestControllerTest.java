@@ -1,7 +1,7 @@
 package ar.uba.fi.hoycomobackend.api.controller;
 
-import ar.uba.fi.hoycomobackend.api.dto.ComercioDto;
-import ar.uba.fi.hoycomobackend.api.service.ComercioService;
+import ar.uba.fi.hoycomobackend.api.dto.ComercioHoyComoDto;
+import ar.uba.fi.hoycomobackend.api.service.BackofficeHoyComoService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,28 +23,28 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @RunWith(SpringRunner.class)
-@WebMvcTest(ComercioRestController.class)
-public class ComercioRestControllerTest {
+@WebMvcTest(BackofficeHoyComoRestController.class)
+public class BackofficeHoyComoRestControllerTest {
 
     private static String COMERCIOS_URL = "/api/comercios";
 
     @Autowired
     private MockMvc mockMvc;
     @MockBean
-    private ComercioService comercioService;
+    private BackofficeHoyComoService backofficeHoyComoService;
 
     @Test
     public void givenComercios_whenGetComercios_thenReturnJsonArray() throws Exception {
-        ComercioDto comercioDto = createComercioDto(1L, "email", "comercio");
+        ComercioHoyComoDto comercioHoyComoDto = createComercioDto(1L, "email", "comercio");
 
-        List<ComercioDto> allComercios = Arrays.asList(comercioDto);
+        List<ComercioHoyComoDto> allComercios = Arrays.asList(comercioHoyComoDto);
 
-        given(comercioService.getAllComercios()).willReturn(allComercios);
+        given(backofficeHoyComoService.getAllComercios()).willReturn(allComercios);
 
         mockMvc.perform(get(COMERCIOS_URL)
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$", hasSize(1)))
-                .andExpect(jsonPath("$[0].nombre", is(comercioDto.getNombre())));
+                .andExpect(jsonPath("$[0].nombre", is(comercioHoyComoDto.getNombre())));
     }
 }

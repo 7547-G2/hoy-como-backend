@@ -1,7 +1,5 @@
 package ar.uba.fi.hoycomobackend.entity;
 
-import ar.uba.fi.hoycomobackend.entity.comercio.Comercio;
-
 import javax.persistence.*;
 
 @Entity
@@ -14,7 +12,7 @@ public class Plato {
     private String nombre;
     private String imagen;
     private Float precio;
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "comercio_id")
     private Comercio comercio;
 

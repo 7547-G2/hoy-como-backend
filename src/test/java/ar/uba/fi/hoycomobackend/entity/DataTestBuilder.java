@@ -1,10 +1,9 @@
 package ar.uba.fi.hoycomobackend.entity;
 
-import ar.uba.fi.hoycomobackend.api.dto.ComercioDto;
+import ar.uba.fi.hoycomobackend.api.dto.AddressDto;
+import ar.uba.fi.hoycomobackend.api.dto.ComercioHoyComoDto;
 import ar.uba.fi.hoycomobackend.api.dto.MobileUserDto;
 import ar.uba.fi.hoycomobackend.api.dto.PlatoDto;
-import ar.uba.fi.hoycomobackend.entity.comercio.Comercio;
-import ar.uba.fi.hoycomobackend.entity.mobileuser.MobileUser;
 
 public class DataTestBuilder {
 
@@ -23,13 +22,12 @@ public class DataTestBuilder {
         return comercio;
     }
 
-    public static ComercioDto createComercioDto(Long id, String email, String nombre) {
-        ComercioDto comercioDto = new ComercioDto();
-        comercioDto.setId(id);
-        comercioDto.setEmail(email);
-        comercioDto.setNombre(nombre);
+    public static ComercioHoyComoDto createComercioDto(Long id, String email, String nombre) {
+        ComercioHoyComoDto comercioHoyComoDto = new ComercioHoyComoDto();
+        comercioHoyComoDto.setEmail(email);
+        comercioHoyComoDto.setNombre(nombre);
 
-        return comercioDto;
+        return comercioHoyComoDto;
     }
 
     public static MobileUser createMobileUser(Long facebookId, String username, String firstName, String lastName) {
@@ -61,9 +59,36 @@ public class DataTestBuilder {
         comercio.setTipo("tipo");
         comercio.setToken("token");
         comercio.setPassword("password");
+        comercio.setEstado("estado");
+        comercio.setImagenLogo("imagenLogo");
         comercio.setAddress(address);
 
         return comercio;
+    }
+
+    public static ComercioHoyComoDto createDefaultComercioHoyComoDto() {
+        AddressDto addressDto = createDefaultAddressDto();
+        ComercioHoyComoDto comercioHoyComoDto = new ComercioHoyComoDto();
+        comercioHoyComoDto.setEmail("email");
+        comercioHoyComoDto.setNombre("nombre");
+        comercioHoyComoDto.setRazonSocial("razonSocial");
+        comercioHoyComoDto.setTipo("tipo");
+        comercioHoyComoDto.setPassword("password");
+        comercioHoyComoDto.setEstado("estado");
+        comercioHoyComoDto.setImagenLogo("imagenLogo");
+        comercioHoyComoDto.setAddressDto(addressDto);
+
+        return comercioHoyComoDto;
+    }
+
+    public static AddressDto createDefaultAddressDto() {
+        AddressDto addressDto = new AddressDto();
+        addressDto.setDepartment("department");
+        addressDto.setFloor("floor");
+        addressDto.setPostalCode("postalCode");
+        addressDto.setStreet("street");
+
+        return addressDto;
     }
 
     public static PlatoDto createDefaultPlatoDto() {

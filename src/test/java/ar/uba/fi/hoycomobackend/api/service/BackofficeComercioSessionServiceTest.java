@@ -2,7 +2,7 @@ package ar.uba.fi.hoycomobackend.api.service;
 
 import ar.uba.fi.hoycomobackend.api.dto.BackofficeComercioSessionDto;
 import ar.uba.fi.hoycomobackend.api.dto.TokenDto;
-import ar.uba.fi.hoycomobackend.entity.comercio.Comercio;
+import ar.uba.fi.hoycomobackend.entity.Comercio;
 import ar.uba.fi.hoycomobackend.repository.ComercioRepository;
 import ar.uba.fi.hoycomobackend.repository.PlatoRepository;
 import ar.uba.fi.hoycomobackend.utils.TokenGenerator;
@@ -11,6 +11,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.Test;
 import org.mockito.Mockito;
 import org.modelmapper.ModelMapper;
+import org.springframework.http.ResponseEntity;
 
 import java.util.Optional;
 
@@ -54,8 +55,10 @@ public class BackofficeComercioSessionServiceTest {
         Optional<Comercio> comercio = Optional.empty();
         when(comercioRepository.getComercioByEmail(SESSION_EMAIL)).thenReturn(comercio);
 
-        String response = backofficeComercioSessionService.getTokenFromSession(backofficeComercioSessionDto);
+        ResponseEntity response = backofficeComercioSessionService.getTokenFromSession(backofficeComercioSessionDto);
 
-        assertThat(response).isEqualTo("No se encontró ningún comercio con email: " + SESSION_EMAIL);
+        assertThat(response.getStatusCodeValue()).isEqualTo(404);
+        assertThat(response.getBody()).isEqualTo("No se encontró ningún comercio con email: " + SESSION_EMAIL);
+
     }
 }

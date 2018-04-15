@@ -1,6 +1,7 @@
 package ar.uba.fi.hoycomobackend.api.controller;
 
 import ar.uba.fi.hoycomobackend.api.dto.AddressDto;
+import ar.uba.fi.hoycomobackend.api.dto.ComercioMobileUserDto;
 import ar.uba.fi.hoycomobackend.api.dto.MobileUserDto;
 import ar.uba.fi.hoycomobackend.api.service.MobileUserService;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -8,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Set;
 
 @RestController
 @RequestMapping(value = "/api")
@@ -53,5 +55,10 @@ public class MobileUserRestController {
     @PutMapping(value = "/mobileUser/{mobileUserFacebookId}/address")
     public String addAddressToMobileUser(@PathVariable("mobileUserFacebookId") Long mobileUserFacebookId, @RequestBody AddressDto addressDto) {
         return mobileUserService.addAddressToMobileUser(mobileUserFacebookId, addressDto);
+    }
+
+    @GetMapping(value = "/mobileUser/comercios")
+    public List<ComercioMobileUserDto> getComercioMobileUserDtoSet() {
+        return mobileUserService.getComercioMobileUserDtoSet();
     }
 }

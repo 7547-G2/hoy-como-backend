@@ -1,26 +1,23 @@
 package ar.uba.fi.hoycomobackend.api.service;
 
-import ar.uba.fi.hoycomobackend.api.dto.AddressDto;
-import ar.uba.fi.hoycomobackend.api.dto.MobileUserDto;
-import ar.uba.fi.hoycomobackend.api.dto.MobileUserFavoritesDto;
+import ar.uba.fi.hoycomobackend.api.dto.*;
 import ar.uba.fi.hoycomobackend.entity.Address;
-import ar.uba.fi.hoycomobackend.entity.comercio.Comercio;
-import ar.uba.fi.hoycomobackend.entity.mobileuser.MobileUser;
+import ar.uba.fi.hoycomobackend.entity.Comercio;
+import ar.uba.fi.hoycomobackend.entity.MobileUser;
 import ar.uba.fi.hoycomobackend.repository.ComercioRepository;
 import ar.uba.fi.hoycomobackend.repository.MobileUserRepository;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.modelmapper.ModelMapper;
-import org.modelmapper.TypeToken;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @Service
 public class MobileUserService {
@@ -154,5 +151,25 @@ public class MobileUserService {
             response = NON_EXISTANT_USER_MESSAGE;
 
         return response;
+    }
+
+    public List<ComercioMobileUserDto> getComercioMobileUserDtoSet() {
+        LOGGER.info("Getting all Comercios");
+        List<Comercio> comercioList = comercioRepository.findAll();
+        List<ComercioMobileUserDto> comercioMobileUserDtoList = getComercioDtos(comercioList);
+
+        return comercioMobileUserDtoList;
+    }
+
+    private List<ComercioMobileUserDto> getComercioDtos(List<Comercio> comercioList) {
+        List<ComercioMobileUserDto> comercioMobileUserDtoList = new ArrayList<>();
+        for (Comercio comercio : comercioList) {
+            Address address = comercio.getAddress();
+            AddressDto addressDto = modelMapper.map(address, AddressDto.class);
+            ComercioMobileUserDto comercioMobileUserDto = modelMapper.map(comercio, ComercioMobileUserDto.class);
+            comercioMobileUserDto.setAddressDto(addressDto);
+            comercioMobileUserDtoList.add(comercioMobileUserDto);
+        }
+        return comercioMobileUserDtoList;
     }
 }

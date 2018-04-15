@@ -1,8 +1,5 @@
 package ar.uba.fi.hoycomobackend.entity;
 
-import ar.uba.fi.hoycomobackend.entity.comercio.Comercio;
-import ar.uba.fi.hoycomobackend.entity.mobileuser.MobileUser;
-
 import javax.persistence.*;
 
 @Entity
@@ -16,9 +13,9 @@ public class Address {
     private String postalCode;
     private String floor;
     private String department;
-    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "address")
+    @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL, mappedBy = "address")
     private Comercio comercio;
-    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "address")
+    @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL, mappedBy = "address")
     private MobileUser mobileUser;
 
     public Long getId() {

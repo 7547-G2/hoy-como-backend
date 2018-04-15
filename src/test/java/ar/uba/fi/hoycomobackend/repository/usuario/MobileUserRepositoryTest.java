@@ -1,6 +1,6 @@
 package ar.uba.fi.hoycomobackend.repository.usuario;
 
-import ar.uba.fi.hoycomobackend.entity.mobileuser.MobileUser;
+import ar.uba.fi.hoycomobackend.entity.MobileUser;
 import ar.uba.fi.hoycomobackend.repository.MobileUserRepository;
 import org.junit.Test;
 import org.junit.runner.RunWith;

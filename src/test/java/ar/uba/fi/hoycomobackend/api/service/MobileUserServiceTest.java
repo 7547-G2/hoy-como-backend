@@ -1,18 +1,14 @@
 package ar.uba.fi.hoycomobackend.api.service;
 
 import ar.uba.fi.hoycomobackend.api.dto.MobileUserDto;
-import ar.uba.fi.hoycomobackend.entity.mobileuser.MobileUser;
+import ar.uba.fi.hoycomobackend.entity.MobileUser;
 import ar.uba.fi.hoycomobackend.repository.ComercioRepository;
 import ar.uba.fi.hoycomobackend.repository.MobileUserRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.Test;
 import org.mockito.Mockito;
 import org.modelmapper.ModelMapper;
-import org.modelmapper.TypeToken;
 
-import java.lang.reflect.Type;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
 
 import static ar.uba.fi.hoycomobackend.entity.DataTestBuilder.createMobileUser;

@@ -3,6 +3,8 @@ package ar.uba.fi.hoycomobackend.integration;
 import ar.uba.fi.hoycomobackend.App;
 import ar.uba.fi.hoycomobackend.api.dto.AddressDto;
 import ar.uba.fi.hoycomobackend.api.dto.MobileUserDto;
+import ar.uba.fi.hoycomobackend.entity.Comercio;
+import ar.uba.fi.hoycomobackend.repository.ComercioRepository;
 import ar.uba.fi.hoycomobackend.repository.MobileUserRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.After;
@@ -18,21 +20,19 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.ResultActions;
 
+import static ar.uba.fi.hoycomobackend.entity.DataTestBuilder.createDefaultComercio;
 import static org.assertj.core.api.Java6Assertions.assertThat;
 import static org.hamcrest.CoreMatchers.is;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.hamcrest.CoreMatchers.nullValue;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT, classes = App.class)
 @AutoConfigureMockMvc
 @TestPropertySource(locations = "classpath:application-localprod.yml")
-public class MobileUserResControllerIntegrationTest {
+public class MobileUserRestControllerIntegrationTest {
 
     private static String DEPARTMENT = "department";
     private static String FLOOR = "floor";
@@ -49,10 +49,13 @@ public class MobileUserResControllerIntegrationTest {
     private ObjectMapper objectMapper;
     @Autowired
     private MobileUserRepository mobileUserRepository;
+    @Autowired
+    private ComercioRepository comercioRepository;
 
     @After
     public void tearDown() {
         mobileUserRepository.deleteAll();
+        comercioRepository.deleteAll();
     }
 
     @Test
@@ -94,12 +97,36 @@ public class MobileUserResControllerIntegrationTest {
         String addressDtoJson = objectMapper.writeValueAsString(addressDto);
 
         ResultActions resultActions = mockMvc.perform(put("/api/mobileUser/" + FACEBOOK_ID + "/address")
-                                                .contentType(MediaType.APPLICATION_JSON)
-                                                .content(addressDtoJson));
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(addressDtoJson));
 
         MvcResult mvcResult = resultActions.andExpect(status().isOk()).andReturn();
         String response = mvcResult.getResponse().getContentAsString();
         assertThat(response).isEqualTo("Se agregó dirección exitosamente");
+    }
+
+    @Test
+    public void getAllComercios() throws Exception {
+        Comercio comercio = createDefaultComercio();
+        comercio = comercioRepository.saveAndFlush(comercio);
+
+        mockMvc.perform(get("/api/mobileUser/comercios")
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(content()
+                        .contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$[0].id", is(comercio.getId().intValue())))
+                .andExpect(jsonPath("$[0].nombre", is("nombre")))
+                .andExpect(jsonPath("$[0].tipo", is("tipo")))
+                .andExpect(jsonPath("$[0].imagenLogo", is("imagenLogo")))
+                .andExpect(jsonPath("$[0].estado", is("estado")))
+                .andExpect(jsonPath("$[0].leadTime", nullValue()))
+                .andExpect(jsonPath("$[0].minPrice", nullValue()))
+                .andExpect(jsonPath("$[0].maxPrice", nullValue()))
+                .andExpect(jsonPath("$[0].addressDto.street", is("street")))
+                .andExpect(jsonPath("$[0].addressDto.postalCode", is("postalCode")))
+                .andExpect(jsonPath("$[0].addressDto.floor", is("floor")))
+                .andExpect(jsonPath("$[0].addressDto.department", is("department")));
     }
 
     private ResultActions createPostNewMobileUser() throws Exception {

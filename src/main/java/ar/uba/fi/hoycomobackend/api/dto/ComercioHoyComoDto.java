@@ -1,14 +1,15 @@
 package ar.uba.fi.hoycomobackend.api.dto;
 
-public class ComercioDto {
+public class ComercioHoyComoDto {
 
     private Long id;
     private String email;
     private String nombre;
     private String razonSocial;
     private String tipo;
-    private String token;
     private String password;
+    private String imagenLogo;
+    private String estado;
     private AddressDto addressDto;
 
     public Long getId() {
@@ -51,14 +52,6 @@ public class ComercioDto {
         this.tipo = tipo;
     }
 
-    public String getToken() {
-        return token;
-    }
-
-    public void setToken(String token) {
-        this.token = token;
-    }
-
     public String getPassword() {
         return password;
     }
@@ -73,5 +66,21 @@ public class ComercioDto {
 
     public void setAddressDto(AddressDto addressDto) {
         this.addressDto = addressDto;
+    }
+
+    public String getImagenLogo() {
+        return imagenLogo;
+    }
+
+    public void setImagenLogo(String imagenLogo) {
+        this.imagenLogo = imagenLogo;
+    }
+
+    public String getEstado() {
+        return estado;
+    }
+
+    public void setEstado(String estado) {
+        this.estado = estado;
     }
 }

@@ -9,7 +9,7 @@
     <packaging>jar</packaging>
 
     <name>hoy-como-backend</name>
-    <description>Demo project for Spring Boot</description>
+    <description>Backend for Hoy Como</description>
 
     <parent>
         <groupId>org.springframework.boot</groupId>

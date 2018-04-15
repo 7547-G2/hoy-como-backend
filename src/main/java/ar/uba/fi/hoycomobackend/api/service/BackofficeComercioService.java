@@ -3,8 +3,8 @@ package ar.uba.fi.hoycomobackend.api.service;
 import ar.uba.fi.hoycomobackend.api.dto.BackofficeComercioSessionDto;
 import ar.uba.fi.hoycomobackend.api.dto.PlatoDto;
 import ar.uba.fi.hoycomobackend.api.dto.TokenDto;
+import ar.uba.fi.hoycomobackend.entity.Comercio;
 import ar.uba.fi.hoycomobackend.entity.Plato;
-import ar.uba.fi.hoycomobackend.entity.comercio.Comercio;
 import ar.uba.fi.hoycomobackend.repository.ComercioRepository;
 import ar.uba.fi.hoycomobackend.repository.PlatoRepository;
 import ar.uba.fi.hoycomobackend.utils.TokenGenerator;
@@ -13,10 +13,11 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.lang.reflect.Type;
-import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
@@ -38,7 +39,7 @@ public class BackofficeComercioService {
         this.tokenGenerator = tokenGenerator;
     }
 
-    public String getTokenFromSession(BackofficeComercioSessionDto backofficeComercioSessionDto) throws JsonProcessingException {
+    public ResponseEntity getTokenFromSession(BackofficeComercioSessionDto backofficeComercioSessionDto) throws JsonProcessingException {
         String givenEmail = backofficeComercioSessionDto.getEmail();
         String givenPassword = backofficeComercioSessionDto.getPassword();
         Optional<Comercio> comercio = comercioRepository.getComercioByEmail(givenEmail);
@@ -50,12 +51,13 @@ public class BackofficeComercioService {
                 String tokenString = tokenDto.getToken();
                 matchingValidComercio.setToken(tokenString);
                 comercioRepository.save(matchingValidComercio);
+                String tokenDtoJson = objectMapper.writeValueAsString(tokenDto);
 
-                return objectMapper.writeValueAsString(tokenDto);
+                return ResponseEntity.ok(tokenDtoJson);
             } else
-                return "Usuario o password de comercio incorrecto";
+                return ResponseEntity.status(HttpStatus.METHOD_NOT_ALLOWED).body("Usuario o password de comercio incorrecto");
         } else
-            return "No se encontró ningún comercio con email: " + givenEmail;
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No se encontró ningún comercio con email: " + givenEmail);
     }
 
     private TokenDto createToken() {
