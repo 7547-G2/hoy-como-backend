@@ -25,7 +25,6 @@ public class ComercioRepositoryTest {
 
     @Test
     public void whenFindByNombre_thenReturnComercio() {
-        // given
         String nombreComercio = "nombreComercio";
         Comercio comercio = createComercio("email", nombreComercio);
         entityManager.persist(comercio);
@@ -33,10 +32,8 @@ public class ComercioRepositoryTest {
         entityManager.persist(comercio);
         entityManager.flush();
 
-        // when
         List<Comercio> comercioList = comercioRepository.findByNombre(nombreComercio);
 
-        // then
         assertThat(comercioList).hasSize(1);
         Comercio found = comercioList.get(0);
         assertThat(found.getNombre()).isEqualTo(nombreComercio);
