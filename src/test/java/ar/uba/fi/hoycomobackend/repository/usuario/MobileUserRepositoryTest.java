@@ -25,17 +25,14 @@ public class MobileUserRepositoryTest {
 
     @Test
     public void whenGetMobileUserById_thenReturnMobileUser() {
-        // given
         MobileUser mobileUser = createMobileUser(1L, "username", "firstName", "lastName");
         Long firstMobileUserId = (Long) entityManager.persistAndGetId(mobileUser);
         mobileUser = createMobileUser(2L, "otherUsername", "otherFirstName", "otherLastName");
         entityManager.persist(mobileUser);
         entityManager.flush();
 
-        // when
         Optional<MobileUser> mobileUserFoundOptional = mobileUserRepository.getMobileUserByFacebookId(firstMobileUserId);
 
-        // then
         assertThat(mobileUserFoundOptional.isPresent()).isTrue();
         MobileUser mobileUserFound = mobileUserFoundOptional.get();
         assertThat(mobileUserFound.getFacebookId()).isEqualTo(1L);

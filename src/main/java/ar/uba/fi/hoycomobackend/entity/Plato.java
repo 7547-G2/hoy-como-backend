@@ -10,6 +10,7 @@ public class Plato {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     private String nombre;
+    @Column(columnDefinition = "text")
     private String imagen;
     private Float precio;
     @ManyToOne(fetch = FetchType.EAGER)

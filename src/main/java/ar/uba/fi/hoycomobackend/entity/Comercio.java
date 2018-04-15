@@ -20,6 +20,7 @@ public class Comercio {
     private String tipo;
     private String token;
     private String password;
+    @Column(columnDefinition = "text")
     private String imagenLogo;
     @Column(columnDefinition = "varchar(128) default 'deshabilitado'")
     private String estado;
