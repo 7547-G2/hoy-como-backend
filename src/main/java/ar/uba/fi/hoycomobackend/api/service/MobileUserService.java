@@ -60,10 +60,17 @@ public class MobileUserService {
 
     public MobileUserDto getMobileUserById(Long id) {
         LOGGER.info("Getting MobileUser by id: {}", id);
-        Optional<MobileUser> mobileUser = mobileUserRepository.getMobileUserByFacebookId(id);
-        MobileUserDto mobileUserDto = modelMapper.map(mobileUser.get(), MobileUserDto.class);
+        Optional<MobileUser> mobileUserOptional = mobileUserRepository.getMobileUserByFacebookId(id);
+        if (mobileUserOptional.isPresent()) {
+            MobileUser mobileUser = mobileUserOptional.get();
+            Address address = mobileUser.getAddress();
+            AddressDto addressDto = modelMapper.map(address, AddressDto.class);
+            MobileUserDto mobileUserDto = modelMapper.map(mobileUserOptional.get(), MobileUserDto.class);
+            mobileUserDto.setAddressDto(addressDto);
 
-        return mobileUserDto;
+            return mobileUserDto;
+        } else
+            return new MobileUserDto();
     }
 
     public String addMobileUser(MobileUserDto mobileUserDto) {

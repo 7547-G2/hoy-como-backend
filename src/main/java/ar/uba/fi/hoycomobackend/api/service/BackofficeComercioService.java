@@ -43,16 +43,16 @@ public class BackofficeComercioService {
     public ResponseEntity getTokenFromSession(BackofficeComercioSessionDto backofficeComercioSessionDto) throws JsonProcessingException {
         String givenEmail = backofficeComercioSessionDto.getEmail();
         String givenPassword = backofficeComercioSessionDto.getPassword();
-        Optional<Comercio> comercio = comercioRepository.getComercioByEmail(givenEmail);
+        Optional<Comercio> comercioOptional = comercioRepository.getComercioByEmail(givenEmail);
 
-        if (comercio.isPresent()) {
-            if (comercio.get().getEmail().equals(givenEmail) && comercio.get().getPassword().equals(givenPassword)) {
-                Comercio matchingValidComercio = comercio.get();
-                Long matchingValidComercioId = matchingValidComercio.getId();
+        if (comercioOptional.isPresent()) {
+            Comercio comercio = comercioOptional.get();
+            if (comercio.getEmail().equals(givenEmail) && comercio.getPassword().equals(givenPassword)) {
+                Long matchingValidComercioId = comercio.getId();
                 TokenDto tokenDto = createToken(matchingValidComercioId);
                 String tokenString = tokenDto.getToken();
-                matchingValidComercio.setToken(tokenString);
-                comercioRepository.save(matchingValidComercio);
+                comercio.setToken(tokenString);
+                comercioRepository.saveAndFlush(comercio);
                 String tokenDtoJson = objectMapper.writeValueAsString(tokenDto);
 
                 return ResponseEntity.ok(tokenDtoJson);

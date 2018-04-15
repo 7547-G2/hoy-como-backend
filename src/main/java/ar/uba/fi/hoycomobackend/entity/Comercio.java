@@ -1,6 +1,7 @@
 package ar.uba.fi.hoycomobackend.entity;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.util.Set;
 
@@ -13,12 +14,14 @@ public class Comercio {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     @Column(name = "email", unique = true)
+    @NotNull
     private String email;
     @Size(min = 3, max = 128)
     private String nombre;
     private String razonSocial;
     private String tipo;
     private String token;
+    @NotNull
     private String password;
     @Column(columnDefinition = "text")
     private String imagenLogo;
