@@ -1,6 +1,7 @@
 package ar.uba.fi.hoycomobackend.api.service;
 
 import ar.uba.fi.hoycomobackend.api.dto.BackofficeComercioSessionDto;
+import ar.uba.fi.hoycomobackend.api.dto.ErrorMessage;
 import ar.uba.fi.hoycomobackend.api.dto.PlatoDto;
 import ar.uba.fi.hoycomobackend.api.dto.TokenDto;
 import ar.uba.fi.hoycomobackend.entity.Comercio;
@@ -47,7 +48,8 @@ public class BackofficeComercioService {
         if (comercio.isPresent()) {
             if (comercio.get().getEmail().equals(givenEmail) && comercio.get().getPassword().equals(givenPassword)) {
                 Comercio matchingValidComercio = comercio.get();
-                TokenDto tokenDto = createToken();
+                Long matchingValidComercioId = matchingValidComercio.getId();
+                TokenDto tokenDto = createToken(matchingValidComercioId);
                 String tokenString = tokenDto.getToken();
                 matchingValidComercio.setToken(tokenString);
                 comercioRepository.save(matchingValidComercio);
@@ -55,20 +57,21 @@ public class BackofficeComercioService {
 
                 return ResponseEntity.ok(tokenDtoJson);
             } else
-                return ResponseEntity.status(HttpStatus.METHOD_NOT_ALLOWED).body("Usuario o password de comercio incorrecto");
+                return ResponseEntity.status(HttpStatus.METHOD_NOT_ALLOWED).body(new ErrorMessage("Usuario o password de comercio incorrecto"));
         } else
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No se encontró ningún comercio con email: " + givenEmail);
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ErrorMessage("No se encontró ningún comercio con email: " + givenEmail));
     }
 
-    private TokenDto createToken() {
+    private TokenDto createToken(Long matchingValidComercioId) {
         TokenDto tokenDto = new TokenDto();
         String token = tokenGenerator.createToken();
         tokenDto.setToken(token);
+        tokenDto.setComercioId(matchingValidComercioId);
 
         return tokenDto;
     }
 
-    public String addPlatoToComercio(Long comercioId, PlatoDto platoDto) throws JsonProcessingException {
+    public ResponseEntity addPlatoToComercio(Long comercioId, PlatoDto platoDto) throws JsonProcessingException {
         Optional<Comercio> comercioOptional = comercioRepository.getComercioById(comercioId);
 
         if (comercioOptional.isPresent()) {
@@ -77,13 +80,14 @@ public class BackofficeComercioService {
             plato.setComercio(comercio);
 
             plato = platoRepository.saveAndFlush(plato);
+            String response = objectMapper.writeValueAsString(plato.getId());
 
-            return objectMapper.writeValueAsString(plato.getId());
+            return ResponseEntity.ok(response);
         } else
-            return "No se encontró ningún comercio con id: " + comercioId;
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ErrorMessage("No se encontró ningún comercio con id: " + comercioId));
     }
 
-    public String getPlatosFromComercio(Long comercioId) throws JsonProcessingException {
+    public ResponseEntity getPlatosFromComercio(Long comercioId) throws JsonProcessingException {
         Optional<Comercio> comercioOptional = comercioRepository.getComercioById(comercioId);
 
         if (comercioOptional.isPresent()) {
@@ -92,9 +96,10 @@ public class BackofficeComercioService {
             Type setType = new TypeToken<Set<PlatoDto>>() {
             }.getType();
             Set<PlatoDto> platoDtoSet = modelMapper.map(platoSet, setType);
+            String response = objectMapper.writeValueAsString(platoDtoSet);
 
-            return objectMapper.writeValueAsString(platoDtoSet);
+            return ResponseEntity.ok(response);
         } else
-            return "No se encontró ningún comercio con id: " + comercioId;
+            return  ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ErrorMessage("No se encontró ningún comercio con id: " + comercioId));
     }
 }

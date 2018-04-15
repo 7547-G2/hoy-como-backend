@@ -26,12 +26,12 @@ public class BackofficeComercioController {
     }
 
     @PostMapping(value = "/backofficeComercio/{comercioId}/platos")
-    public String addPlato(@PathVariable("comercioId") Long comercioId, @RequestBody PlatoDto platoDto) throws JsonProcessingException {
+    public ResponseEntity addPlato(@PathVariable("comercioId") Long comercioId, @RequestBody PlatoDto platoDto) throws JsonProcessingException {
         return backofficeComercioService.addPlatoToComercio(comercioId, platoDto);
     }
 
     @GetMapping(value = "/backofficeComercio/{comercioId}/platos", produces = {"application/json"})
-    public String getPlatosFromComercio(@PathVariable("comercioId") Long comercioId) throws JsonProcessingException {
+    public ResponseEntity getPlatosFromComercio(@PathVariable("comercioId") Long comercioId) throws JsonProcessingException {
         return backofficeComercioService.getPlatosFromComercio(comercioId);
     }
 }
