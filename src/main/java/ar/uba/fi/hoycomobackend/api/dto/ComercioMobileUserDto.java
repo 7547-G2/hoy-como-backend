@@ -7,6 +7,7 @@ public class ComercioMobileUserDto {
     private String tipo;
     private String imagenLogo;
     private String estado;
+    private String rating;
     private String leadTime;
     private String minPrice;
     private String maxPrice;
@@ -82,5 +83,13 @@ public class ComercioMobileUserDto {
 
     public void setAddressDto(AddressDto addressDto) {
         this.addressDto = addressDto;
+    }
+
+    public String getRating() {
+        return rating;
+    }
+
+    public void setRating(String rating) {
+        this.rating = rating;
     }
 }

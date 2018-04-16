@@ -6,6 +6,7 @@ import ar.uba.fi.hoycomobackend.api.dto.MobileUserDto;
 import ar.uba.fi.hoycomobackend.entity.Comercio;
 import ar.uba.fi.hoycomobackend.repository.ComercioRepository;
 import ar.uba.fi.hoycomobackend.repository.MobileUserRepository;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.After;
 import org.junit.Test;
@@ -139,13 +140,31 @@ public class MobileUserRestControllerIntegrationTest {
                 .andExpect(jsonPath("$[0].tipo", is("tipo")))
                 .andExpect(jsonPath("$[0].imagenLogo", is("imagenLogo")))
                 .andExpect(jsonPath("$[0].estado", is("estado")))
-                .andExpect(jsonPath("$[0].leadTime", nullValue()))
-                .andExpect(jsonPath("$[0].minPrice", nullValue()))
-                .andExpect(jsonPath("$[0].maxPrice", nullValue()))
+                .andExpect(jsonPath("$[0].rating", is("")))
+                .andExpect(jsonPath("$[0].leadTime", is("")))
+                .andExpect(jsonPath("$[0].minPrice", is("")))
+                .andExpect(jsonPath("$[0].maxPrice", is("")))
                 .andExpect(jsonPath("$[0].addressDto.street", is("street")))
                 .andExpect(jsonPath("$[0].addressDto.postalCode", is("postalCode")))
                 .andExpect(jsonPath("$[0].addressDto.floor", is("floor")))
                 .andExpect(jsonPath("$[0].addressDto.department", is("department")));
+    }
+
+    @Test
+    public void getFavoritesFromGivenUserAfterAdding() throws Exception {
+        Comercio comercio = createDefaultComercio();
+        comercio = comercioRepository.saveAndFlush(comercio);
+        Long comercioId = comercio.getId();
+        createPostNewMobileUser();
+
+        mockMvc.perform(post("/api/mobileUser/" + FACEBOOK_ID + "/favorite/" + comercioId)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
+
+        mockMvc.perform(get("/api/mobileUser/" + FACEBOOK_ID + "/favorites")
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.favorites[0]", is(comercio.getId().intValue())));
     }
 
     private ResultActions createPostNewMobileUser() throws Exception {
@@ -172,6 +191,4 @@ public class MobileUserRestControllerIntegrationTest {
 
         return mobileUserDto;
     }
-
-
 }
