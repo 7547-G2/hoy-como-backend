@@ -3,6 +3,7 @@ package ar.uba.fi.hoycomobackend.integration;
 import ar.uba.fi.hoycomobackend.App;
 import ar.uba.fi.hoycomobackend.api.dto.PlatoDto;
 import ar.uba.fi.hoycomobackend.entity.Comercio;
+import ar.uba.fi.hoycomobackend.entity.Plato;
 import ar.uba.fi.hoycomobackend.repository.ComercioRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.After;
@@ -12,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
@@ -22,6 +24,7 @@ import static ar.uba.fi.hoycomobackend.entity.DataTestBuilder.createDefaultPlato
 import static org.hamcrest.CoreMatchers.is;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @RunWith(SpringRunner.class)
@@ -69,8 +72,43 @@ public class BackofficeComercioControllerIntegrationTest {
                 .andExpect(jsonPath("$[1].precio", is(1.0)));
     }
 
+
+    @Test
+    public void updateExistingPlato() throws Exception {
+        Long comercioId = createDefaultComercioInDatabase();
+        String platoId = createComercioWithPlato(comercioId, createTestPlato()).andReturn().getResponse().getContentAsString();
+        PlatoDto platoDto = createDefaultPlatoDto();
+        String platoDtoJson = objectMapper.writeValueAsString(platoDto);
+
+        mockMvc.perform(put("/api/backofficeComercio/" + comercioId + "/platos/" + platoId)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(platoDtoJson));
+
+        mockMvc.perform(get("/api/backofficeComercio/" + comercioId + "/platos")
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(content()
+                        .contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$[0].nombre", is("nombre")))
+                .andExpect(jsonPath("$[0].imagen", is("imagen")))
+                .andExpect(jsonPath("$[0].precio", is(1.0)));
+    }
+
+    private PlatoDto createTestPlato() {
+        PlatoDto platoDto = new PlatoDto();
+        platoDto.setPrecio(2.0f);
+        platoDto.setNombre("otherName");
+        platoDto.setImagen("otherImage");
+
+        return platoDto;
+    }
+
     private ResultActions createComercioWithPlato(Long comercioId) throws Exception {
         PlatoDto platoDto = createDefaultPlatoDto();
+        return createComercioWithPlato(comercioId, platoDto);
+    }
+
+    private ResultActions createComercioWithPlato(Long comercioId, PlatoDto platoDto) throws Exception {
         String platoDtoJson = objectMapper.writeValueAsString(platoDto);
 
         return mockMvc.perform(post("/api/backofficeComercio/" + comercioId + "/platos")

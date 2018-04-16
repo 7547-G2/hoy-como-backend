@@ -25,13 +25,18 @@ public class BackofficeComercioController {
         return backofficeComercioService.getTokenFromSession(backofficeComercioSessionDto);
     }
 
+    @GetMapping(value = "/backofficeComercio/{comercioId}/platos", produces = {"application/json"})
+    public ResponseEntity getPlatosFromComercio(@PathVariable("comercioId") Long comercioId) throws JsonProcessingException {
+        return backofficeComercioService.getPlatosFromComercio(comercioId);
+    }
+
     @PostMapping(value = "/backofficeComercio/{comercioId}/platos")
     public ResponseEntity addPlato(@PathVariable("comercioId") Long comercioId, @RequestBody PlatoDto platoDto) throws JsonProcessingException {
         return backofficeComercioService.addPlatoToComercio(comercioId, platoDto);
     }
 
-    @GetMapping(value = "/backofficeComercio/{comercioId}/platos", produces = {"application/json"})
-    public ResponseEntity getPlatosFromComercio(@PathVariable("comercioId") Long comercioId) throws JsonProcessingException {
-        return backofficeComercioService.getPlatosFromComercio(comercioId);
+    @PutMapping(value = "/backofficeComercio/{comercioId}/platos/{platoId}")
+    public ResponseEntity updatePlato(@PathVariable("comercioId") Long comercioId, @PathVariable("platoId") Long platoId, @RequestBody PlatoDto platoDto) throws JsonProcessingException {
+        return backofficeComercioService.updatePlatoFromComercio(comercioId, platoId, platoDto);
     }
 }

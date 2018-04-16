@@ -71,6 +71,22 @@ public class BackofficeComercioService {
         return tokenDto;
     }
 
+    public ResponseEntity getPlatosFromComercio(Long comercioId) throws JsonProcessingException {
+        Optional<Comercio> comercioOptional = comercioRepository.getComercioById(comercioId);
+
+        if (comercioOptional.isPresent()) {
+            Comercio comercio = comercioOptional.get();
+            Set<Plato> platoSet = comercio.getPlatos();
+            Type setType = new TypeToken<Set<PlatoDto>>() {
+            }.getType();
+            Set<PlatoDto> platoDtoSet = modelMapper.map(platoSet, setType);
+            String response = objectMapper.writeValueAsString(platoDtoSet);
+
+            return ResponseEntity.ok(response);
+        } else
+            return  ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ErrorMessage("No se encontró ningún comercio con id: " + comercioId));
+    }
+
     public ResponseEntity addPlatoToComercio(Long comercioId, PlatoDto platoDto) throws JsonProcessingException {
         Optional<Comercio> comercioOptional = comercioRepository.getComercioById(comercioId);
 
@@ -87,19 +103,27 @@ public class BackofficeComercioService {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ErrorMessage("No se encontró ningún comercio con id: " + comercioId));
     }
 
-    public ResponseEntity getPlatosFromComercio(Long comercioId) throws JsonProcessingException {
+    public ResponseEntity updatePlatoFromComercio(Long comercioId, Long platoId, PlatoDto platoDto) throws JsonProcessingException {
         Optional<Comercio> comercioOptional = comercioRepository.getComercioById(comercioId);
 
         if (comercioOptional.isPresent()) {
             Comercio comercio = comercioOptional.get();
             Set<Plato> platoSet = comercio.getPlatos();
-            Type setType = new TypeToken<Set<PlatoDto>>() {
-            }.getType();
-            Set<PlatoDto> platoDtoSet = modelMapper.map(platoSet, setType);
-            String response = objectMapper.writeValueAsString(platoDtoSet);
+            Optional<Plato> platoOptional = platoSet.stream().filter(plato -> plato.getId().equals(platoId)).findFirst();
 
-            return ResponseEntity.ok(response);
+            if (platoOptional.isPresent()) {
+                Plato plato = modelMapper.map(platoDto, Plato.class);
+                plato.setComercio(comercio);
+                plato.setId(platoId);
+                platoDto.setId(platoId);
+                String response = objectMapper.writeValueAsString(platoDto);
+
+                platoRepository.saveAndFlush(plato);
+
+                return ResponseEntity.ok(response);
+            } else
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ErrorMessage("No se encontró ningún plato con id: " + platoId));
         } else
-            return  ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ErrorMessage("No se encontró ningún comercio con id: " + comercioId));
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ErrorMessage("No se encontró ningún comercio con id: " + comercioId));
     }
 }
