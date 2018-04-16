@@ -5,6 +5,7 @@ public class MobileUserDto {
     private String username;
     private String firstName;
     private String lastName;
+    private String state;
     private AddressDto addressDto;
 
     public long getFacebookId() {
@@ -45,5 +46,13 @@ public class MobileUserDto {
 
     public void setAddressDto(AddressDto address) {
         this.addressDto = address;
+    }
+
+    public String getState() {
+        return state;
+    }
+
+    public void setState(String state) {
+        this.state = state;
     }
 }

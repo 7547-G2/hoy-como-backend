@@ -20,8 +20,6 @@ import java.util.*;
 public class MobileUserService {
 
     private static Logger LOGGER = LoggerFactory.getLogger(MobileUserService.class);
-    private static String AUTHORIZED_USER_MESSAGE = "El usuario está habilitado";
-    private static String UNAUTHORIZED_USER_MESSAGE = "El usuario está deshabilitado";
     private static String NON_EXISTANT_USER_MESSAGE = "No existe el usuario";
     private static String ADDRESS_ADDED_SUCCESSFUL = "Se agregó dirección exitosamente";
     private static String MOBILE_USER_ADDED_SUCCESSFUL = "Se agregó usuario exitosamente";
@@ -89,17 +87,10 @@ public class MobileUserService {
         LOGGER.info("Checking if MobileUser is authorized by id: {}", id);
         Optional<MobileUser> mobileUser = mobileUserRepository.getMobileUserByFacebookId(id);
 
-        String response;
         if (mobileUser.isPresent()) {
-            if (mobileUser.get().getAuthorized()) {
-                response = AUTHORIZED_USER_MESSAGE;
-            } else {
-                response = UNAUTHORIZED_USER_MESSAGE;
-            }
+            return mobileUser.get().getState();
         } else
-            response = NON_EXISTANT_USER_MESSAGE;
-
-        return response;
+            return NON_EXISTANT_USER_MESSAGE;
     }
 
     public String addFavoriteComercioToMobileUser(Long mobileUserFacebookId, Long comercioId) {
@@ -185,11 +176,32 @@ public class MobileUserService {
             ComercioMobileUserDto comercioMobileUserDto = modelMapper.map(comercio, ComercioMobileUserDto.class);
             comercioMobileUserDto.setAddressDto(addressDto);
             comercioMobileUserDtoList.add(comercioMobileUserDto);
-            comercioMobileUserDto.setLeadTime("");
-            comercioMobileUserDto.setMinPrice("");
-            comercioMobileUserDto.setMaxPrice("");
-            comercioMobileUserDto.setRating("");
+            Random random = new Random();
+            Integer randomLeadTime = random.nextInt(40 + 1 - 15) + 15;
+            Integer randomMinPrice = random.nextInt(70 + 1 - 50) + 50;
+            Integer randomMaxPrice =  random.nextInt(120 + 1 - 90) + 90;
+            Integer randomRating = random.nextInt(5 + 1);
+            comercioMobileUserDto.setLeadTime(randomLeadTime.toString());
+            comercioMobileUserDto.setMinPrice(randomMinPrice.toString());
+            comercioMobileUserDto.setMaxPrice(randomMaxPrice.toString());
+            comercioMobileUserDto.setRating(randomRating.toString());
         }
         return comercioMobileUserDtoList;
+    }
+
+    public String changeStateToMobileUser(Long mobileUserFacebookId, String state) {
+        //TODO add test to this
+        LOGGER.info("Getting mobile user with id: {}", mobileUserFacebookId);
+        Optional<MobileUser> mobileUserOptional = mobileUserRepository.getMobileUserByFacebookId(mobileUserFacebookId);
+
+        if (mobileUserOptional.isPresent()) {
+            MobileUser mobileUser = mobileUserOptional.get();
+            mobileUser.setState(state);
+
+            mobileUserRepository.saveAndFlush(mobileUser);
+
+            return "Mobile user with id: " + mobileUserFacebookId + " changed state successfully to: " + state;
+        } else
+            return NON_EXISTANT_USER_MESSAGE;
     }
 }

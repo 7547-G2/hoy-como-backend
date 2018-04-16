@@ -36,6 +36,20 @@ public class DataTestBuilder {
         mobileUser.setUsername(username);
         mobileUser.setFirstName(firstName);
         mobileUser.setLastName(lastName);
+        mobileUser.setState("state");
+
+        return mobileUser;
+    }
+
+    public static MobileUser createDefaultMobileUser() {
+        MobileUser mobileUser = new MobileUser();
+        mobileUser.setFacebookId(1L);
+        mobileUser.setUsername("username");
+        mobileUser.setFirstName("firstName");
+        mobileUser.setLastName("lastName");
+        mobileUser.setState("state");
+        Address address = createDefaultAddress();
+        mobileUser.setAddress(address);
 
         return mobileUser;
     }
@@ -102,7 +116,7 @@ public class DataTestBuilder {
 
     public static MobileUser createMobileUser(Long facebookId, String username, String firstName, String lastName, Boolean authorized) {
         MobileUser mobileUser = createMobileUser(facebookId, username, firstName, lastName);
-        mobileUser.setAuthorized(authorized);
+        mobileUser.setState("enabled");
 
         return mobileUser;
     }

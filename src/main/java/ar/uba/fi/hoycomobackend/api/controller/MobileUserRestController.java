@@ -61,4 +61,9 @@ public class MobileUserRestController {
     public List<ComercioMobileUserDto> getComercioMobileUserDtoSet() {
         return mobileUserService.getComercioMobileUserDtoSet();
     }
+
+    @PutMapping(value = "/mobileUser/{mobileUserFacebookId}/state")
+    public String changeStateToMobileUser(@PathVariable("mobileUserFacebookId") Long mobileUserFacebookId, @RequestBody String state) {
+        return mobileUserService.changeStateToMobileUser(mobileUserFacebookId, state);
+    }
 }

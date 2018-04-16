@@ -11,6 +11,7 @@ import org.modelmapper.ModelMapper;
 
 import java.util.Optional;
 
+import static ar.uba.fi.hoycomobackend.entity.DataTestBuilder.createDefaultMobileUser;
 import static ar.uba.fi.hoycomobackend.entity.DataTestBuilder.createMobileUser;
 import static org.assertj.core.api.Java6Assertions.assertThat;
 import static org.mockito.Mockito.*;
@@ -48,13 +49,13 @@ public class MobileUserServiceTest {
     }
 
     @Test
-    public void getMobileUserAuthorizedById_authorized_returnsAuthorizedMessage() {
-        Optional<MobileUser> mobileUserOptional = Optional.of(createMobileUser(1L, "username", "firstName", "lastName"));
+    public void getMobileUserAuthorizedById_returnsStateMessage() {
+        Optional<MobileUser> mobileUserOptional = Optional.of(createDefaultMobileUser());
         when(mobileUserRepository.getMobileUserByFacebookId(1L)).thenReturn(mobileUserOptional);
 
         String response = mobileUserService.getMobileUserAuthorizedById(1L);
 
-        assertThat(response).isEqualTo("El usuario está habilitado");
+        assertThat(response).isEqualTo("state");
     }
 
     @Test
@@ -65,15 +66,5 @@ public class MobileUserServiceTest {
         String response = mobileUserService.getMobileUserAuthorizedById(1L);
 
         assertThat(response).isEqualTo("No existe el usuario");
-    }
-
-    @Test
-    public void getMobileUserAuthorizedById_notAuthorized_returnsUserNotAuthorizedMessage() {
-        Optional<MobileUser> mobileUserOptional = Optional.of(createMobileUser(1L, "username", "firstName", "lastName", false));
-        when(mobileUserRepository.getMobileUserByFacebookId(1L)).thenReturn(mobileUserOptional);
-
-        String response = mobileUserService.getMobileUserAuthorizedById(1L);
-
-        assertThat(response).isEqualTo("El usuario está deshabilitado");
     }
 }
