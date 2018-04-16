@@ -12,6 +12,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import java.util.List;
 
 import static ar.uba.fi.hoycomobackend.entity.DataTestBuilder.createComercio;
+import static ar.uba.fi.hoycomobackend.entity.DataTestBuilder.createDefaultComercio;
 import static org.assertj.core.api.Java6Assertions.assertThat;
 
 @RunWith(SpringRunner.class)
@@ -25,18 +26,19 @@ public class ComercioRepositoryTest {
 
     @Test
     public void whenFindByNombre_thenReturnComercio() {
-        String nombreComercio = "nombreComercio";
-        Comercio comercio = createComercio("email", nombreComercio);
-        entityManager.persist(comercio);
-        comercio = createComercio("anotherEmail", "segundoComercio");
-        entityManager.persist(comercio);
+        Comercio firstComercio = createDefaultComercio();
+        entityManager.persist(firstComercio);
+        Comercio secondComercio = createDefaultComercio();
+        secondComercio.setEmail("anotherEmail");
+        secondComercio.setNombre("anotherNombre");
+        entityManager.persist(secondComercio);
         entityManager.flush();
 
-        List<Comercio> comercioList = comercioRepository.findByNombre(nombreComercio);
+        List<Comercio> comercioList = comercioRepository.findByNombre("nombre");
 
         assertThat(comercioList).hasSize(1);
         Comercio found = comercioList.get(0);
-        assertThat(found.getNombre()).isEqualTo(nombreComercio);
+        assertThat(found.getNombre()).isEqualTo("nombre");
     }
 
 }

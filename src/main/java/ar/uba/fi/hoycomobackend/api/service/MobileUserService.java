@@ -14,10 +14,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 
 @Service
 public class MobileUserService {
@@ -65,7 +62,7 @@ public class MobileUserService {
             MobileUser mobileUser = mobileUserOptional.get();
             Address address = mobileUser.getAddress();
             AddressDto addressDto = modelMapper.map(address, AddressDto.class);
-            MobileUserDto mobileUserDto = modelMapper.map(mobileUserOptional.get(), MobileUserDto.class);
+            MobileUserDto mobileUserDto = modelMapper.map(mobileUser, MobileUserDto.class);
             mobileUserDto.setAddressDto(addressDto);
 
             return mobileUserDto;
@@ -132,14 +129,26 @@ public class MobileUserService {
         String response;
         if (mobileUserOptional.isPresent()) {
             MobileUser mobileUser = mobileUserOptional.get();
-            List<Comercio> comercioList = mobileUser.getFavoriteComercios();
-            MobileUserFavoritesDto mobileUserFavoritesDto = modelMapper.map(comercioList, MobileUserFavoritesDto.class);
+            MobileUserFavoritesDto mobileUserFavoritesDto = getMobileUserFavoritesDtoFromMobileUser(mobileUser);
             response = objectMapper.writeValueAsString(mobileUserFavoritesDto);
         } else {
             response = "No existe el usuario";
         }
 
         return response;
+    }
+
+    private MobileUserFavoritesDto getMobileUserFavoritesDtoFromMobileUser(MobileUser mobileUser) {
+        MobileUserFavoritesDto mobileUserFavoritesDto = new MobileUserFavoritesDto();
+        Set<Long> favorites = new LinkedHashSet<>();
+        List<Comercio> comercioList = mobileUser.getFavoriteComercios();
+
+        for (Comercio comercio : comercioList) {
+            favorites.add(comercio.getId());
+        }
+        mobileUserFavoritesDto.setFavorites(favorites);
+
+        return mobileUserFavoritesDto;
     }
 
     public String addAddressToMobileUser(Long mobileUserFacebookId, AddressDto addressDto) {
@@ -176,6 +185,10 @@ public class MobileUserService {
             ComercioMobileUserDto comercioMobileUserDto = modelMapper.map(comercio, ComercioMobileUserDto.class);
             comercioMobileUserDto.setAddressDto(addressDto);
             comercioMobileUserDtoList.add(comercioMobileUserDto);
+            comercioMobileUserDto.setLeadTime("");
+            comercioMobileUserDto.setMinPrice("");
+            comercioMobileUserDto.setMaxPrice("");
+            comercioMobileUserDto.setRating("");
         }
         return comercioMobileUserDtoList;
     }

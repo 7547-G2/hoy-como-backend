@@ -28,6 +28,7 @@ public class MobileUserServiceTest {
         MobileUser mobileUser = createMobileUser(1L, "username", "firstName", "lastName");
         Optional<MobileUser> mobileUserOptional = Optional.of(mobileUser);
         when(mobileUserRepository.getMobileUserByFacebookId(1L)).thenReturn(mobileUserOptional);
+        when(modelMapper.map(any(MobileUser.class), any())).thenReturn(new MobileUserDto());
 
         mobileUserService.getMobileUserById(1L);
 
