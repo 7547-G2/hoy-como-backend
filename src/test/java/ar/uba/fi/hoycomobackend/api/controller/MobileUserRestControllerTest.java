@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -79,7 +80,7 @@ public class MobileUserRestControllerTest {
 
     @Test
     public void whengetMobileUserAuthorizedById_mobileUserAuthorized_thenReturnResponseEntity() throws Exception {
-        given(mobileUserService.getMobileUserAuthorizedById(1L)).willReturn("ok");
+        given(mobileUserService.getMobileUserAuthorizedById(1L)).willReturn(ResponseEntity.ok("ok"));
 
         mockMvc.perform(get(MOBILE_USER_API + "/1/authorized")
                 .contentType(MediaType.APPLICATION_JSON))

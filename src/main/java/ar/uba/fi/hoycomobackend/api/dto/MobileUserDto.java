@@ -1,11 +1,13 @@
 package ar.uba.fi.hoycomobackend.api.dto;
 
+import ar.uba.fi.hoycomobackend.entity.MobileUserState;
+
 public class MobileUserDto {
     private long facebookId;
     private String username;
     private String firstName;
     private String lastName;
-    private String state;
+    private MobileUserState mobileUserState;
     private AddressDto addressDto;
 
     public long getFacebookId() {
@@ -48,11 +50,11 @@ public class MobileUserDto {
         this.addressDto = address;
     }
 
-    public String getState() {
-        return state;
+    public MobileUserState getMobileUserState() {
+        return mobileUserState;
     }
 
-    public void setState(String state) {
-        this.state = state;
+    public void setMobileUserState(MobileUserState mobileUserState) {
+        this.mobileUserState = mobileUserState;
     }
 }

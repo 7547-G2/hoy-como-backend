@@ -4,6 +4,7 @@ import ar.uba.fi.hoycomobackend.api.dto.*;
 import ar.uba.fi.hoycomobackend.entity.Address;
 import ar.uba.fi.hoycomobackend.entity.Comercio;
 import ar.uba.fi.hoycomobackend.entity.MobileUser;
+import ar.uba.fi.hoycomobackend.entity.MobileUserState;
 import ar.uba.fi.hoycomobackend.repository.ComercioRepository;
 import ar.uba.fi.hoycomobackend.repository.MobileUserRepository;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -12,6 +13,8 @@ import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -83,14 +86,18 @@ public class MobileUserService {
         return MOBILE_USER_ADD_UNSUCCESSFUL;
     }
 
-    public String getMobileUserAuthorizedById(Long id) {
+    public ResponseEntity getMobileUserAuthorizedById(Long id) {
         LOGGER.info("Checking if MobileUser is authorized by id: {}", id);
-        Optional<MobileUser> mobileUser = mobileUserRepository.getMobileUserByFacebookId(id);
+        Optional<MobileUser> mobileUserOptional = mobileUserRepository.getMobileUserByFacebookId(id);
 
-        if (mobileUser.isPresent()) {
-            return mobileUser.get().getState();
+        if (mobileUserOptional.isPresent()) {
+            MobileUser mobileUser = mobileUserOptional.get();
+            MobileUserState mobileUserState = mobileUser.getState();
+            MobileUserStateDto mobileUserStateDto = new MobileUserStateDto(HttpStatus.OK, mobileUserState);
+
+            return ResponseEntity.ok(mobileUserStateDto);
         } else
-            return NON_EXISTANT_USER_MESSAGE;
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ErrorMessage("No se encontró ningún usuario con id: " + id));
     }
 
     public String addFavoriteComercioToMobileUser(Long mobileUserFacebookId, Long comercioId) {
@@ -189,18 +196,18 @@ public class MobileUserService {
         return comercioMobileUserDtoList;
     }
 
-    public String changeStateToMobileUser(Long mobileUserFacebookId, String state) {
-        //TODO add test to this
+    public String changeStateToMobileUser(Long mobileUserFacebookId, Integer stateCode) {
         LOGGER.info("Getting mobile user with id: {}", mobileUserFacebookId);
         Optional<MobileUser> mobileUserOptional = mobileUserRepository.getMobileUserByFacebookId(mobileUserFacebookId);
 
         if (mobileUserOptional.isPresent()) {
             MobileUser mobileUser = mobileUserOptional.get();
-            mobileUser.setState(state);
+            MobileUserState mobileUserState = MobileUserState.getByStateCode(stateCode);
+            mobileUser.setState(mobileUserState);
 
             mobileUserRepository.saveAndFlush(mobileUser);
 
-            return "Mobile user with id: " + mobileUserFacebookId + " changed state successfully to: " + state;
+            return "Mobile user with id: " + mobileUserFacebookId + " changed state successfully to: " + mobileUserState.name();
         } else
             return NON_EXISTANT_USER_MESSAGE;
     }
