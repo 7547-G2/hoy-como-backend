@@ -2,6 +2,7 @@ package ar.uba.fi.hoycomobackend.api.service;
 
 import ar.uba.fi.hoycomobackend.api.dto.ComercioHoyComoDto;
 import ar.uba.fi.hoycomobackend.database.entity.Comercio;
+import ar.uba.fi.hoycomobackend.database.queries.ComercioQuery;
 import ar.uba.fi.hoycomobackend.database.repository.ComercioRepository;
 import org.junit.Before;
 import org.junit.Test;
@@ -20,15 +21,15 @@ import static org.mockito.Mockito.when;
 public class BackofficeHoyComoServiceTest {
 
     private static String COMERCIO_NOMBRE = "nombre";
-    private ComercioRepository comercioRepository = Mockito.mock(ComercioRepository.class);
+    private ComercioQuery comercioQuery = Mockito.mock(ComercioQuery.class);
     private ModelMapper modelMapper = Mockito.mock(ModelMapper.class);
-    private BackofficeHoyComoService backofficeHoyComoService = new BackofficeHoyComoService(comercioRepository, modelMapper);
+    private BackofficeHoyComoService backofficeHoyComoService = new BackofficeHoyComoService(comercioQuery, modelMapper);
 
     @Before
     public void setUp() {
         List<Comercio> comercioList = Arrays.asList(createDefaultComercio());
 
-        when(comercioRepository.findByNombre(COMERCIO_NOMBRE)).thenReturn(comercioList);
+        when(comercioQuery.findByNombre(COMERCIO_NOMBRE)).thenReturn(comercioList);
     }
 
     @Test
@@ -37,6 +38,6 @@ public class BackofficeHoyComoServiceTest {
         when(modelMapper.map(any(Comercio.class), any())).thenReturn(comercioHoyComoDto);
         backofficeHoyComoService.getComercioByNombre(COMERCIO_NOMBRE);
 
-        verify(comercioRepository).findByNombre(COMERCIO_NOMBRE);
+        verify(comercioQuery).findByNombre(COMERCIO_NOMBRE);
     }
 }

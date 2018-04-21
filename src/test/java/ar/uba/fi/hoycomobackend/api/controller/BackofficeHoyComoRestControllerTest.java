@@ -26,8 +26,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @WebMvcTest(BackofficeHoyComoRestController.class)
 public class BackofficeHoyComoRestControllerTest {
 
-    private static String COMERCIOS_URL = "/api/comercios";
-
     @Autowired
     private MockMvc mockMvc;
     @MockBean
@@ -39,9 +37,9 @@ public class BackofficeHoyComoRestControllerTest {
 
         List<ComercioHoyComoDto> allComercios = Arrays.asList(comercioHoyComoDto);
 
-        given(backofficeHoyComoService.getAllComercios()).willReturn(allComercios);
+        given(backofficeHoyComoService.getComercios(null)).willReturn(allComercios);
 
-        mockMvc.perform(get(COMERCIOS_URL)
+        mockMvc.perform(get("/api/comercios")
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$", hasSize(1)))

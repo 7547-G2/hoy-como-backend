@@ -4,6 +4,7 @@ import ar.uba.fi.hoycomobackend.api.dto.AddressDto;
 import ar.uba.fi.hoycomobackend.api.dto.ComercioHoyComoDto;
 import ar.uba.fi.hoycomobackend.database.entity.Address;
 import ar.uba.fi.hoycomobackend.database.entity.Comercio;
+import ar.uba.fi.hoycomobackend.database.queries.ComercioQuery;
 import ar.uba.fi.hoycomobackend.database.repository.ComercioRepository;
 import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
@@ -23,26 +24,24 @@ public class BackofficeHoyComoService {
     private static Logger LOGGER = LoggerFactory.getLogger(BackofficeHoyComoService.class);
     private static String CREATION_SUCCESSFUL = "Comercio creado correctamente";
 
-    private ComercioRepository comercioRepository;
+    private ComercioQuery comercioQuery;
     private ModelMapper modelMapper;
 
     @Autowired
-    public BackofficeHoyComoService(ComercioRepository comercioRepository, ModelMapper modelMapper) {
-        this.comercioRepository = comercioRepository;
+    public BackofficeHoyComoService(ComercioQuery comercioQuery, ModelMapper modelMapper) {
+        this.comercioQuery = comercioQuery;
         this.modelMapper = modelMapper;
     }
 
     public List<ComercioHoyComoDto> getComercioByNombre(String nombre) {
-        LOGGER.info("Getting all Comercios with name: {}", nombre);
-        List<Comercio> comercioList = comercioRepository.findByNombre(nombre);
+        List<Comercio> comercioList = comercioQuery.findByNombre(nombre);
         List<ComercioHoyComoDto> comercioHoyComoDtoList = getComercioDtos(comercioList);
 
         return comercioHoyComoDtoList;
     }
 
-    public List<ComercioHoyComoDto> getAllComercios() {
-        LOGGER.info("Getting all Comercios");
-        List<Comercio> comercioList = comercioRepository.findAll();
+    public List<ComercioHoyComoDto> getComercios(String search) {
+        List<Comercio> comercioList = comercioQuery.findBySearchQuery(search);
         List<ComercioHoyComoDto> comercioHoyComoDtoList = getComercioDtos(comercioList);
 
         return comercioHoyComoDtoList;
@@ -69,7 +68,7 @@ public class BackofficeHoyComoService {
 
     public ResponseEntity updateComercio(Long comercioId, ComercioHoyComoDto comercioHoyComoDto) {
         LOGGER.info("Trying to update comercio with id: {}", comercioId);
-        Optional<Comercio> comercioOptional = comercioRepository.getComercioById(comercioId);
+        Optional<Comercio> comercioOptional = comercioQuery.getComercioById(comercioId);
 
         if (comercioOptional.isPresent()) {
             Comercio comercio = comercioOptional.get();
@@ -86,7 +85,7 @@ public class BackofficeHoyComoService {
         Address address = modelMapper.map(addressDto, Address.class);
         comercio.setAddress(address);
         try {
-            comercioRepository.saveAndFlush(comercio);
+            comercioQuery.saveAndFlush(comercio);
             return ResponseEntity.ok(CREATION_SUCCESSFUL);
         } catch (RuntimeException e) {
             LOGGER.error("Got the following error while trying to save a new Comercio: {}", e);

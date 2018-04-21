@@ -4,9 +4,8 @@ import ar.uba.fi.hoycomobackend.api.dto.*;
 import ar.uba.fi.hoycomobackend.database.entity.Address;
 import ar.uba.fi.hoycomobackend.database.entity.Comercio;
 import ar.uba.fi.hoycomobackend.database.entity.MobileUser;
-import ar.uba.fi.hoycomobackend.database.repository.ComercioRepository;
+import ar.uba.fi.hoycomobackend.database.queries.ComercioQuery;
 import ar.uba.fi.hoycomobackend.database.repository.MobileUserRepository;
-import ar.uba.fi.hoycomobackend.database.specification.ComercioSpecificationBuilder;
 import ar.uba.fi.hoycomobackend.entity.MobileUserState;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -14,14 +13,11 @@ import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 @Service
 public class MobileUserService {
@@ -33,14 +29,14 @@ public class MobileUserService {
     private static String MOBILE_USER_ADD_UNSUCCESSFUL = "Datos incorrectos al cargar usuario";
 
     private MobileUserRepository mobileUserRepository;
-    private ComercioRepository comercioRepository;
+    private ComercioQuery comercioQuery;
     private ModelMapper modelMapper;
     private ObjectMapper objectMapper;
 
     @Autowired
-    public MobileUserService(MobileUserRepository mobileUserRepository, ComercioRepository comercioRepository, ModelMapper modelMapper, ObjectMapper objectMapper) {
+    public MobileUserService(MobileUserRepository mobileUserRepository, ComercioQuery comercioQuery, ModelMapper modelMapper, ObjectMapper objectMapper) {
         this.mobileUserRepository = mobileUserRepository;
-        this.comercioRepository = comercioRepository;
+        this.comercioQuery = comercioQuery;
         this.modelMapper = modelMapper;
         this.objectMapper = objectMapper;
     }
@@ -107,7 +103,7 @@ public class MobileUserService {
     public String addFavoriteComercioToMobileUser(Long mobileUserFacebookId, Long comercioId) {
         LOGGER.info("Trying to add Comercio with id: {}, to mobile user with id: {}", comercioId, mobileUserFacebookId);
         Optional<MobileUser> mobileUserOptional = mobileUserRepository.getMobileUserByFacebookId(mobileUserFacebookId);
-        Optional<Comercio> comercioOptional = comercioRepository.getComercioById(comercioId);
+        Optional<Comercio> comercioOptional = comercioQuery.getComercioById(comercioId);
 
         String response;
         if (mobileUserOptional.isPresent() && comercioOptional.isPresent()) {
@@ -172,16 +168,7 @@ public class MobileUserService {
     }
 
     public List<ComercioMobileUserDto> getComercioMobileUserDtoSet(String search) {
-        LOGGER.info("Getting all Comercios");
-        ComercioSpecificationBuilder builder = new ComercioSpecificationBuilder();
-        Pattern pattern = Pattern.compile("(\\w+?)(:|<|>)(\\w+?),");
-        Matcher matcher = pattern.matcher(search + ",");
-        while (matcher.find()) {
-            builder.with(matcher.group(1), matcher.group(2), matcher.group(3));
-        }
-
-        Specification<Comercio> spec = builder.build();
-        List<Comercio> comercioList = comercioRepository.findAll(spec);
+        List<Comercio> comercioList = comercioQuery.findBySearchQuery(search);
         List<ComercioMobileUserDto> comercioMobileUserDtoList = getComercioDtos(comercioList);
 
         return comercioMobileUserDtoList;
