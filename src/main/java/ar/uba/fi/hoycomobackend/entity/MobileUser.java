@@ -2,6 +2,7 @@ package ar.uba.fi.hoycomobackend.entity;
 
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.util.List;
 
 @Entity
@@ -14,8 +15,9 @@ public class MobileUser {
     private String username;
     private String firstName;
     private String lastName;
-    @Column(name = "authorized")
-    private Boolean authorized = true;
+    @Column(columnDefinition = "varchar(128) default 'enabled'")
+    @NotNull
+    private String state;
     @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinTable(name = "mobileuser_comercio",
             joinColumns = {@JoinColumn(name = "mobileuser_facebookId")},
@@ -66,19 +68,19 @@ public class MobileUser {
         this.lastName = lastName;
     }
 
-    public Boolean getAuthorized() {
-        return authorized;
-    }
-
-    public void setAuthorized(Boolean deactivated) {
-        this.authorized = deactivated;
-    }
-
     public Address getAddress() {
         return address;
     }
 
     public void setAddress(Address address) {
         this.address = address;
+    }
+
+    public String getState() {
+        return state;
+    }
+
+    public void setState(String state) {
+        this.state = state;
     }
 }

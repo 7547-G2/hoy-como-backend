@@ -11,6 +11,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.Optional;
 
+import static ar.uba.fi.hoycomobackend.entity.DataTestBuilder.createDefaultMobileUser;
 import static ar.uba.fi.hoycomobackend.entity.DataTestBuilder.createMobileUser;
 import static org.assertj.core.api.Java6Assertions.assertThat;
 
@@ -25,10 +26,10 @@ public class MobileUserRepositoryTest {
 
     @Test
     public void whenGetMobileUserById_thenReturnMobileUser() {
-        MobileUser mobileUser = createMobileUser(1L, "username", "firstName", "lastName");
+        MobileUser mobileUser = createDefaultMobileUser();
         Long firstMobileUserId = (Long) entityManager.persistAndGetId(mobileUser);
-        mobileUser = createMobileUser(2L, "otherUsername", "otherFirstName", "otherLastName");
-        entityManager.persist(mobileUser);
+        MobileUser otherMobileUser = createMobileUser(2L, "otherUsername", "otherFirstName", "otherLastName");
+        entityManager.persist(otherMobileUser);
         entityManager.flush();
 
         Optional<MobileUser> mobileUserFoundOptional = mobileUserRepository.getMobileUserByFacebookId(firstMobileUserId);

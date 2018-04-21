@@ -22,6 +22,7 @@ import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.ResultActions;
 
 import static ar.uba.fi.hoycomobackend.entity.DataTestBuilder.createDefaultComercio;
+import static ar.uba.fi.hoycomobackend.entity.DataTestBuilder.createDefaultMobileUser;
 import static org.assertj.core.api.Java6Assertions.assertThat;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.nullValue;
@@ -43,6 +44,7 @@ public class MobileUserRestControllerIntegrationTest {
     private static String FIRST_NAME = "firstName";
     private static String LAST_NAME = "lastName";
     private static String USER_NAME = "userName";
+    private static String STATE = "state";
 
     @Autowired
     private MockMvc mockMvc;
@@ -81,6 +83,7 @@ public class MobileUserRestControllerIntegrationTest {
                 .andExpect(jsonPath("$[0].username", is(USER_NAME)))
                 .andExpect(jsonPath("$[0].firstName", is(FIRST_NAME)))
                 .andExpect(jsonPath("$[0].lastName", is(LAST_NAME)))
+                .andExpect(jsonPath("$[0].state", is(STATE)))
                 .andExpect(jsonPath("$[0].addressDto.street", is(STREET)))
                 .andExpect(jsonPath("$[0].addressDto.postalCode", is(POSTAL_CODE)))
                 .andExpect(jsonPath("$[0].addressDto.floor", is(FLOOR)))
@@ -100,6 +103,31 @@ public class MobileUserRestControllerIntegrationTest {
                 .andExpect(jsonPath("$.username", is(USER_NAME)))
                 .andExpect(jsonPath("$.firstName", is(FIRST_NAME)))
                 .andExpect(jsonPath("$.lastName", is(LAST_NAME)))
+                .andExpect(jsonPath("$.state", is(STATE)))
+                .andExpect(jsonPath("$.addressDto.street", is(STREET)))
+                .andExpect(jsonPath("$.addressDto.postalCode", is(POSTAL_CODE)))
+                .andExpect(jsonPath("$.addressDto.floor", is(FLOOR)))
+                .andExpect(jsonPath("$.addressDto.department", is(DEPARTMENT)));
+    }
+
+    @Test
+    public void changeStateToAMobileUser() throws Exception {
+        createPostNewMobileUser();
+
+        mockMvc.perform(put("/api/mobileUser/1/state")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("otherState"));
+
+        mockMvc.perform(get("/api/mobileUser/1")
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(content()
+                        .contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.facebookId", is(FACEBOOK_ID.intValue())))
+                .andExpect(jsonPath("$.username", is(USER_NAME)))
+                .andExpect(jsonPath("$.firstName", is(FIRST_NAME)))
+                .andExpect(jsonPath("$.lastName", is(LAST_NAME)))
+                .andExpect(jsonPath("$.state", is("otherState")))
                 .andExpect(jsonPath("$.addressDto.street", is(STREET)))
                 .andExpect(jsonPath("$.addressDto.postalCode", is(POSTAL_CODE)))
                 .andExpect(jsonPath("$.addressDto.floor", is(FLOOR)))
@@ -140,10 +168,11 @@ public class MobileUserRestControllerIntegrationTest {
                 .andExpect(jsonPath("$[0].tipo", is("tipo")))
                 .andExpect(jsonPath("$[0].imagenLogo", is("imagenLogo")))
                 .andExpect(jsonPath("$[0].estado", is("estado")))
-                .andExpect(jsonPath("$[0].rating", is("")))
-                .andExpect(jsonPath("$[0].leadTime", is("")))
-                .andExpect(jsonPath("$[0].minPrice", is("")))
-                .andExpect(jsonPath("$[0].maxPrice", is("")))
+                //TODO change this when no longer random item is given
+                //.andExpect(jsonPath("$[0].rating", is("")))
+                //.andExpect(jsonPath("$[0].leadTime", is("")))
+                //.andExpect(jsonPath("$[0].minPrice", is("")))
+                //.andExpect(jsonPath("$[0].maxPrice", is("")))
                 .andExpect(jsonPath("$[0].addressDto.street", is("street")))
                 .andExpect(jsonPath("$[0].addressDto.postalCode", is("postalCode")))
                 .andExpect(jsonPath("$[0].addressDto.floor", is("floor")))
@@ -168,8 +197,8 @@ public class MobileUserRestControllerIntegrationTest {
     }
 
     private ResultActions createPostNewMobileUser() throws Exception {
-        MobileUserDto mobileUser = createMobileUserDtoTest();
-        String mobileUserDtoJson = objectMapper.writeValueAsString(mobileUser);
+        MobileUserDto mobileUserDto = createMobileUserDtoTest();
+        String mobileUserDtoJson = objectMapper.writeValueAsString(mobileUserDto);
 
         return mockMvc.perform(post("/api/mobileUser")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -187,6 +216,7 @@ public class MobileUserRestControllerIntegrationTest {
         mobileUserDto.setFirstName(FIRST_NAME);
         mobileUserDto.setLastName(LAST_NAME);
         mobileUserDto.setUsername(USER_NAME);
+        mobileUserDto.setState(STATE);
         mobileUserDto.setAddressDto(address);
 
         return mobileUserDto;
