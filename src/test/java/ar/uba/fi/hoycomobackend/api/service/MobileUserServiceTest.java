@@ -3,6 +3,7 @@ package ar.uba.fi.hoycomobackend.api.service;
 import ar.uba.fi.hoycomobackend.api.dto.MobileUserDto;
 import ar.uba.fi.hoycomobackend.api.dto.MobileUserStateDto;
 import ar.uba.fi.hoycomobackend.database.entity.MobileUser;
+import ar.uba.fi.hoycomobackend.database.queries.ComercioQuery;
 import ar.uba.fi.hoycomobackend.database.repository.ComercioRepository;
 import ar.uba.fi.hoycomobackend.database.repository.MobileUserRepository;
 import ar.uba.fi.hoycomobackend.entity.MobileUserState;
@@ -23,10 +24,10 @@ import static org.mockito.Mockito.*;
 public class MobileUserServiceTest {
 
     private MobileUserRepository mobileUserRepository = Mockito.mock(MobileUserRepository.class);
-    private ComercioRepository comercioRepository = Mockito.mock(ComercioRepository.class);
+    private ComercioQuery comercioQuery = Mockito.mock(ComercioQuery.class);
     private ModelMapper modelMapper = Mockito.mock(ModelMapper.class);
     private ObjectMapper objectMapper = Mockito.mock(ObjectMapper.class);
-    private MobileUserService mobileUserService = new MobileUserService(mobileUserRepository, comercioRepository, modelMapper, objectMapper);
+    private MobileUserService mobileUserService = new MobileUserService(mobileUserRepository, comercioQuery, modelMapper, objectMapper);
 
     @Test
     public void getMobileUserById_returnsMobileUserDto() {

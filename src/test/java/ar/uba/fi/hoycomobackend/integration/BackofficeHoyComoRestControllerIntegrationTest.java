@@ -52,11 +52,46 @@ public class BackofficeHoyComoRestControllerIntegrationTest {
     }
 
     @Test
-    public void getCreatedComercios() throws Exception {
+    public void getCreatedComerciosWithoutFilters() throws Exception {
         Comercio comercio = createDefaultComercio();
         comercioRepository.saveAndFlush(comercio);
 
         expectDefaultComercioGot();
+    }
+
+    @Test
+    public void getCreatedComerciosWithMatchingFilters() throws Exception {
+        Comercio comercio = createDefaultComercio();
+        comercioRepository.saveAndFlush(comercio);
+
+        mockMvc.perform(get("/api/comercios?search=estado:estado,nombre:nombre,razonSocial:razonSocial")
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(content()
+                        .contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$[0].email", is("email")))
+                .andExpect(jsonPath("$[0].nombre", is("nombre")))
+                .andExpect(jsonPath("$[0].razonSocial", is("razonSocial")))
+                .andExpect(jsonPath("$[0].tipo", is("tipo")))
+                .andExpect(jsonPath("$[0].password", is("password")))
+                .andExpect(jsonPath("$[0].estado", is("estado")))
+                .andExpect(jsonPath("$[0].imagenLogo", is("imagenLogo")))
+                .andExpect(jsonPath("$[0].addressDto.street", is("street")))
+                .andExpect(jsonPath("$[0].addressDto.postalCode", is("postalCode")))
+                .andExpect(jsonPath("$[0].addressDto.floor", is("floor")))
+                .andExpect(jsonPath("$[0].addressDto.department", is("department")));    }
+
+    @Test
+    public void getCreatedComerciosWithNonMatchingFiltersReturnsEmptyList() throws Exception {
+        Comercio comercio = createDefaultComercio();
+        comercioRepository.saveAndFlush(comercio);
+
+        mockMvc.perform(get("/api/comercios?search=nombre:noMatchingNombre")
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(content()
+                        .contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
+                .andExpect(content().string("[]"));
     }
 
     @Test
