@@ -41,7 +41,7 @@ public class MobileUserService {
         this.objectMapper = objectMapper;
     }
 
-    public List<MobileUserDto> getMobileUserList() {
+    public ResponseEntity getMobileUserList() {
         LOGGER.info("Getting all Usuarios from database.");
         List<MobileUser> mobileUserList = mobileUserRepository.findAll();
         List<MobileUserDto> mobileUserDtoList = new ArrayList<>();
@@ -53,10 +53,10 @@ public class MobileUserService {
             mobileUserDtoList.add(mobileUserDto);
         }
 
-        return mobileUserDtoList;
+        return ResponseEntity.ok(mobileUserDtoList);
     }
 
-    public MobileUserDto getMobileUserById(Long id) {
+    public ResponseEntity getMobileUserById(Long id) {
         LOGGER.info("Getting MobileUser by id: {}", id);
         Optional<MobileUser> mobileUserOptional = mobileUserRepository.getMobileUserByFacebookId(id);
         if (mobileUserOptional.isPresent()) {
@@ -66,12 +66,12 @@ public class MobileUserService {
             MobileUserDto mobileUserDto = modelMapper.map(mobileUser, MobileUserDto.class);
             mobileUserDto.setAddressDto(addressDto);
 
-            return mobileUserDto;
+            return ResponseEntity.ok(mobileUserDto);
         } else
-            return new MobileUserDto();
+            return ResponseEntity.ok(new MobileUserDto());
     }
 
-    public String addMobileUser(MobileUserDto mobileUserDto) {
+    public ResponseEntity addMobileUser(MobileUserDto mobileUserDto) {
         LOGGER.info("Adding new MobileUser: {}", mobileUserDto);
         AddressDto addressDto = mobileUserDto.getAddressDto();
         Address address = modelMapper.map(addressDto, Address.class);
@@ -79,11 +79,11 @@ public class MobileUserService {
         mobileUser.setAddress(address);
         try {
             mobileUserRepository.saveAndFlush(mobileUser);
-            return MOBILE_USER_ADDED_SUCCESSFUL;
+            return ResponseEntity.ok(MOBILE_USER_ADDED_SUCCESSFUL);
         } catch (RuntimeException e) {
             LOGGER.info("Error while adding new mobile user: {}", e.getMessage());
         }
-        return MOBILE_USER_ADD_UNSUCCESSFUL;
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorMessage(MOBILE_USER_ADD_UNSUCCESSFUL));
     }
 
     public ResponseEntity getMobileUserAuthorizedById(Long id) {
@@ -100,12 +100,11 @@ public class MobileUserService {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ErrorMessage("No se encontró ningún usuario con id: " + id));
     }
 
-    public String addFavoriteComercioToMobileUser(Long mobileUserFacebookId, Long comercioId) {
+    public ResponseEntity addFavoriteComercioToMobileUser(Long mobileUserFacebookId, Long comercioId) {
         LOGGER.info("Trying to add Comercio with id: {}, to mobile user with id: {}", comercioId, mobileUserFacebookId);
         Optional<MobileUser> mobileUserOptional = mobileUserRepository.getMobileUserByFacebookId(mobileUserFacebookId);
         Optional<Comercio> comercioOptional = comercioQuery.getComercioById(comercioId);
 
-        String response;
         if (mobileUserOptional.isPresent() && comercioOptional.isPresent()) {
             MobileUser mobileUser = mobileUserOptional.get();
             Comercio comercio = comercioOptional.get();
@@ -113,27 +112,23 @@ public class MobileUserService {
             comercio.getMobileUserList().add(mobileUser);
 
             mobileUserRepository.saveAndFlush(mobileUser);
-            response = "Alta correcta";
+            return ResponseEntity.ok("Comercio con id: " + comercioId + "agregado a favoritos al usuario con id: " + mobileUserFacebookId);
         } else {
-            response = "No se pudo dar de alta";
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorMessage("No se pudo dar de alta debido a que el usuario o el comercio no fueron encontrados"));
         }
-        return response;
     }
 
-    public String getMobileUserFavorites(Long id) throws JsonProcessingException {
+    public ResponseEntity getMobileUserFavorites(Long id) throws JsonProcessingException {
         LOGGER.info("Trying to get all mobile user's favorites with id: {}", id);
         Optional<MobileUser> mobileUserOptional = mobileUserRepository.getMobileUserByFacebookId(id);
 
-        String response;
         if (mobileUserOptional.isPresent()) {
             MobileUser mobileUser = mobileUserOptional.get();
             MobileUserFavoritesDto mobileUserFavoritesDto = getMobileUserFavoritesDtoFromMobileUser(mobileUser);
-            response = objectMapper.writeValueAsString(mobileUserFavoritesDto);
+            return ResponseEntity.ok(objectMapper.writeValueAsString(mobileUserFavoritesDto));
         } else {
-            response = "No existe el usuario";
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorMessage("No existe el usuario con id: " + id));
         }
-
-        return response;
     }
 
     private MobileUserFavoritesDto getMobileUserFavoritesDtoFromMobileUser(MobileUser mobileUser) {
@@ -149,29 +144,26 @@ public class MobileUserService {
         return mobileUserFavoritesDto;
     }
 
-    public String addAddressToMobileUser(Long mobileUserFacebookId, AddressDto addressDto) {
+    public ResponseEntity addAddressToMobileUser(Long mobileUserFacebookId, AddressDto addressDto) {
         LOGGER.info("Getting mobile user with id: {}", mobileUserFacebookId);
         Optional<MobileUser> mobileUserOptional = mobileUserRepository.getMobileUserByFacebookId(mobileUserFacebookId);
 
-        String response;
         if (mobileUserOptional.isPresent()) {
             MobileUser mobileUser = mobileUserOptional.get();
             Address address = modelMapper.map(addressDto, Address.class);
             mobileUser.setAddress(address);
 
             mobileUserRepository.saveAndFlush(mobileUser);
-            response = ADDRESS_ADDED_SUCCESSFUL;
+            return ResponseEntity.ok(ADDRESS_ADDED_SUCCESSFUL);
         } else
-            response = NON_EXISTANT_USER_MESSAGE;
-
-        return response;
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorMessage("No existe el usuario con id: " + mobileUserFacebookId));
     }
 
-    public List<ComercioMobileUserDto> getComercioMobileUserDtoSet(String search) {
+    public ResponseEntity getComercioMobileUserDtoSet(String search) {
         List<Comercio> comercioList = comercioQuery.findBySearchQuery(search);
         List<ComercioMobileUserDto> comercioMobileUserDtoList = getComercioDtos(comercioList);
 
-        return comercioMobileUserDtoList;
+        return ResponseEntity.ok(comercioMobileUserDtoList);
     }
 
     private List<ComercioMobileUserDto> getComercioDtos(List<Comercio> comercioList) {
@@ -186,7 +178,7 @@ public class MobileUserService {
         return comercioMobileUserDtoList;
     }
 
-    public String changeStateToMobileUser(Long mobileUserFacebookId, Integer stateCode) {
+    public ResponseEntity changeStateToMobileUser(Long mobileUserFacebookId, Integer stateCode) {
         LOGGER.info("Getting mobile user with id: {}", mobileUserFacebookId);
         Optional<MobileUser> mobileUserOptional = mobileUserRepository.getMobileUserByFacebookId(mobileUserFacebookId);
 
@@ -197,8 +189,8 @@ public class MobileUserService {
 
             mobileUserRepository.saveAndFlush(mobileUser);
 
-            return "Mobile user with id: " + mobileUserFacebookId + " changed state successfully to: " + mobileUserState.name();
+            return ResponseEntity.ok("Mobile user with id: " + mobileUserFacebookId + " changed state successfully to: " + mobileUserState.name());
         } else
-            return NON_EXISTANT_USER_MESSAGE;
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorMessage("No existe el usuario con id: " + mobileUserFacebookId));
     }
 }

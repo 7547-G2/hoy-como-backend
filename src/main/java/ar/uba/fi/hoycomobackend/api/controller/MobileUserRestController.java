@@ -24,12 +24,12 @@ public class MobileUserRestController {
     }
 
     @GetMapping(value = "/mobileUser")
-    public List<MobileUserDto> getAllMobileUsers() {
+    public ResponseEntity getAllMobileUsers() {
         return mobileUserService.getMobileUserList();
     }
 
     @GetMapping(value = "/mobileUser/{id}")
-    public MobileUserDto getMobileUserById(@PathVariable("id") Long id) {
+    public ResponseEntity getMobileUserById(@PathVariable("id") Long id) {
         return mobileUserService.getMobileUserById(id);
     }
 
@@ -39,32 +39,32 @@ public class MobileUserRestController {
     }
 
     @PostMapping(value = "/mobileUser")
-    public String addMobileUser(@RequestBody MobileUserDto mobileUser) {
+    public ResponseEntity addMobileUser(@RequestBody MobileUserDto mobileUser) {
         return mobileUserService.addMobileUser(mobileUser);
     }
 
     @GetMapping(value = "/mobileUser/{id}/favorites")
-    public String getMobileUserFavorites(@PathVariable("id") Long id) throws JsonProcessingException {
+    public ResponseEntity getMobileUserFavorites(@PathVariable("id") Long id) throws JsonProcessingException {
         return mobileUserService.getMobileUserFavorites(id);
     }
 
     @PostMapping(value = "/mobileUser/{mobileUserFacebookId}/favorite/{comercioId}")
-    public String addFavoriteComercioToMobileUser(@PathVariable("mobileUserFacebookId") Long mobileUserFacebookId, @PathVariable("comercioId") Long comercioId) {
+    public ResponseEntity addFavoriteComercioToMobileUser(@PathVariable("mobileUserFacebookId") Long mobileUserFacebookId, @PathVariable("comercioId") Long comercioId) {
         return mobileUserService.addFavoriteComercioToMobileUser(mobileUserFacebookId, comercioId);
     }
 
     @PutMapping(value = "/mobileUser/{mobileUserFacebookId}/address")
-    public String addAddressToMobileUser(@PathVariable("mobileUserFacebookId") Long mobileUserFacebookId, @RequestBody AddressDto addressDto) {
+    public ResponseEntity addAddressToMobileUser(@PathVariable("mobileUserFacebookId") Long mobileUserFacebookId, @RequestBody AddressDto addressDto) {
         return mobileUserService.addAddressToMobileUser(mobileUserFacebookId, addressDto);
     }
 
     @GetMapping(value = "/mobileUser/comercios")
-    public List<ComercioMobileUserDto> getComercioMobileUserDtoSet(@RequestParam(value="search", required=false) String search) {
+    public ResponseEntity getComercioMobileUserDtoSet(@RequestParam(value="search", required=false) String search) {
         return mobileUserService.getComercioMobileUserDtoSet(search);
     }
 
     @PutMapping(value = "/mobileUser/{mobileUserFacebookId}/state")
-    public String changeStateToMobileUser(@PathVariable("mobileUserFacebookId") Long mobileUserFacebookId, @RequestBody Integer stateCode) {
+    public ResponseEntity changeStateToMobileUser(@PathVariable("mobileUserFacebookId") Long mobileUserFacebookId, @RequestBody Integer stateCode) {
         return mobileUserService.changeStateToMobileUser(mobileUserFacebookId, stateCode);
     }
 }
