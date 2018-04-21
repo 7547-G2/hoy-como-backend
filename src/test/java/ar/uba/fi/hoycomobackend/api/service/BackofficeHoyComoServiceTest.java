@@ -1,8 +1,8 @@
 package ar.uba.fi.hoycomobackend.api.service;
 
 import ar.uba.fi.hoycomobackend.api.dto.ComercioHoyComoDto;
-import ar.uba.fi.hoycomobackend.entity.Comercio;
-import ar.uba.fi.hoycomobackend.repository.ComercioRepository;
+import ar.uba.fi.hoycomobackend.database.entity.Comercio;
+import ar.uba.fi.hoycomobackend.database.repository.ComercioRepository;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;

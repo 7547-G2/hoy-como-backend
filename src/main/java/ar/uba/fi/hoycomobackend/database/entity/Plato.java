@@ -1,4 +1,4 @@
-package ar.uba.fi.hoycomobackend.entity;
+package ar.uba.fi.hoycomobackend.database.entity;
 
 import javax.persistence.*;
 

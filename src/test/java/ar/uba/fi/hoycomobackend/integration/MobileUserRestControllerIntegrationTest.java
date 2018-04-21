@@ -3,11 +3,10 @@ package ar.uba.fi.hoycomobackend.integration;
 import ar.uba.fi.hoycomobackend.App;
 import ar.uba.fi.hoycomobackend.api.dto.AddressDto;
 import ar.uba.fi.hoycomobackend.api.dto.MobileUserDto;
-import ar.uba.fi.hoycomobackend.entity.Comercio;
+import ar.uba.fi.hoycomobackend.database.entity.Comercio;
+import ar.uba.fi.hoycomobackend.database.repository.ComercioRepository;
+import ar.uba.fi.hoycomobackend.database.repository.MobileUserRepository;
 import ar.uba.fi.hoycomobackend.entity.MobileUserState;
-import ar.uba.fi.hoycomobackend.repository.ComercioRepository;
-import ar.uba.fi.hoycomobackend.repository.MobileUserRepository;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.After;
 import org.junit.Test;
@@ -23,7 +22,6 @@ import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.ResultActions;
 
 import static ar.uba.fi.hoycomobackend.entity.DataTestBuilder.createDefaultComercio;
-import static ar.uba.fi.hoycomobackend.entity.DataTestBuilder.createDefaultMobileUser;
 import static org.assertj.core.api.Java6Assertions.assertThat;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.nullValue;
@@ -156,7 +154,7 @@ public class MobileUserRestControllerIntegrationTest {
     }
 
     @Test
-    public void getAllComercios() throws Exception {
+    public void getComerciosWithoutFilters() throws Exception {
         Comercio comercio = createDefaultComercio();
         comercio = comercioRepository.saveAndFlush(comercio);
 
@@ -179,6 +177,44 @@ public class MobileUserRestControllerIntegrationTest {
                 .andExpect(jsonPath("$[0].addressDto.postalCode", is("postalCode")))
                 .andExpect(jsonPath("$[0].addressDto.floor", is("floor")))
                 .andExpect(jsonPath("$[0].addressDto.department", is("department")));
+    }
+
+    @Test
+    public void getComerciosWithMatchingFilters() throws Exception {
+        Comercio comercio = createDefaultComercio();
+        comercio = comercioRepository.saveAndFlush(comercio);
+
+        mockMvc.perform(get("/api/mobileUser/comercios/?search=tipo:tipo,leadTime<60,precioMinimo>50,precioMaximo<120,totalPedidos>10,rating>1")
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(content()
+                        .contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$[0].id", is(comercio.getId().intValue())))
+                .andExpect(jsonPath("$[0].nombre", is("nombre")))
+                .andExpect(jsonPath("$[0].tipo", is("tipo")))
+                .andExpect(jsonPath("$[0].imagenLogo", is("imagenLogo")))
+                .andExpect(jsonPath("$[0].estado", is("estado")))
+                .andExpect(jsonPath("$[0].rating", is("4.5")))
+                .andExpect(jsonPath("$[0].leadTime", is("15")))
+                .andExpect(jsonPath("$[0].precioMinimo", is("50.0")))
+                .andExpect(jsonPath("$[0].precioMaximo", is("100.0")))
+                .andExpect(jsonPath("$[0].addressDto.street", is("street")))
+                .andExpect(jsonPath("$[0].addressDto.postalCode", is("postalCode")))
+                .andExpect(jsonPath("$[0].addressDto.floor", is("floor")))
+                .andExpect(jsonPath("$[0].addressDto.department", is("department")));
+    }
+
+    @Test
+    public void getComerciosWithNonMatchingFilters() throws Exception {
+        Comercio comercio = createDefaultComercio();
+        comercioRepository.saveAndFlush(comercio);
+
+        mockMvc.perform(get("/api/mobileUser/comercios/?search=tipo:tipo,leadTime<60,precioMinimo>50,precioMaximo<120,totalPedidos>200,rating>4")
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(content()
+                        .contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
+                .andExpect(content().string("[]"));
     }
 
     @Test

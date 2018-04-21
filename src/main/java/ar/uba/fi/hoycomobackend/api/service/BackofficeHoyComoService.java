@@ -2,9 +2,9 @@ package ar.uba.fi.hoycomobackend.api.service;
 
 import ar.uba.fi.hoycomobackend.api.dto.AddressDto;
 import ar.uba.fi.hoycomobackend.api.dto.ComercioHoyComoDto;
-import ar.uba.fi.hoycomobackend.entity.Address;
-import ar.uba.fi.hoycomobackend.entity.Comercio;
-import ar.uba.fi.hoycomobackend.repository.ComercioRepository;
+import ar.uba.fi.hoycomobackend.database.entity.Address;
+import ar.uba.fi.hoycomobackend.database.entity.Comercio;
+import ar.uba.fi.hoycomobackend.database.repository.ComercioRepository;
 import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

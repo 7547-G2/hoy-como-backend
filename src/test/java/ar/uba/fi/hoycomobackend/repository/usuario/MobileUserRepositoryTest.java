@@ -1,7 +1,7 @@
 package ar.uba.fi.hoycomobackend.repository.usuario;
 
-import ar.uba.fi.hoycomobackend.entity.MobileUser;
-import ar.uba.fi.hoycomobackend.repository.MobileUserRepository;
+import ar.uba.fi.hoycomobackend.database.entity.MobileUser;
+import ar.uba.fi.hoycomobackend.database.repository.MobileUserRepository;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;

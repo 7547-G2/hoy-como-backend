@@ -2,10 +2,10 @@ package ar.uba.fi.hoycomobackend.api.service;
 
 import ar.uba.fi.hoycomobackend.api.dto.MobileUserDto;
 import ar.uba.fi.hoycomobackend.api.dto.MobileUserStateDto;
-import ar.uba.fi.hoycomobackend.entity.MobileUser;
+import ar.uba.fi.hoycomobackend.database.entity.MobileUser;
+import ar.uba.fi.hoycomobackend.database.repository.ComercioRepository;
+import ar.uba.fi.hoycomobackend.database.repository.MobileUserRepository;
 import ar.uba.fi.hoycomobackend.entity.MobileUserState;
-import ar.uba.fi.hoycomobackend.repository.ComercioRepository;
-import ar.uba.fi.hoycomobackend.repository.MobileUserRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.Test;
 import org.mockito.Mockito;

@@ -2,10 +2,9 @@ package ar.uba.fi.hoycomobackend.integration;
 
 import ar.uba.fi.hoycomobackend.App;
 import ar.uba.fi.hoycomobackend.api.dto.ComercioHoyComoDto;
-import ar.uba.fi.hoycomobackend.entity.Address;
-import ar.uba.fi.hoycomobackend.entity.Comercio;
-import ar.uba.fi.hoycomobackend.repository.ComercioRepository;
-import com.fasterxml.jackson.core.JsonProcessingException;
+import ar.uba.fi.hoycomobackend.database.entity.Address;
+import ar.uba.fi.hoycomobackend.database.entity.Comercio;
+import ar.uba.fi.hoycomobackend.database.repository.ComercioRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.After;
 import org.junit.Test;
