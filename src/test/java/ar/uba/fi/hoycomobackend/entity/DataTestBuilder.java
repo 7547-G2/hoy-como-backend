@@ -7,6 +7,8 @@ import ar.uba.fi.hoycomobackend.api.dto.PlatoDto;
 
 public class DataTestBuilder {
 
+    private static MobileUserState DEFAULT_MOBILE_USER_STATE = MobileUserState.AUTHORIZED;
+
     public static Comercio createComercio(String email, String nombre) {
         Comercio comercio = new Comercio();
         comercio.setEmail(email);
@@ -36,7 +38,7 @@ public class DataTestBuilder {
         mobileUser.setUsername(username);
         mobileUser.setFirstName(firstName);
         mobileUser.setLastName(lastName);
-        mobileUser.setState("state");
+        mobileUser.setState(DEFAULT_MOBILE_USER_STATE);
 
         return mobileUser;
     }
@@ -47,7 +49,7 @@ public class DataTestBuilder {
         mobileUser.setUsername("username");
         mobileUser.setFirstName("firstName");
         mobileUser.setLastName("lastName");
-        mobileUser.setState("state");
+        mobileUser.setState(DEFAULT_MOBILE_USER_STATE);
         Address address = createDefaultAddress();
         mobileUser.setAddress(address);
 
@@ -116,7 +118,7 @@ public class DataTestBuilder {
 
     public static MobileUser createMobileUser(Long facebookId, String username, String firstName, String lastName, Boolean authorized) {
         MobileUser mobileUser = createMobileUser(facebookId, username, firstName, lastName);
-        mobileUser.setState("enabled");
+        mobileUser.setState(DEFAULT_MOBILE_USER_STATE);
 
         return mobileUser;
     }

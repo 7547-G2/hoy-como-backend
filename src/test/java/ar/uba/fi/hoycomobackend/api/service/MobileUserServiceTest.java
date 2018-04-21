@@ -1,13 +1,17 @@
 package ar.uba.fi.hoycomobackend.api.service;
 
 import ar.uba.fi.hoycomobackend.api.dto.MobileUserDto;
+import ar.uba.fi.hoycomobackend.api.dto.MobileUserStateDto;
 import ar.uba.fi.hoycomobackend.entity.MobileUser;
+import ar.uba.fi.hoycomobackend.entity.MobileUserState;
 import ar.uba.fi.hoycomobackend.repository.ComercioRepository;
 import ar.uba.fi.hoycomobackend.repository.MobileUserRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.Test;
 import org.mockito.Mockito;
 import org.modelmapper.ModelMapper;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 
 import java.util.Optional;
 
@@ -53,9 +57,13 @@ public class MobileUserServiceTest {
         Optional<MobileUser> mobileUserOptional = Optional.of(createDefaultMobileUser());
         when(mobileUserRepository.getMobileUserByFacebookId(1L)).thenReturn(mobileUserOptional);
 
-        String response = mobileUserService.getMobileUserAuthorizedById(1L);
+        ResponseEntity response = mobileUserService.getMobileUserAuthorizedById(1L);
 
-        assertThat(response).isEqualTo("state");
+        HttpStatus statusCode = response.getStatusCode();
+        assertThat(statusCode).isEqualTo(HttpStatus.OK);
+        MobileUserStateDto mobileUserStateDto = (MobileUserStateDto) response.getBody();
+        MobileUserStateDto expectedMobileUserStateDto = new MobileUserStateDto(HttpStatus.OK, MobileUserState.AUTHORIZED);
+        assertThat(mobileUserStateDto).isEqualToComparingFieldByField(expectedMobileUserStateDto);
     }
 
     @Test
@@ -63,8 +71,9 @@ public class MobileUserServiceTest {
         Optional<MobileUser> mobileUserOptional = Optional.empty();
         when(mobileUserRepository.getMobileUserByFacebookId(1L)).thenReturn(mobileUserOptional);
 
-        String response = mobileUserService.getMobileUserAuthorizedById(1L);
+        ResponseEntity response = mobileUserService.getMobileUserAuthorizedById(1L);
 
-        assertThat(response).isEqualTo("No existe el usuario");
+        HttpStatus statusCode = response.getStatusCode();
+        assertThat(statusCode).isEqualTo(HttpStatus.NOT_FOUND);
     }
 }

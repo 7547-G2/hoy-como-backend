@@ -4,6 +4,7 @@ import ar.uba.fi.hoycomobackend.App;
 import ar.uba.fi.hoycomobackend.api.dto.AddressDto;
 import ar.uba.fi.hoycomobackend.api.dto.MobileUserDto;
 import ar.uba.fi.hoycomobackend.entity.Comercio;
+import ar.uba.fi.hoycomobackend.entity.MobileUserState;
 import ar.uba.fi.hoycomobackend.repository.ComercioRepository;
 import ar.uba.fi.hoycomobackend.repository.MobileUserRepository;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -44,7 +45,7 @@ public class MobileUserRestControllerIntegrationTest {
     private static String FIRST_NAME = "firstName";
     private static String LAST_NAME = "lastName";
     private static String USER_NAME = "userName";
-    private static String STATE = "state";
+    private static MobileUserState STATE = MobileUserState.AUTHORIZED;
 
     @Autowired
     private MockMvc mockMvc;
@@ -83,7 +84,7 @@ public class MobileUserRestControllerIntegrationTest {
                 .andExpect(jsonPath("$[0].username", is(USER_NAME)))
                 .andExpect(jsonPath("$[0].firstName", is(FIRST_NAME)))
                 .andExpect(jsonPath("$[0].lastName", is(LAST_NAME)))
-                .andExpect(jsonPath("$[0].state", is(STATE)))
+                .andExpect(jsonPath("$[0].mobileUserState", is(STATE.name())))
                 .andExpect(jsonPath("$[0].addressDto.street", is(STREET)))
                 .andExpect(jsonPath("$[0].addressDto.postalCode", is(POSTAL_CODE)))
                 .andExpect(jsonPath("$[0].addressDto.floor", is(FLOOR)))
@@ -103,7 +104,7 @@ public class MobileUserRestControllerIntegrationTest {
                 .andExpect(jsonPath("$.username", is(USER_NAME)))
                 .andExpect(jsonPath("$.firstName", is(FIRST_NAME)))
                 .andExpect(jsonPath("$.lastName", is(LAST_NAME)))
-                .andExpect(jsonPath("$.state", is(STATE)))
+                .andExpect(jsonPath("$.mobileUserState", is(STATE.name())))
                 .andExpect(jsonPath("$.addressDto.street", is(STREET)))
                 .andExpect(jsonPath("$.addressDto.postalCode", is(POSTAL_CODE)))
                 .andExpect(jsonPath("$.addressDto.floor", is(FLOOR)))
@@ -113,10 +114,11 @@ public class MobileUserRestControllerIntegrationTest {
     @Test
     public void changeStateToAMobileUser() throws Exception {
         createPostNewMobileUser();
+        MobileUserState mobileUserStateToChangeTo = MobileUserState.UNAUTHORIZED;
 
         mockMvc.perform(put("/api/mobileUser/1/state")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content("otherState"));
+                .content(mobileUserStateToChangeTo.getValue().toString()));
 
         mockMvc.perform(get("/api/mobileUser/1")
                 .contentType(MediaType.APPLICATION_JSON))
@@ -127,7 +129,7 @@ public class MobileUserRestControllerIntegrationTest {
                 .andExpect(jsonPath("$.username", is(USER_NAME)))
                 .andExpect(jsonPath("$.firstName", is(FIRST_NAME)))
                 .andExpect(jsonPath("$.lastName", is(LAST_NAME)))
-                .andExpect(jsonPath("$.state", is("otherState")))
+                .andExpect(jsonPath("$.mobileUserState", is(mobileUserStateToChangeTo.name())))
                 .andExpect(jsonPath("$.addressDto.street", is(STREET)))
                 .andExpect(jsonPath("$.addressDto.postalCode", is(POSTAL_CODE)))
                 .andExpect(jsonPath("$.addressDto.floor", is(FLOOR)))
@@ -216,7 +218,7 @@ public class MobileUserRestControllerIntegrationTest {
         mobileUserDto.setFirstName(FIRST_NAME);
         mobileUserDto.setLastName(LAST_NAME);
         mobileUserDto.setUsername(USER_NAME);
-        mobileUserDto.setState(STATE);
+        mobileUserDto.setMobileUserState(STATE);
         mobileUserDto.setAddressDto(address);
 
         return mobileUserDto;
