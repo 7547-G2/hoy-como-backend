@@ -1,6 +1,6 @@
-package ar.uba.fi.hoycomobackend.repository;
+package ar.uba.fi.hoycomobackend.database.repository;
 
-import ar.uba.fi.hoycomobackend.entity.MobileUser;
+import ar.uba.fi.hoycomobackend.database.entity.MobileUser;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;

@@ -1,4 +1,4 @@
-package ar.uba.fi.hoycomobackend.entity;
+package ar.uba.fi.hoycomobackend.database.entity;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -21,6 +21,11 @@ public class Comercio {
     private String razonSocial;
     private String tipo;
     private String token;
+    private Integer leadTime;
+    private Float precioMinimo;
+    private Float precioMaximo;
+    private Integer totalPedidos;
+    private Float rating;
     @NotNull
     private String password;
     @Column(columnDefinition = "text")
@@ -129,5 +134,45 @@ public class Comercio {
 
     public void setEstado(String estado) {
         this.estado = estado;
+    }
+
+    public Integer getLeadTime() {
+        return leadTime;
+    }
+
+    public void setLeadTime(Integer leadTime) {
+        this.leadTime = leadTime;
+    }
+
+    public Float getPrecioMinimo() {
+        return precioMinimo;
+    }
+
+    public void setPrecioMinimo(Float precioMinimo) {
+        this.precioMinimo = precioMinimo;
+    }
+
+    public Float getPrecioMaximo() {
+        return precioMaximo;
+    }
+
+    public void setPrecioMaximo(Float precioMaximo) {
+        this.precioMaximo = precioMaximo;
+    }
+
+    public Integer getTotalPedidos() {
+        return totalPedidos;
+    }
+
+    public void setTotalPedidos(Integer totalPedidos) {
+        this.totalPedidos = totalPedidos;
+    }
+
+    public Float getRating() {
+        return rating;
+    }
+
+    public void setRating(Float rating) {
+        this.rating = rating;
     }
 }

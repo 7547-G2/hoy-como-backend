@@ -4,6 +4,9 @@ import ar.uba.fi.hoycomobackend.api.dto.AddressDto;
 import ar.uba.fi.hoycomobackend.api.dto.ComercioHoyComoDto;
 import ar.uba.fi.hoycomobackend.api.dto.MobileUserDto;
 import ar.uba.fi.hoycomobackend.api.dto.PlatoDto;
+import ar.uba.fi.hoycomobackend.database.entity.Address;
+import ar.uba.fi.hoycomobackend.database.entity.Comercio;
+import ar.uba.fi.hoycomobackend.database.entity.MobileUser;
 
 public class DataTestBuilder {
 
@@ -77,6 +80,11 @@ public class DataTestBuilder {
         comercio.setPassword("password");
         comercio.setEstado("estado");
         comercio.setImagenLogo("imagenLogo");
+        comercio.setLeadTime(15);
+        comercio.setPrecioMinimo(50f);
+        comercio.setPrecioMaximo(100f);
+        comercio.setTotalPedidos(20);
+        comercio.setRating(4.5f);
         comercio.setAddress(address);
 
         return comercio;

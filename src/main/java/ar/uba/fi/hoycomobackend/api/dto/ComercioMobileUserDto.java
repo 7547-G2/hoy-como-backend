@@ -9,8 +9,8 @@ public class ComercioMobileUserDto {
     private String estado;
     private String rating;
     private String leadTime;
-    private String minPrice;
-    private String maxPrice;
+    private String precioMinimo;
+    private String precioMaximo;
     private AddressDto addressDto;
 
     public Long getId() {
@@ -61,20 +61,20 @@ public class ComercioMobileUserDto {
         this.leadTime = leadTime;
     }
 
-    public String getMinPrice() {
-        return minPrice;
+    public String getPrecioMinimo() {
+        return precioMinimo;
     }
 
-    public void setMinPrice(String minPrice) {
-        this.minPrice = minPrice;
+    public void setPrecioMinimo(String precioMinimo) {
+        this.precioMinimo = precioMinimo;
     }
 
-    public String getMaxPrice() {
-        return maxPrice;
+    public String getPrecioMaximo() {
+        return precioMaximo;
     }
 
-    public void setMaxPrice(String maxPrice) {
-        this.maxPrice = maxPrice;
+    public void setPrecioMaximo(String precioMaximo) {
+        this.precioMaximo = precioMaximo;
     }
 
     public AddressDto getAddressDto() {

@@ -1,23 +1,27 @@
 package ar.uba.fi.hoycomobackend.api.service;
 
 import ar.uba.fi.hoycomobackend.api.dto.*;
-import ar.uba.fi.hoycomobackend.entity.Address;
-import ar.uba.fi.hoycomobackend.entity.Comercio;
-import ar.uba.fi.hoycomobackend.entity.MobileUser;
+import ar.uba.fi.hoycomobackend.database.entity.Address;
+import ar.uba.fi.hoycomobackend.database.entity.Comercio;
+import ar.uba.fi.hoycomobackend.database.entity.MobileUser;
+import ar.uba.fi.hoycomobackend.database.repository.ComercioRepository;
+import ar.uba.fi.hoycomobackend.database.repository.MobileUserRepository;
+import ar.uba.fi.hoycomobackend.database.specification.ComercioSpecificationBuilder;
 import ar.uba.fi.hoycomobackend.entity.MobileUserState;
-import ar.uba.fi.hoycomobackend.repository.ComercioRepository;
-import ar.uba.fi.hoycomobackend.repository.MobileUserRepository;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @Service
 public class MobileUserService {
@@ -167,9 +171,17 @@ public class MobileUserService {
         return response;
     }
 
-    public List<ComercioMobileUserDto> getComercioMobileUserDtoSet() {
+    public List<ComercioMobileUserDto> getComercioMobileUserDtoSet(String search) {
         LOGGER.info("Getting all Comercios");
-        List<Comercio> comercioList = comercioRepository.findAll();
+        ComercioSpecificationBuilder builder = new ComercioSpecificationBuilder();
+        Pattern pattern = Pattern.compile("(\\w+?)(:|<|>)(\\w+?),");
+        Matcher matcher = pattern.matcher(search + ",");
+        while (matcher.find()) {
+            builder.with(matcher.group(1), matcher.group(2), matcher.group(3));
+        }
+
+        Specification<Comercio> spec = builder.build();
+        List<Comercio> comercioList = comercioRepository.findAll(spec);
         List<ComercioMobileUserDto> comercioMobileUserDtoList = getComercioDtos(comercioList);
 
         return comercioMobileUserDtoList;
@@ -183,15 +195,6 @@ public class MobileUserService {
             ComercioMobileUserDto comercioMobileUserDto = modelMapper.map(comercio, ComercioMobileUserDto.class);
             comercioMobileUserDto.setAddressDto(addressDto);
             comercioMobileUserDtoList.add(comercioMobileUserDto);
-            Random random = new Random();
-            Integer randomLeadTime = random.nextInt(40 + 1 - 15) + 15;
-            Integer randomMinPrice = random.nextInt(70 + 1 - 50) + 50;
-            Integer randomMaxPrice =  random.nextInt(120 + 1 - 90) + 90;
-            Integer randomRating = random.nextInt(5 + 1);
-            comercioMobileUserDto.setLeadTime(randomLeadTime.toString());
-            comercioMobileUserDto.setMinPrice(randomMinPrice.toString());
-            comercioMobileUserDto.setMaxPrice(randomMaxPrice.toString());
-            comercioMobileUserDto.setRating(randomRating.toString());
         }
         return comercioMobileUserDtoList;
     }

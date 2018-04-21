@@ -59,8 +59,8 @@ public class MobileUserRestController {
     }
 
     @GetMapping(value = "/mobileUser/comercios")
-    public List<ComercioMobileUserDto> getComercioMobileUserDtoSet() {
-        return mobileUserService.getComercioMobileUserDtoSet();
+    public List<ComercioMobileUserDto> getComercioMobileUserDtoSet(@RequestParam(value="search", required=false) String search) {
+        return mobileUserService.getComercioMobileUserDtoSet(search);
     }
 
     @PutMapping(value = "/mobileUser/{mobileUserFacebookId}/state")
