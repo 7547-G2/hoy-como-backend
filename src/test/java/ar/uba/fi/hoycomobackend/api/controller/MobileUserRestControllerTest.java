@@ -42,7 +42,7 @@ public class MobileUserRestControllerTest {
 
         List<MobileUserDto> allMobileUserDto = Arrays.asList(mobileUserDto);
 
-        given(mobileUserService.getMobileUserList()).willReturn(allMobileUserDto);
+        given(mobileUserService.getMobileUserList()).willReturn(ResponseEntity.ok(allMobileUserDto));
 
         mockMvc.perform(get(MOBILE_USER_API)
                 .contentType(MediaType.APPLICATION_JSON))
@@ -57,7 +57,7 @@ public class MobileUserRestControllerTest {
     public void whenGetMobileUserById_thenReturnJsonArray() throws Exception {
         MobileUserDto mobileUserDto = createMobileUserDto(1L, "username", "firstName", "lastName");
 
-        given(mobileUserService.getMobileUserById(1L)).willReturn(mobileUserDto);
+        given(mobileUserService.getMobileUserById(1L)).willReturn(ResponseEntity.ok(mobileUserDto));
 
         mockMvc.perform(get(MOBILE_USER_API + "/1")
                 .contentType(MediaType.APPLICATION_JSON))
