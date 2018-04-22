@@ -1,8 +1,6 @@
 package ar.uba.fi.hoycomobackend.database.entity;
 
 
-import ar.uba.fi.hoycomobackend.entity.MobileUserState;
-
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.util.List;

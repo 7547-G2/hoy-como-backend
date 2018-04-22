@@ -4,9 +4,9 @@ import ar.uba.fi.hoycomobackend.App;
 import ar.uba.fi.hoycomobackend.api.dto.AddressDto;
 import ar.uba.fi.hoycomobackend.api.dto.MobileUserDto;
 import ar.uba.fi.hoycomobackend.database.entity.Comercio;
+import ar.uba.fi.hoycomobackend.database.entity.MobileUserState;
 import ar.uba.fi.hoycomobackend.database.repository.ComercioRepository;
 import ar.uba.fi.hoycomobackend.database.repository.MobileUserRepository;
-import ar.uba.fi.hoycomobackend.entity.MobileUserState;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.After;
 import org.junit.Test;
@@ -24,7 +24,7 @@ import org.springframework.test.web.servlet.ResultActions;
 import static ar.uba.fi.hoycomobackend.entity.DataTestBuilder.createDefaultComercio;
 import static org.assertj.core.api.Java6Assertions.assertThat;
 import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.nullValue;
+import static org.hamcrest.Matchers.hasSize;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -165,7 +165,8 @@ public class MobileUserRestControllerIntegrationTest {
                         .contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$[0].id", is(comercio.getId().intValue())))
                 .andExpect(jsonPath("$[0].nombre", is("nombre")))
-                .andExpect(jsonPath("$[0].tipo", is("tipo")))
+                .andExpect(jsonPath("$[0].tipoComidaSet", hasSize(1)))
+                .andExpect(jsonPath("$[0].tipoComidaSet.[0].tipo", is("tipo")))
                 .andExpect(jsonPath("$[0].imagenLogo", is("imagenLogo")))
                 .andExpect(jsonPath("$[0].estado", is("estado")))
                 .andExpect(jsonPath("$[0].rating", is("4.5")))
@@ -190,7 +191,8 @@ public class MobileUserRestControllerIntegrationTest {
                         .contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$[0].id", is(comercio.getId().intValue())))
                 .andExpect(jsonPath("$[0].nombre", is("nombre")))
-                .andExpect(jsonPath("$[0].tipo", is("tipo")))
+                .andExpect(jsonPath("$[0].tipoComidaSet", hasSize(1)))
+                .andExpect(jsonPath("$[0].tipoComidaSet.[0].tipo", is("tipo")))
                 .andExpect(jsonPath("$[0].imagenLogo", is("imagenLogo")))
                 .andExpect(jsonPath("$[0].estado", is("estado")))
                 .andExpect(jsonPath("$[0].rating", is("4.5")))

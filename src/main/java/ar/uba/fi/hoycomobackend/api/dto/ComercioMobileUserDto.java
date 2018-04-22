@@ -1,10 +1,12 @@
 package ar.uba.fi.hoycomobackend.api.dto;
 
+import java.util.Set;
+
 public class ComercioMobileUserDto {
 
     private Long id;
     private String nombre;
-    private String tipo;
+    private Set<TipoComidaDto> tipoComidaSet;
     private String imagenLogo;
     private String estado;
     private String rating;
@@ -27,14 +29,6 @@ public class ComercioMobileUserDto {
 
     public void setNombre(String nombre) {
         this.nombre = nombre;
-    }
-
-    public String getTipo() {
-        return tipo;
-    }
-
-    public void setTipo(String tipo) {
-        this.tipo = tipo;
     }
 
     public String getImagenLogo() {
@@ -91,5 +85,13 @@ public class ComercioMobileUserDto {
 
     public void setRating(String rating) {
         this.rating = rating;
+    }
+
+    public Set<TipoComidaDto> getTipoComidaSet() {
+        return tipoComidaSet;
+    }
+
+    public void setTipoComidaSet(Set<TipoComidaDto> tipoComidaSet) {
+        this.tipoComidaSet = tipoComidaSet;
     }
 }
