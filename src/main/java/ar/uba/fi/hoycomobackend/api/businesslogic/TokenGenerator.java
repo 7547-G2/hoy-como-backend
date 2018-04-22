@@ -1,4 +1,4 @@
-package ar.uba.fi.hoycomobackend.utils;
+package ar.uba.fi.hoycomobackend.api.businesslogic;
 
 import org.springframework.stereotype.Component;
 

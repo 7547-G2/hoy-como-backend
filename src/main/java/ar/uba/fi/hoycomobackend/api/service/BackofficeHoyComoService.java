@@ -1,14 +1,18 @@
 package ar.uba.fi.hoycomobackend.api.service;
 
 import ar.uba.fi.hoycomobackend.api.dto.AddressDto;
+import ar.uba.fi.hoycomobackend.api.dto.ComercioHoyComoAddDto;
 import ar.uba.fi.hoycomobackend.api.dto.ComercioHoyComoDto;
 import ar.uba.fi.hoycomobackend.database.entity.Address;
 import ar.uba.fi.hoycomobackend.database.entity.Comercio;
 import ar.uba.fi.hoycomobackend.database.queries.ComercioQuery;
+import org.hibernate.exception.ConstraintViolationException;
 import org.modelmapper.ModelMapper;
+import org.postgresql.util.PSQLException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -58,46 +62,41 @@ public class BackofficeHoyComoService {
         return comercioHoyComoDtoList;
     }
 
-    public ResponseEntity addComercio(ComercioHoyComoDto comercioHoyComoDto) {
+    public ResponseEntity addComercio(ComercioHoyComoAddDto comercioHoyComoAddDto) {
         LOGGER.info("Adding a new Comercio");
-        comercioHoyComoDto.setId(null);
+        comercioHoyComoAddDto.setId(null);
 
-        return addComercioToDatabaseFromDto(comercioHoyComoDto);
+        return addComercioToDatabaseFromDto(comercioHoyComoAddDto);
     }
 
-    public ResponseEntity updateComercio(Long comercioId, ComercioHoyComoDto comercioHoyComoDto) {
+    public ResponseEntity updateComercio(Long comercioId, ComercioHoyComoAddDto comercioHoyComoAddDto) {
         LOGGER.info("Trying to update comercio with id: {}", comercioId);
         Optional<Comercio> comercioOptional = comercioQuery.getComercioById(comercioId);
 
         if (comercioOptional.isPresent()) {
             Comercio comercio = comercioOptional.get();
-            comercioHoyComoDto.setId(comercio.getId());
+            comercioHoyComoAddDto.setId(comercio.getId());
 
-            return addComercioToDatabaseFromDto(comercioHoyComoDto);
+            return addComercioToDatabaseFromDto(comercioHoyComoAddDto);
         } else
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No se encontró ningún comercio con id: " + comercioId);
     }
 
-    private ResponseEntity addComercioToDatabaseFromDto(ComercioHoyComoDto comercioHoyComoDto) {
-        Comercio comercio = modelMapper.map(comercioHoyComoDto, Comercio.class);
-        AddressDto addressDto = comercioHoyComoDto.getAddressDto();
+    private ResponseEntity addComercioToDatabaseFromDto(ComercioHoyComoAddDto comercioHoyComoAddDto) {
+        Comercio comercio = modelMapper.map(comercioHoyComoAddDto, Comercio.class);
+        AddressDto addressDto = comercioHoyComoAddDto.getAddressDto();
         Address address = modelMapper.map(addressDto, Address.class);
         comercio.setAddress(address);
         try {
             comercioQuery.saveAndFlush(comercio);
             return ResponseEntity.ok(CREATION_SUCCESSFUL);
-        } catch (RuntimeException e) {
+        } catch (DataIntegrityViolationException e) {
             LOGGER.error("Got the following error while trying to save a new Comercio: {}", e);
 
-            String cause = getCause(e);
+            String cause = e.getCause().getCause().getMessage();
             return ResponseEntity.status(HttpStatus.PRECONDITION_FAILED).body("No se pudo agregar el comercio debido a " + cause);
         }
     }
 
-    private String getCause(RuntimeException e) {
-        if (e.getMessage().contains("23505"))
-            return "email ya utilizado";
-        return e.getMessage();
-    }
 
 }

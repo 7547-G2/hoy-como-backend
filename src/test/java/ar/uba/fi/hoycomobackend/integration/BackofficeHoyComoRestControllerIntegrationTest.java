@@ -14,7 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
-import org.springframework.test.context.TestPropertySource;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
@@ -34,7 +34,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT, classes = App.class)
 @AutoConfigureMockMvc
-@TestPropertySource(locations = "classpath:application-localprod.yml")
+@ActiveProfiles("localprod")
 public class BackofficeHoyComoRestControllerIntegrationTest {
 
     @Autowired
@@ -70,7 +70,7 @@ public class BackofficeHoyComoRestControllerIntegrationTest {
                                     .andExpect(status().isPreconditionFailed())
                                     .andReturn();
         String content = mvcResult.getResponse().getContentAsString();
-        assertThat(content).isEqualToIgnoringCase("No se pudo agregar el comercio debido a email ya utilizado");
+        assertThat(content).contains("Ya existe la llave");
 
     }
 

@@ -1,17 +1,21 @@
 spring:
   datasource:
-    url: jdbc:postgresql://localhost:5432/testdb
     driver-class-name: org.postgresql.Driver
+    maxActive: 10
+    maxIdle: 5
+    minIdle: 2
+    initialSize: 5
+    removeAbandoned: true
+    url: jdbc:postgresql://localhost:5432/testdb
     username: postgres
     password: 1
   jpa:
-    open-in-view: false
+    hibernate:
+      ddl-auto: create-drop
     properties:
       hibernate:
         jdbc:
           lob:
             non_contextual_creation: true
         dialect: org.hibernate.dialect.PostgreSQL94Dialect
-    hibernate:
-      ddl-auto: create-drop
-    generate-ddl: true
+    open-in-view: false

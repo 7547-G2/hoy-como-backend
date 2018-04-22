@@ -1,14 +1,15 @@
 package ar.uba.fi.hoycomobackend.api.service;
 
+import ar.uba.fi.hoycomobackend.api.businesslogic.ComercioPriceUpdater;
 import ar.uba.fi.hoycomobackend.api.dto.BackofficeComercioSessionDto;
 import ar.uba.fi.hoycomobackend.api.dto.ErrorMessage;
 import ar.uba.fi.hoycomobackend.api.dto.PlatoDto;
 import ar.uba.fi.hoycomobackend.api.dto.TokenDto;
 import ar.uba.fi.hoycomobackend.database.entity.Comercio;
 import ar.uba.fi.hoycomobackend.database.entity.Plato;
-import ar.uba.fi.hoycomobackend.database.repository.ComercioRepository;
+import ar.uba.fi.hoycomobackend.database.queries.ComercioQuery;
 import ar.uba.fi.hoycomobackend.database.repository.PlatoRepository;
-import ar.uba.fi.hoycomobackend.utils.TokenGenerator;
+import ar.uba.fi.hoycomobackend.api.businesslogic.TokenGenerator;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.modelmapper.ModelMapper;
@@ -25,25 +26,27 @@ import java.util.Set;
 @Service
 public class BackofficeComercioService {
 
-    private ComercioRepository comercioRepository;
+    private ComercioQuery comercioQuery;
     private PlatoRepository platoRepository;
     private ModelMapper modelMapper;
     private ObjectMapper objectMapper;
     private TokenGenerator tokenGenerator;
+    private ComercioPriceUpdater comercioPriceUpdater;
 
     @Autowired
-    public BackofficeComercioService(ComercioRepository comercioRepository, PlatoRepository platoRepository, ModelMapper modelMapper, ObjectMapper objectMapper, TokenGenerator tokenGenerator) {
-        this.comercioRepository = comercioRepository;
+    public BackofficeComercioService(ComercioQuery comercioQuery, PlatoRepository platoRepository, ModelMapper modelMapper, ObjectMapper objectMapper, TokenGenerator tokenGenerator, ComercioPriceUpdater comercioPriceUpdater) {
+        this.comercioQuery = comercioQuery;
         this.platoRepository = platoRepository;
         this.modelMapper = modelMapper;
         this.objectMapper = objectMapper;
         this.tokenGenerator = tokenGenerator;
+        this.comercioPriceUpdater = comercioPriceUpdater;
     }
 
     public ResponseEntity getTokenFromSession(BackofficeComercioSessionDto backofficeComercioSessionDto) throws JsonProcessingException {
         String givenEmail = backofficeComercioSessionDto.getEmail();
         String givenPassword = backofficeComercioSessionDto.getPassword();
-        Optional<Comercio> comercioOptional = comercioRepository.getComercioByEmail(givenEmail);
+        Optional<Comercio> comercioOptional = comercioQuery.getComercioByEmail(givenEmail);
 
         if (comercioOptional.isPresent()) {
             Comercio comercio = comercioOptional.get();
@@ -52,7 +55,7 @@ public class BackofficeComercioService {
                 TokenDto tokenDto = createToken(matchingValidComercioId);
                 String tokenString = tokenDto.getToken();
                 comercio.setToken(tokenString);
-                comercioRepository.saveAndFlush(comercio);
+                comercioQuery.saveAndFlush(comercio);
                 String tokenDtoJson = objectMapper.writeValueAsString(tokenDto);
 
                 return ResponseEntity.ok(tokenDtoJson);
@@ -72,7 +75,7 @@ public class BackofficeComercioService {
     }
 
     public ResponseEntity getPlatosFromComercio(Long comercioId) throws JsonProcessingException {
-        Optional<Comercio> comercioOptional = comercioRepository.getComercioById(comercioId);
+        Optional<Comercio> comercioOptional = comercioQuery.getComercioById(comercioId);
 
         if (comercioOptional.isPresent()) {
             Comercio comercio = comercioOptional.get();
@@ -88,7 +91,7 @@ public class BackofficeComercioService {
     }
 
     public ResponseEntity addPlatoToComercio(Long comercioId, PlatoDto platoDto) throws JsonProcessingException {
-        Optional<Comercio> comercioOptional = comercioRepository.getComercioById(comercioId);
+        Optional<Comercio> comercioOptional = comercioQuery.getComercioById(comercioId);
 
         if (comercioOptional.isPresent()) {
             Comercio comercio = comercioOptional.get();
@@ -97,6 +100,7 @@ public class BackofficeComercioService {
 
             plato = platoRepository.saveAndFlush(plato);
             String response = objectMapper.writeValueAsString(plato.getId());
+            comercioPriceUpdater.updatePriceOfComercio(comercioId);
 
             return ResponseEntity.ok(response);
         } else
@@ -104,7 +108,7 @@ public class BackofficeComercioService {
     }
 
     public ResponseEntity updatePlatoFromComercio(Long comercioId, Long platoId, PlatoDto platoDto) throws JsonProcessingException {
-        Optional<Comercio> comercioOptional = comercioRepository.getComercioById(comercioId);
+        Optional<Comercio> comercioOptional = comercioQuery.getComercioById(comercioId);
 
         if (comercioOptional.isPresent()) {
             Comercio comercio = comercioOptional.get();
@@ -119,6 +123,7 @@ public class BackofficeComercioService {
                 String response = objectMapper.writeValueAsString(platoDto);
 
                 platoRepository.saveAndFlush(plato);
+                comercioPriceUpdater.updatePriceOfComercio(comercioId);
 
                 return ResponseEntity.ok(response);
             } else

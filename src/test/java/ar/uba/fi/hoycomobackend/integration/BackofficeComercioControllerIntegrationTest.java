@@ -12,13 +12,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
-import org.springframework.test.context.TestPropertySource;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 
+import java.util.Optional;
+
 import static ar.uba.fi.hoycomobackend.entity.DataTestBuilder.createDefaultComercio;
 import static ar.uba.fi.hoycomobackend.entity.DataTestBuilder.createDefaultPlatoDto;
+import static org.assertj.core.api.Java6Assertions.assertThat;
 import static org.hamcrest.CoreMatchers.is;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -26,7 +29,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT, classes = App.class)
 @AutoConfigureMockMvc
-@TestPropertySource(locations = "classpath:application-localprod.yml")
+@ActiveProfiles("localprod")
 public class BackofficeComercioControllerIntegrationTest {
     @Autowired
     private MockMvc mockMvc;
@@ -47,6 +50,18 @@ public class BackofficeComercioControllerIntegrationTest {
         ResultActions resultActions = createComercioWithPlato(comercioId);
 
         resultActions.andExpect(status().isOk());
+    }
+
+    @Test
+    public void addNewPlatoToExistingComercioUpdatesComercioPrices() throws Exception {
+        Long comercioId = createDefaultComercioInDatabase();
+        createComercioWithPlato(comercioId);
+        Optional<Comercio> comercioOptional = comercioRepository.getComercioById(comercioId);
+
+        assertThat(comercioOptional.isPresent()).isTrue();
+        Comercio comercio = comercioOptional.get();
+        assertThat(comercio.getPrecioMaximo()).isEqualTo(1.0f);
+        assertThat(comercio.getPrecioMinimo()).isEqualTo(1.0f);
     }
 
     @Test
@@ -74,6 +89,7 @@ public class BackofficeComercioControllerIntegrationTest {
         Long comercioId = createDefaultComercioInDatabase();
         String platoId = createComercioWithPlato(comercioId, createTestPlato()).andReturn().getResponse().getContentAsString();
         PlatoDto platoDto = createDefaultPlatoDto();
+        platoDto.setPrecio(50.0f);
         String platoDtoJson = objectMapper.writeValueAsString(platoDto);
 
         mockMvc.perform(put("/api/backofficeComercio/" + comercioId + "/platos/" + platoId)
@@ -87,7 +103,16 @@ public class BackofficeComercioControllerIntegrationTest {
                         .contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$[0].nombre", is("nombre")))
                 .andExpect(jsonPath("$[0].imagen", is("imagen")))
-                .andExpect(jsonPath("$[0].precio", is(1.0)));
+                .andExpect(jsonPath("$[0].precio", is(50.0)));
+    }
+
+    @Test
+    public void updateExistingPlatoUpdatesComercioPrices() throws Exception {
+        updateExistingPlato();
+        Comercio comercio = comercioRepository.findAll().get(0);
+        
+        assertThat(comercio.getPrecioMaximo()).isEqualTo(50.0f);
+        assertThat(comercio.getPrecioMinimo()).isEqualTo(50.0f);
     }
 
     private PlatoDto createTestPlato() {

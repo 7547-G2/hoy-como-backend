@@ -1,12 +1,14 @@
 package ar.uba.fi.hoycomobackend.api.service;
 
+import ar.uba.fi.hoycomobackend.api.businesslogic.ComercioPriceUpdater;
 import ar.uba.fi.hoycomobackend.api.dto.BackofficeComercioSessionDto;
 import ar.uba.fi.hoycomobackend.api.dto.ErrorMessage;
 import ar.uba.fi.hoycomobackend.api.dto.TokenDto;
 import ar.uba.fi.hoycomobackend.database.entity.Comercio;
+import ar.uba.fi.hoycomobackend.database.queries.ComercioQuery;
 import ar.uba.fi.hoycomobackend.database.repository.ComercioRepository;
 import ar.uba.fi.hoycomobackend.database.repository.PlatoRepository;
-import ar.uba.fi.hoycomobackend.utils.TokenGenerator;
+import ar.uba.fi.hoycomobackend.api.businesslogic.TokenGenerator;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.Test;
@@ -27,11 +29,12 @@ public class BackofficeComercioSessionServiceTest {
     private static String SESSION_PASSWORD = "password";
 
     private ObjectMapper objectMapper = Mockito.mock(ObjectMapper.class);
-    private ComercioRepository comercioRepository = Mockito.mock(ComercioRepository.class);
+    private ComercioQuery comercioQuery = Mockito.mock(ComercioQuery.class);
     private PlatoRepository platoRepository = Mockito.mock(PlatoRepository.class);
     private ModelMapper modelMapper = Mockito.mock(ModelMapper.class);
     private TokenGenerator tokenGenerator = Mockito.mock(TokenGenerator.class);
-    private BackofficeComercioService backofficeComercioSessionService = new BackofficeComercioService(comercioRepository, platoRepository, modelMapper, objectMapper, tokenGenerator);
+    private ComercioPriceUpdater comercioPriceUpdater = Mockito.mock(ComercioPriceUpdater.class);
+    private BackofficeComercioService backofficeComercioSessionService = new BackofficeComercioService(comercioQuery, platoRepository, modelMapper, objectMapper, tokenGenerator, comercioPriceUpdater);
 
     @Test
     public void getTokenFromSession_withValidSession_returnsToken() throws JsonProcessingException {
@@ -41,7 +44,7 @@ public class BackofficeComercioSessionServiceTest {
         Comercio comercio = new Comercio();
         comercio.setEmail(SESSION_EMAIL);
         comercio.setPassword(SESSION_PASSWORD);
-        when(comercioRepository.getComercioByEmail(SESSION_EMAIL)).thenReturn(Optional.of(comercio));
+        when(comercioQuery.getComercioByEmail(SESSION_EMAIL)).thenReturn(Optional.of(comercio));
 
         backofficeComercioSessionService.getTokenFromSession(backofficeComercioSessionDto);
 
@@ -54,7 +57,7 @@ public class BackofficeComercioSessionServiceTest {
         backofficeComercioSessionDto.setEmail(SESSION_EMAIL);
         backofficeComercioSessionDto.setPassword(SESSION_PASSWORD);
         Optional<Comercio> comercio = Optional.empty();
-        when(comercioRepository.getComercioByEmail(SESSION_EMAIL)).thenReturn(comercio);
+        when(comercioQuery.getComercioByEmail(SESSION_EMAIL)).thenReturn(comercio);
 
         ResponseEntity response = backofficeComercioSessionService.getTokenFromSession(backofficeComercioSessionDto);
 
