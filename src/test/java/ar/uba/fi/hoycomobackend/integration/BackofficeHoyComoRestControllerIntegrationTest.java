@@ -17,6 +17,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.ResultActions;
 
 import java.util.HashSet;
@@ -24,6 +25,7 @@ import java.util.Set;
 
 import static ar.uba.fi.hoycomobackend.entity.DataTestBuilder.createDefaultComercio;
 import static ar.uba.fi.hoycomobackend.entity.DataTestBuilder.createDefaultComercioHoyComoDto;
+import static org.assertj.core.api.Java6Assertions.assertThat;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.Matchers.hasSize;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -52,6 +54,24 @@ public class BackofficeHoyComoRestControllerIntegrationTest {
         ResultActions resultActions = createComercio();
 
         resultActions.andExpect(status().isOk());
+    }
+
+    @Test
+    public void addComercioWithExistingEmailSendsCorrectConstraintInformation() throws Exception {
+        ComercioHoyComoDto comercioHoyComoDto = createDefaultComercioHoyComoDto();
+        String comercioHoyComoDtoJson = objectMapper.writeValueAsString(comercioHoyComoDto);
+
+        mockMvc.perform(post("/api/comercios/")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(comercioHoyComoDtoJson));
+        MvcResult mvcResult = mockMvc.perform(post("/api/comercios/")
+                                    .contentType(MediaType.APPLICATION_JSON)
+                                    .content(comercioHoyComoDtoJson))
+                                    .andExpect(status().isPreconditionFailed())
+                                    .andReturn();
+        String content = mvcResult.getResponse().getContentAsString();
+        assertThat(content).isEqualToIgnoringCase("No se pudo agregar el comercio debido a email ya utilizado");
+
     }
 
     @Test
