@@ -5,7 +5,8 @@ import java.util.Map;
 
 public enum MobileUserState {
     AUTHORIZED(0),
-    UNAUTHORIZED(1);
+    UNAUTHORIZED(1),
+    NOT_FOUND(9);
 
     private static Map<Integer, MobileUserState> mobileUserStateMap = new HashMap<>();
 

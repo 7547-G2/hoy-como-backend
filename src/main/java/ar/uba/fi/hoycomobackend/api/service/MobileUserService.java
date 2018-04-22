@@ -70,11 +70,11 @@ public class MobileUserService {
             return ResponseEntity.ok(new MobileUserDto());
     }
 
-    public ResponseEntity addMobileUser(MobileUserDto mobileUserDto) {
-        LOGGER.info("Adding new MobileUser: {}", mobileUserDto);
-        AddressDto addressDto = mobileUserDto.getAddressDto();
+    public ResponseEntity addMobileUser(MobileUserAddDto mobileUserAddDto) {
+        LOGGER.info("Adding new MobileUser: {}", mobileUserAddDto);
+        AddressDto addressDto = mobileUserAddDto.getAddressDto();
         Address address = modelMapper.map(addressDto, Address.class);
-        MobileUser mobileUser = modelMapper.map(mobileUserDto, MobileUser.class);
+        MobileUser mobileUser = modelMapper.map(mobileUserAddDto, MobileUser.class);
         mobileUser.setAddress(address);
         try {
             mobileUserRepository.saveAndFlush(mobileUser);
@@ -85,18 +85,19 @@ public class MobileUserService {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorMessage(MOBILE_USER_ADD_UNSUCCESSFUL));
     }
 
-    public ResponseEntity getMobileUserAuthorizedById(Long id) {
+    public ResponseEntity getMobileUserAuthorizedById(Long id) throws JsonProcessingException {
         LOGGER.info("Checking if MobileUser is authorized by id: {}", id);
         Optional<MobileUser> mobileUserOptional = mobileUserRepository.getMobileUserByFacebookId(id);
-
+        MobileUserStateDto mobileUserStateDto;
         if (mobileUserOptional.isPresent()) {
             MobileUser mobileUser = mobileUserOptional.get();
             MobileUserState mobileUserState = mobileUser.getState();
-            MobileUserStateDto mobileUserStateDto = new MobileUserStateDto(HttpStatus.OK, mobileUserState);
-
-            return ResponseEntity.ok(mobileUserStateDto);
+            mobileUserStateDto = new MobileUserStateDto(mobileUserState);
         } else
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ErrorMessage("No se encontró ningún usuario con id: " + id));
+            mobileUserStateDto = new MobileUserStateDto(MobileUserState.NOT_FOUND);
+
+        String mobileUserStateDtoJson = objectMapper.writeValueAsString(mobileUserStateDto);
+        return ResponseEntity.ok(mobileUserStateDtoJson);
     }
 
     public ResponseEntity addFavoriteComercioToMobileUser(Long mobileUserFacebookId, Long comercioId) {

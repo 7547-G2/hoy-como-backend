@@ -1,5 +1,6 @@
 package ar.uba.fi.hoycomobackend.api.service;
 
+import ar.uba.fi.hoycomobackend.api.dto.MobileUserAddDto;
 import ar.uba.fi.hoycomobackend.api.dto.MobileUserDto;
 import ar.uba.fi.hoycomobackend.api.dto.MobileUserStateDto;
 import ar.uba.fi.hoycomobackend.database.entity.MobileUser;
@@ -7,6 +8,7 @@ import ar.uba.fi.hoycomobackend.database.entity.MobileUserState;
 import ar.uba.fi.hoycomobackend.database.queries.ComercioQuery;
 import ar.uba.fi.hoycomobackend.database.queries.TipoComidaQuery;
 import ar.uba.fi.hoycomobackend.database.repository.MobileUserRepository;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.Test;
 import org.mockito.Mockito;
@@ -45,17 +47,17 @@ public class MobileUserServiceTest {
 
     @Test
     public void addMobileUser_addsUser() {
-        MobileUserDto mobileUserDto = new MobileUserDto();
-        when(modelMapper.map(mobileUserDto, MobileUser.class)).thenReturn(new MobileUser());
+        MobileUserAddDto mobileUserAddDto = new MobileUserAddDto();
+        when(modelMapper.map(mobileUserAddDto, MobileUser.class)).thenReturn(new MobileUser());
 
-        mobileUserService.addMobileUser(mobileUserDto);
+        mobileUserService.addMobileUser(mobileUserAddDto);
 
-        verify(modelMapper).map(mobileUserDto, MobileUser.class);
+        verify(modelMapper).map(mobileUserAddDto, MobileUser.class);
         verify(mobileUserRepository).saveAndFlush(any(MobileUser.class));
     }
 
     @Test
-    public void getMobileUserAuthorizedById_returnsStateMessage() {
+    public void getMobileUserAuthorizedById_returnsStateMessage() throws JsonProcessingException {
         Optional<MobileUser> mobileUserOptional = Optional.of(createDefaultMobileUser());
         when(mobileUserRepository.getMobileUserByFacebookId(1L)).thenReturn(mobileUserOptional);
 
@@ -63,19 +65,16 @@ public class MobileUserServiceTest {
 
         HttpStatus statusCode = response.getStatusCode();
         assertThat(statusCode).isEqualTo(HttpStatus.OK);
-        MobileUserStateDto mobileUserStateDto = (MobileUserStateDto) response.getBody();
-        MobileUserStateDto expectedMobileUserStateDto = new MobileUserStateDto(HttpStatus.OK, MobileUserState.AUTHORIZED);
-        assertThat(mobileUserStateDto).isEqualToComparingFieldByField(expectedMobileUserStateDto);
     }
 
     @Test
-    public void getMobileUserAuthorizedById_nonExistant_returnsUserNonExistantMessage() {
+    public void getMobileUserAuthorizedById_nonExistant_returnsUserNonExistantMessage() throws JsonProcessingException {
         Optional<MobileUser> mobileUserOptional = Optional.empty();
         when(mobileUserRepository.getMobileUserByFacebookId(1L)).thenReturn(mobileUserOptional);
 
         ResponseEntity response = mobileUserService.getMobileUserAuthorizedById(1L);
 
         HttpStatus statusCode = response.getStatusCode();
-        assertThat(statusCode).isEqualTo(HttpStatus.NOT_FOUND);
+        assertThat(statusCode).isEqualTo(HttpStatus.OK);
     }
 }

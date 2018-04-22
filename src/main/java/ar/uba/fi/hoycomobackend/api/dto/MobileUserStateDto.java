@@ -1,16 +1,29 @@
 package ar.uba.fi.hoycomobackend.api.dto;
 
 import ar.uba.fi.hoycomobackend.database.entity.MobileUserState;
-import org.springframework.http.HttpStatus;
 
 public class MobileUserStateDto {
-    String code;
     Integer state;
     String description;
 
-    public MobileUserStateDto(HttpStatus httpStatus, MobileUserState mobileUserState) {
-        this.code = httpStatus.toString();
+    public MobileUserStateDto(MobileUserState mobileUserState) {
         this.state = mobileUserState.getValue();
         this.description = mobileUserState.name();
+    }
+
+    public Integer getState() {
+        return state;
+    }
+
+    public void setState(Integer state) {
+        this.state = state;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 }

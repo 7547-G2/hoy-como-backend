@@ -4,6 +4,7 @@ import ar.uba.fi.hoycomobackend.App;
 import ar.uba.fi.hoycomobackend.api.dto.AddressDto;
 import ar.uba.fi.hoycomobackend.api.dto.MobileUserDto;
 import ar.uba.fi.hoycomobackend.database.entity.Comercio;
+import ar.uba.fi.hoycomobackend.database.entity.MobileUser;
 import ar.uba.fi.hoycomobackend.database.entity.MobileUserState;
 import ar.uba.fi.hoycomobackend.database.entity.TipoComida;
 import ar.uba.fi.hoycomobackend.database.repository.ComercioRepository;
@@ -24,6 +25,7 @@ import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.ResultActions;
 
 import static ar.uba.fi.hoycomobackend.entity.DataTestBuilder.createDefaultComercio;
+import static ar.uba.fi.hoycomobackend.entity.DataTestBuilder.createDefaultMobileUser;
 import static ar.uba.fi.hoycomobackend.entity.DataTestBuilder.createDefaultTipoComida;
 import static org.assertj.core.api.Java6Assertions.assertThat;
 import static org.hamcrest.CoreMatchers.is;
@@ -63,6 +65,7 @@ public class MobileUserRestControllerIntegrationTest {
     public void tearDown() {
         mobileUserRepository.deleteAll();
         comercioRepository.deleteAll();
+        tipoComidaRepository.deleteAll();
     }
 
     @Test
@@ -72,6 +75,21 @@ public class MobileUserRestControllerIntegrationTest {
         MvcResult mvcResult = resultActions.andExpect(status().isOk()).andReturn();
         String response = mvcResult.getResponse().getContentAsString();
         assertThat(response).isEqualTo("Se agregó usuario exitosamente");
+    }
+
+    @Test
+    public void newlyCreatedMobileUserIsAuthorized() throws Exception {
+        MobileUser mobileUser = createDefaultMobileUser();
+        mobileUser = mobileUserRepository.saveAndFlush(mobileUser);
+
+        MvcResult mvcResult = mockMvc.perform(get("/api/mobileUser/" + mobileUser.getFacebookId() + "/authorized")
+                                .contentType(MediaType.APPLICATION_JSON))
+                                .andExpect(status().isOk())
+                                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
+                                .andReturn();
+        String response = mvcResult.getResponse().getContentAsString();
+
+        assertThat(response).isEqualTo("{\"state\":0,\"description\":\"AUTHORIZED\"}");
     }
 
     @Test
