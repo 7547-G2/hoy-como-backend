@@ -1,11 +1,14 @@
 package ar.uba.fi.hoycomobackend.database.entity;
 
+import org.hibernate.annotations.DynamicInsert;
+
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.util.Set;
 
 @Entity
+@DynamicInsert
 @Table(name = "comercio")
 public class Comercio {
 
@@ -16,8 +19,9 @@ public class Comercio {
     @Column(name = "email", unique = true)
     @NotNull
     private String email;
-    @Size(min = 3, max = 128)
+    @Column(columnDefinition = "varchar(256) default ''")
     private String nombre;
+    @Column(columnDefinition = "varchar(256) default ''")
     private String razonSocial;
     @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinTable(name = "comercio_tipo_comida",
@@ -28,11 +32,13 @@ public class Comercio {
     private Integer leadTime;
     private Float precioMinimo;
     private Float precioMaximo;
+    @Column(columnDefinition = "INTEGER default 0")
     private Integer totalPedidos;
+    @Column(columnDefinition = "float(2) default 1.00")
     private Float rating;
     @NotNull
     private String password;
-    @Column(columnDefinition = "text")
+    @Column(columnDefinition = "text default ''")
     private String imagenLogo;
     @Column(columnDefinition = "varchar(128) default 'deshabilitado'")
     private String estado;
