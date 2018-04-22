@@ -1,11 +1,9 @@
 package ar.uba.fi.hoycomobackend.api.service;
 
 import ar.uba.fi.hoycomobackend.api.dto.*;
-import ar.uba.fi.hoycomobackend.database.entity.Address;
-import ar.uba.fi.hoycomobackend.database.entity.Comercio;
-import ar.uba.fi.hoycomobackend.database.entity.MobileUser;
-import ar.uba.fi.hoycomobackend.database.entity.MobileUserState;
+import ar.uba.fi.hoycomobackend.database.entity.*;
 import ar.uba.fi.hoycomobackend.database.queries.ComercioQuery;
+import ar.uba.fi.hoycomobackend.database.queries.TipoComidaQuery;
 import ar.uba.fi.hoycomobackend.database.repository.MobileUserRepository;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -23,20 +21,21 @@ import java.util.*;
 public class MobileUserService {
 
     private static Logger LOGGER = LoggerFactory.getLogger(MobileUserService.class);
-    private static String NON_EXISTANT_USER_MESSAGE = "No existe el usuario";
     private static String ADDRESS_ADDED_SUCCESSFUL = "Se agregó dirección exitosamente";
     private static String MOBILE_USER_ADDED_SUCCESSFUL = "Se agregó usuario exitosamente";
     private static String MOBILE_USER_ADD_UNSUCCESSFUL = "Datos incorrectos al cargar usuario";
 
     private MobileUserRepository mobileUserRepository;
     private ComercioQuery comercioQuery;
+    private TipoComidaQuery tipoComidaQuery;
     private ModelMapper modelMapper;
     private ObjectMapper objectMapper;
 
     @Autowired
-    public MobileUserService(MobileUserRepository mobileUserRepository, ComercioQuery comercioQuery, ModelMapper modelMapper, ObjectMapper objectMapper) {
+    public MobileUserService(MobileUserRepository mobileUserRepository, ComercioQuery comercioQuery, TipoComidaQuery tipoComidaQuery, ModelMapper modelMapper, ObjectMapper objectMapper) {
         this.mobileUserRepository = mobileUserRepository;
         this.comercioQuery = comercioQuery;
+        this.tipoComidaQuery = tipoComidaQuery;
         this.modelMapper = modelMapper;
         this.objectMapper = objectMapper;
     }
@@ -193,5 +192,22 @@ public class MobileUserService {
             return ResponseEntity.ok("Mobile user with id: " + mobileUserFacebookId + " changed state successfully to: " + mobileUserState.name());
         } else
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorMessage("No existe el usuario con id: " + mobileUserFacebookId));
+    }
+
+    public ResponseEntity getTipoComidaDtoSet() {
+        Set<TipoComida> tipoComidaSet = tipoComidaQuery.getAll();
+        Set<TipoComidaDto> tipoComidaDtoSet = getTipoComidaDtoSet(tipoComidaSet);
+
+        return ResponseEntity.ok(tipoComidaDtoSet);
+    }
+
+    private Set<TipoComidaDto> getTipoComidaDtoSet(Set<TipoComida> tipoComidaSet) {
+        Set<TipoComidaDto> tipoComidaDtoSet = new HashSet<>();
+        for(TipoComida tipoComida : tipoComidaSet) {
+            TipoComidaDto tipoComidaDto = modelMapper.map(tipoComida, TipoComidaDto.class);
+            tipoComidaDtoSet.add(tipoComidaDto);
+        }
+
+        return tipoComidaDtoSet;
     }
 }

@@ -5,6 +5,7 @@ import ar.uba.fi.hoycomobackend.api.dto.MobileUserStateDto;
 import ar.uba.fi.hoycomobackend.database.entity.MobileUser;
 import ar.uba.fi.hoycomobackend.database.entity.MobileUserState;
 import ar.uba.fi.hoycomobackend.database.queries.ComercioQuery;
+import ar.uba.fi.hoycomobackend.database.queries.TipoComidaQuery;
 import ar.uba.fi.hoycomobackend.database.repository.MobileUserRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.Test;
@@ -24,9 +25,10 @@ public class MobileUserServiceTest {
 
     private MobileUserRepository mobileUserRepository = Mockito.mock(MobileUserRepository.class);
     private ComercioQuery comercioQuery = Mockito.mock(ComercioQuery.class);
+    private TipoComidaQuery tipoComidaQuery = Mockito.mock(TipoComidaQuery.class);
     private ModelMapper modelMapper = Mockito.mock(ModelMapper.class);
     private ObjectMapper objectMapper = Mockito.mock(ObjectMapper.class);
-    private MobileUserService mobileUserService = new MobileUserService(mobileUserRepository, comercioQuery, modelMapper, objectMapper);
+    private MobileUserService mobileUserService = new MobileUserService(mobileUserRepository, comercioQuery, tipoComidaQuery, modelMapper, objectMapper);
 
     @Test
     public void getMobileUserById_returnsMobileUserDto() {
