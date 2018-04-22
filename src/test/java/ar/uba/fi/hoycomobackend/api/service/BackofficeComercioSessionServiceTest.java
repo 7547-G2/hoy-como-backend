@@ -1,14 +1,13 @@
 package ar.uba.fi.hoycomobackend.api.service;
 
 import ar.uba.fi.hoycomobackend.api.businesslogic.ComercioPriceUpdater;
+import ar.uba.fi.hoycomobackend.api.businesslogic.TokenGenerator;
 import ar.uba.fi.hoycomobackend.api.dto.BackofficeComercioSessionDto;
 import ar.uba.fi.hoycomobackend.api.dto.ErrorMessage;
 import ar.uba.fi.hoycomobackend.api.dto.TokenDto;
 import ar.uba.fi.hoycomobackend.database.entity.Comercio;
 import ar.uba.fi.hoycomobackend.database.queries.ComercioQuery;
-import ar.uba.fi.hoycomobackend.database.repository.ComercioRepository;
 import ar.uba.fi.hoycomobackend.database.repository.PlatoRepository;
-import ar.uba.fi.hoycomobackend.api.businesslogic.TokenGenerator;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.Test;

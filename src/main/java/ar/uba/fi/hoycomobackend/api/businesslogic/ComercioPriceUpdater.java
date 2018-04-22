@@ -38,8 +38,8 @@ public class ComercioPriceUpdater {
 
     private PriceRange getPriceRangeFromPlatos(Set<Plato> platoSet) {
         Set<Float> filteredPrices = platoSet.stream().filter(plato -> plato.getHabilitado())
-                                    .map(Plato::getPrecio)
-                                    .collect(Collectors.toSet());
+                .map(Plato::getPrecio)
+                .collect(Collectors.toSet());
 
         PriceRange priceRange = new PriceRange();
         priceRange.maxPrice = filteredPrices.stream().max(Float::compare).get();
