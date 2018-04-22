@@ -204,7 +204,7 @@ public class MobileUserService {
 
     private Set<TipoComidaDto> getTipoComidaDtoSet(Set<TipoComida> tipoComidaSet) {
         Set<TipoComidaDto> tipoComidaDtoSet = new HashSet<>();
-        for(TipoComida tipoComida : tipoComidaSet) {
+        for (TipoComida tipoComida : tipoComidaSet) {
             TipoComidaDto tipoComidaDto = modelMapper.map(tipoComida, TipoComidaDto.class);
             tipoComidaDtoSet.add(tipoComidaDto);
         }

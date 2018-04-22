@@ -81,10 +81,10 @@ public class MobileUserRestControllerIntegrationTest {
         mobileUser = mobileUserRepository.saveAndFlush(mobileUser);
 
         MvcResult mvcResult = mockMvc.perform(get("/api/mobileUser/" + mobileUser.getFacebookId() + "/authorized")
-                                .contentType(MediaType.APPLICATION_JSON))
-                                .andExpect(status().isOk())
-                                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-                                .andReturn();
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
+                .andReturn();
         String response = mvcResult.getResponse().getContentAsString();
 
         assertThat(response).isEqualTo("{\"state\":0,\"description\":\"AUTHORIZED\"}");

@@ -65,10 +65,10 @@ public class BackofficeHoyComoRestControllerIntegrationTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(comercioHoyComoDtoJson));
         MvcResult mvcResult = mockMvc.perform(post("/api/comercios/")
-                                    .contentType(MediaType.APPLICATION_JSON)
-                                    .content(comercioHoyComoDtoJson))
-                                    .andExpect(status().isPreconditionFailed())
-                                    .andReturn();
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(comercioHoyComoDtoJson))
+                .andExpect(status().isPreconditionFailed())
+                .andReturn();
         String content = mvcResult.getResponse().getContentAsString();
         assertThat(content).contains("Ya existe la llave");
 
@@ -87,7 +87,7 @@ public class BackofficeHoyComoRestControllerIntegrationTest {
         Comercio comercio = createDefaultComercio();
         comercioRepository.saveAndFlush(comercio);
 
-        mockMvc.perform(get("/api/comercios?search=estado:estado,nombre:nombre,razonSocial:razonSocial")
+        mockMvc.perform(get("/api/comercios?search=estado:estado,nombre:nombre,razonSocial:rAzOnSocIAL")
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(content()

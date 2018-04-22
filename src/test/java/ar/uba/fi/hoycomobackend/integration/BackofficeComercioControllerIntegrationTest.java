@@ -110,7 +110,7 @@ public class BackofficeComercioControllerIntegrationTest {
     public void updateExistingPlatoUpdatesComercioPrices() throws Exception {
         updateExistingPlato();
         Comercio comercio = comercioRepository.findAll().get(0);
-        
+
         assertThat(comercio.getPrecioMaximo()).isEqualTo(50.0f);
         assertThat(comercio.getPrecioMinimo()).isEqualTo(50.0f);
     }
