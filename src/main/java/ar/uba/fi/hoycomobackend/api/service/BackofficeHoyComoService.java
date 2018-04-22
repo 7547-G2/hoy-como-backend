@@ -88,8 +88,16 @@ public class BackofficeHoyComoService {
             return ResponseEntity.ok(CREATION_SUCCESSFUL);
         } catch (RuntimeException e) {
             LOGGER.error("Got the following error while trying to save a new Comercio: {}", e);
-            return ResponseEntity.status(HttpStatus.PRECONDITION_FAILED).body("No se pudo agregar el comercio debido a " + e.getCause().getMessage());
+
+            String cause = getCause(e);
+            return ResponseEntity.status(HttpStatus.PRECONDITION_FAILED).body("No se pudo agregar el comercio debido a " + cause);
         }
+    }
+
+    private String getCause(RuntimeException e) {
+        if (e.getMessage().contains("23505"))
+            return "email ya utilizado";
+        return e.getMessage();
     }
 
 }
