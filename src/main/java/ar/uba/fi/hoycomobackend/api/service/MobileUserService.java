@@ -4,9 +4,9 @@ import ar.uba.fi.hoycomobackend.api.dto.*;
 import ar.uba.fi.hoycomobackend.database.entity.Address;
 import ar.uba.fi.hoycomobackend.database.entity.Comercio;
 import ar.uba.fi.hoycomobackend.database.entity.MobileUser;
+import ar.uba.fi.hoycomobackend.database.entity.MobileUserState;
 import ar.uba.fi.hoycomobackend.database.queries.ComercioQuery;
 import ar.uba.fi.hoycomobackend.database.repository.MobileUserRepository;
-import ar.uba.fi.hoycomobackend.entity.MobileUserState;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.modelmapper.ModelMapper;
@@ -173,6 +173,7 @@ public class MobileUserService {
             AddressDto addressDto = modelMapper.map(address, AddressDto.class);
             ComercioMobileUserDto comercioMobileUserDto = modelMapper.map(comercio, ComercioMobileUserDto.class);
             comercioMobileUserDto.setAddressDto(addressDto);
+
             comercioMobileUserDtoList.add(comercioMobileUserDto);
         }
         return comercioMobileUserDtoList;

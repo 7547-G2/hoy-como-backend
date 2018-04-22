@@ -59,7 +59,7 @@ public class BackofficeComercioSessionServiceTest {
         ResponseEntity response = backofficeComercioSessionService.getTokenFromSession(backofficeComercioSessionDto);
 
         assertThat(response.getStatusCodeValue()).isEqualTo(404);
-        ErrorMessage errorMessage = (ErrorMessage)response.getBody();
+        ErrorMessage errorMessage = (ErrorMessage) response.getBody();
         String errorMessageContent = errorMessage.getErrorMessage();
         assertThat(errorMessageContent).isEqualTo("No se encontró ningún comercio con email: " + SESSION_EMAIL);
     }

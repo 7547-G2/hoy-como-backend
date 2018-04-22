@@ -4,6 +4,7 @@ import ar.uba.fi.hoycomobackend.App;
 import ar.uba.fi.hoycomobackend.api.dto.ComercioHoyComoDto;
 import ar.uba.fi.hoycomobackend.database.entity.Address;
 import ar.uba.fi.hoycomobackend.database.entity.Comercio;
+import ar.uba.fi.hoycomobackend.database.entity.TipoComida;
 import ar.uba.fi.hoycomobackend.database.repository.ComercioRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.After;
@@ -18,12 +19,14 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import static ar.uba.fi.hoycomobackend.entity.DataTestBuilder.createDefaultComercio;
 import static ar.uba.fi.hoycomobackend.entity.DataTestBuilder.createDefaultComercioHoyComoDto;
 import static org.hamcrest.CoreMatchers.is;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.hamcrest.Matchers.hasSize;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @RunWith(SpringRunner.class)
@@ -72,14 +75,16 @@ public class BackofficeHoyComoRestControllerIntegrationTest {
                 .andExpect(jsonPath("$[0].email", is("email")))
                 .andExpect(jsonPath("$[0].nombre", is("nombre")))
                 .andExpect(jsonPath("$[0].razonSocial", is("razonSocial")))
-                .andExpect(jsonPath("$[0].tipo", is("tipo")))
+                .andExpect(jsonPath("$[0].tipoComidaSet", hasSize(1)))
+                .andExpect(jsonPath("$[0].tipoComidaSet.[0].tipo", is("tipo")))
                 .andExpect(jsonPath("$[0].password", is("password")))
                 .andExpect(jsonPath("$[0].estado", is("estado")))
                 .andExpect(jsonPath("$[0].imagenLogo", is("imagenLogo")))
                 .andExpect(jsonPath("$[0].addressDto.street", is("street")))
                 .andExpect(jsonPath("$[0].addressDto.postalCode", is("postalCode")))
                 .andExpect(jsonPath("$[0].addressDto.floor", is("floor")))
-                .andExpect(jsonPath("$[0].addressDto.department", is("department")));    }
+                .andExpect(jsonPath("$[0].addressDto.department", is("department")));
+    }
 
     @Test
     public void getCreatedComerciosWithNonMatchingFiltersReturnsEmptyList() throws Exception {
@@ -120,7 +125,8 @@ public class BackofficeHoyComoRestControllerIntegrationTest {
                 .andExpect(jsonPath("$[0].email", is("email")))
                 .andExpect(jsonPath("$[0].nombre", is("nombre")))
                 .andExpect(jsonPath("$[0].razonSocial", is("razonSocial")))
-                .andExpect(jsonPath("$[0].tipo", is("tipo")))
+                .andExpect(jsonPath("$[0].tipoComidaSet", hasSize(1)))
+                .andExpect(jsonPath("$[0].tipoComidaSet.[0].tipo", is("tipo")))
                 .andExpect(jsonPath("$[0].password", is("password")))
                 .andExpect(jsonPath("$[0].estado", is("estado")))
                 .andExpect(jsonPath("$[0].imagenLogo", is("imagenLogo")))
@@ -140,21 +146,25 @@ public class BackofficeHoyComoRestControllerIntegrationTest {
     }
 
     private Comercio createTestComercio() {
+        Comercio comercio = new Comercio();
         Address address = new Address();
         address.setStreet("anotherStreet");
         address.setPostalCode("anotherPostalCode");
         address.setFloor("anotherFloor");
         address.setDepartment("anotherDepartment");
-        Comercio comercio = new Comercio();
+        comercio.setAddress(address);
+        TipoComida tipoComida = new TipoComida();
+        tipoComida.setTipo("anotherTipo");
+        Set<TipoComida> tipoComidaSet = new HashSet<>();
+        tipoComidaSet.add(tipoComida);
+        comercio.setTipoComidaSet(tipoComidaSet);
         comercio.setEmail("anotherEmail");
         comercio.setNombre("anotherNombre");
         comercio.setRazonSocial("anotherRazonSocial");
-        comercio.setTipo("anotherTipo");
         comercio.setToken("anotherToken");
         comercio.setPassword("anotherPassword");
         comercio.setEstado("anotherEstado");
         comercio.setImagenLogo("anotherImagenLogo");
-        comercio.setAddress(address);
 
         return comercio;
     }

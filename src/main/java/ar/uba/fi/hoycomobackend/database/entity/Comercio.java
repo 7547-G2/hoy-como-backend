@@ -19,7 +19,11 @@ public class Comercio {
     @Size(min = 3, max = 128)
     private String nombre;
     private String razonSocial;
-    private String tipo;
+    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @JoinTable(name = "comercio_tipo_comida",
+            joinColumns = {@JoinColumn(name = "comercio_id", referencedColumnName = "id")},
+            inverseJoinColumns = {@JoinColumn(name = "tipo_comida_id", referencedColumnName = "id")})
+    private Set<TipoComida> tipoComidaSet;
     private String token;
     private Integer leadTime;
     private Float precioMinimo;
@@ -96,14 +100,6 @@ public class Comercio {
         this.razonSocial = razonSocial;
     }
 
-    public String getTipo() {
-        return tipo;
-    }
-
-    public void setTipo(String tipo) {
-        this.tipo = tipo;
-    }
-
     public Address getAddress() {
         return address;
     }
@@ -174,5 +170,13 @@ public class Comercio {
 
     public void setRating(Float rating) {
         this.rating = rating;
+    }
+
+    public Set<TipoComida> getTipoComidaSet() {
+        return tipoComidaSet;
+    }
+
+    public void setTipoComidaSet(Set<TipoComida> tipoComidaSet) {
+        this.tipoComidaSet = tipoComidaSet;
     }
 }

@@ -1,4 +1,4 @@
-package ar.uba.fi.hoycomobackend.entity;
+package ar.uba.fi.hoycomobackend.database.entity;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -7,9 +7,7 @@ public enum MobileUserState {
     AUTHORIZED(0),
     UNAUTHORIZED(1);
 
-    private final Integer value;
-
-    private static Map<Integer, MobileUserState> mobileUserStateMap = new HashMap<Integer, MobileUserState>();
+    private static Map<Integer, MobileUserState> mobileUserStateMap = new HashMap<>();
 
     static {
         for (MobileUserState mobileUserState : MobileUserState.values()) {
@@ -17,15 +15,17 @@ public enum MobileUserState {
         }
     }
 
+    private final Integer value;
+
     MobileUserState(Integer value) {
         this.value = value;
     }
 
-    public Integer getValue() {
-        return value;
-    }
-
     public static MobileUserState getByStateCode(Integer stateCode) {
         return mobileUserStateMap.get(stateCode);
+    }
+
+    public Integer getValue() {
+        return value;
     }
 }

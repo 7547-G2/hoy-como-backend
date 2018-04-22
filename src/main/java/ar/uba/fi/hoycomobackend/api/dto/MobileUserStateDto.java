@@ -1,6 +1,6 @@
 package ar.uba.fi.hoycomobackend.api.dto;
 
-import ar.uba.fi.hoycomobackend.entity.MobileUserState;
+import ar.uba.fi.hoycomobackend.database.entity.MobileUserState;
 import org.springframework.http.HttpStatus;
 
 public class MobileUserStateDto {

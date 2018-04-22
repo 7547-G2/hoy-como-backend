@@ -20,9 +20,7 @@ import org.springframework.test.web.servlet.ResultActions;
 import static ar.uba.fi.hoycomobackend.entity.DataTestBuilder.createDefaultComercio;
 import static ar.uba.fi.hoycomobackend.entity.DataTestBuilder.createDefaultPlatoDto;
 import static org.hamcrest.CoreMatchers.is;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @RunWith(SpringRunner.class)

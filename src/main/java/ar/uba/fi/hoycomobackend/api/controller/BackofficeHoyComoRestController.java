@@ -20,7 +20,7 @@ public class BackofficeHoyComoRestController {
     }
 
     @GetMapping(value = {"/comercios"}, produces = {"application/json"})
-    public List<ComercioHoyComoDto> getComercios(@RequestParam(value="search", required=false) String search) {
+    public List<ComercioHoyComoDto> getComercios(@RequestParam(value = "search", required = false) String search) {
         return backofficeHoyComoService.getComercios(search);
     }
 

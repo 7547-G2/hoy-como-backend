@@ -1,12 +1,10 @@
 package ar.uba.fi.hoycomobackend.entity;
 
-import ar.uba.fi.hoycomobackend.api.dto.AddressDto;
-import ar.uba.fi.hoycomobackend.api.dto.ComercioHoyComoDto;
-import ar.uba.fi.hoycomobackend.api.dto.MobileUserDto;
-import ar.uba.fi.hoycomobackend.api.dto.PlatoDto;
-import ar.uba.fi.hoycomobackend.database.entity.Address;
-import ar.uba.fi.hoycomobackend.database.entity.Comercio;
-import ar.uba.fi.hoycomobackend.database.entity.MobileUser;
+import ar.uba.fi.hoycomobackend.api.dto.*;
+import ar.uba.fi.hoycomobackend.database.entity.*;
+
+import java.util.HashSet;
+import java.util.Set;
 
 public class DataTestBuilder {
 
@@ -70,12 +68,16 @@ public class DataTestBuilder {
     }
 
     public static Comercio createDefaultComercio() {
-        Address address = createDefaultAddress();
         Comercio comercio = new Comercio();
+        Address address = createDefaultAddress();
+        comercio.setAddress(address);
+        TipoComida tipoComida = createDefaultTipoComida();
+        Set<TipoComida> tipoComidaSet = new HashSet<>();
+        tipoComidaSet.add(tipoComida);
+        comercio.setTipoComidaSet(tipoComidaSet);
         comercio.setEmail("email");
         comercio.setNombre("nombre");
         comercio.setRazonSocial("razonSocial");
-        comercio.setTipo("tipo");
         comercio.setToken("token");
         comercio.setPassword("password");
         comercio.setEstado("estado");
@@ -85,24 +87,40 @@ public class DataTestBuilder {
         comercio.setPrecioMaximo(100f);
         comercio.setTotalPedidos(20);
         comercio.setRating(4.5f);
-        comercio.setAddress(address);
 
         return comercio;
     }
 
+    public static TipoComida createDefaultTipoComida() {
+        TipoComida tipoComida = new TipoComida();
+        tipoComida.setTipo("tipo");
+
+        return tipoComida;
+    }
+
     public static ComercioHoyComoDto createDefaultComercioHoyComoDto() {
         AddressDto addressDto = createDefaultAddressDto();
+        TipoComidaDto tipoComida = createDefaultTipoComidaDto();
         ComercioHoyComoDto comercioHoyComoDto = new ComercioHoyComoDto();
         comercioHoyComoDto.setEmail("email");
         comercioHoyComoDto.setNombre("nombre");
         comercioHoyComoDto.setRazonSocial("razonSocial");
-        comercioHoyComoDto.setTipo("tipo");
+        Set<TipoComidaDto> tipoComidaDtoSet = new HashSet<>();
+        tipoComidaDtoSet.add(tipoComida);
+        comercioHoyComoDto.setTipoComidaSet(tipoComidaDtoSet);
         comercioHoyComoDto.setPassword("password");
         comercioHoyComoDto.setEstado("estado");
         comercioHoyComoDto.setImagenLogo("imagenLogo");
         comercioHoyComoDto.setAddressDto(addressDto);
 
         return comercioHoyComoDto;
+    }
+
+    public static TipoComidaDto createDefaultTipoComidaDto() {
+        TipoComidaDto tipoComidaDto = new TipoComidaDto();
+        tipoComidaDto.setTipo("tipo");
+
+        return tipoComidaDto;
     }
 
     public static AddressDto createDefaultAddressDto() {
