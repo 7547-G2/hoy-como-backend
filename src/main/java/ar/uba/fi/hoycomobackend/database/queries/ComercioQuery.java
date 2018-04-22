@@ -18,7 +18,6 @@ import java.util.regex.Pattern;
 public class ComercioQuery {
 
     private static Logger LOGGER = LoggerFactory.getLogger(ComercioQuery.class);
-
     private ComercioRepository comercioRepository;
 
     @Autowired

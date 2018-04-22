@@ -63,4 +63,9 @@ public class MobileUserRestController {
     public ResponseEntity changeStateToMobileUser(@PathVariable("mobileUserFacebookId") Long mobileUserFacebookId, @RequestBody Integer stateCode) {
         return mobileUserService.changeStateToMobileUser(mobileUserFacebookId, stateCode);
     }
+
+    @GetMapping(value = "/mobileUser/tipoComida")
+    public ResponseEntity getTipoComidaDtoSet() {
+        return mobileUserService.getTipoComidaDtoSet();
+    }
 }

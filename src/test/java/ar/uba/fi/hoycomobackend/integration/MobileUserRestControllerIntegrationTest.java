@@ -5,8 +5,10 @@ import ar.uba.fi.hoycomobackend.api.dto.AddressDto;
 import ar.uba.fi.hoycomobackend.api.dto.MobileUserDto;
 import ar.uba.fi.hoycomobackend.database.entity.Comercio;
 import ar.uba.fi.hoycomobackend.database.entity.MobileUserState;
+import ar.uba.fi.hoycomobackend.database.entity.TipoComida;
 import ar.uba.fi.hoycomobackend.database.repository.ComercioRepository;
 import ar.uba.fi.hoycomobackend.database.repository.MobileUserRepository;
+import ar.uba.fi.hoycomobackend.database.repository.TipoComidaRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.After;
 import org.junit.Test;
@@ -22,6 +24,7 @@ import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.ResultActions;
 
 import static ar.uba.fi.hoycomobackend.entity.DataTestBuilder.createDefaultComercio;
+import static ar.uba.fi.hoycomobackend.entity.DataTestBuilder.createDefaultTipoComida;
 import static org.assertj.core.api.Java6Assertions.assertThat;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.Matchers.hasSize;
@@ -51,6 +54,8 @@ public class MobileUserRestControllerIntegrationTest {
     private ObjectMapper objectMapper;
     @Autowired
     private MobileUserRepository mobileUserRepository;
+    @Autowired
+    private TipoComidaRepository tipoComidaRepository;
     @Autowired
     private ComercioRepository comercioRepository;
 
@@ -233,6 +238,18 @@ public class MobileUserRestControllerIntegrationTest {
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.favorites[0]", is(comercio.getId().intValue())));
+    }
+
+    @Test
+    public void getTipoComida() throws Exception {
+        TipoComida tipoComida = createDefaultTipoComida();
+        tipoComida = tipoComidaRepository.saveAndFlush(tipoComida);
+
+        mockMvc.perform(get("/api/mobileUser/tipoComida")
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$", hasSize(1)))
+                .andExpect(jsonPath("$[0].tipo", is(tipoComida.getTipo())));
     }
 
     private ResultActions createPostNewMobileUser() throws Exception {
