@@ -1,8 +1,11 @@
 package ar.uba.fi.hoycomobackend.database.entity;
 
+import org.hibernate.annotations.DynamicInsert;
+
 import javax.persistence.*;
 
 @Entity
+@DynamicInsert
 @Table(name = "plato")
 public class Plato {
     @Id
@@ -13,6 +16,8 @@ public class Plato {
     @Column(columnDefinition = "text")
     private String imagen;
     private Float precio;
+    @Column(columnDefinition = "boolean default true")
+    private Boolean habilitado = true;
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "comercio_id")
     private Comercio comercio;
@@ -55,5 +60,13 @@ public class Plato {
 
     public void setComercio(Comercio comercio) {
         this.comercio = comercio;
+    }
+
+    public Boolean getHabilitado() {
+        return habilitado;
+    }
+
+    public void setHabilitado(Boolean habilitado) {
+        this.habilitado = habilitado;
     }
 }

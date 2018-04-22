@@ -18,15 +18,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
-import org.springframework.test.context.TestPropertySource;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.ResultActions;
 
-import static ar.uba.fi.hoycomobackend.entity.DataTestBuilder.createDefaultComercio;
-import static ar.uba.fi.hoycomobackend.entity.DataTestBuilder.createDefaultMobileUser;
-import static ar.uba.fi.hoycomobackend.entity.DataTestBuilder.createDefaultTipoComida;
+import static ar.uba.fi.hoycomobackend.entity.DataTestBuilder.*;
 import static org.assertj.core.api.Java6Assertions.assertThat;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.Matchers.hasSize;
@@ -37,7 +35,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT, classes = App.class)
 @AutoConfigureMockMvc
-@TestPropertySource(locations = "classpath:application-localprod.yml")
+@ActiveProfiles("localprod")
 public class MobileUserRestControllerIntegrationTest {
 
     private static String DEPARTMENT = "department";

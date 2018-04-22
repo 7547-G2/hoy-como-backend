@@ -65,4 +65,9 @@ public class ComercioQuery {
 
         return comercioList;
     }
+
+    public Optional<Comercio> getComercioByEmail(String email) {
+        LOGGER.info("Getting Comercio by email: {}", email);
+        return comercioRepository.getComercioByEmail(email);
+    }
 }

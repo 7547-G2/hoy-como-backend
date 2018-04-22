@@ -1,5 +1,6 @@
 package ar.uba.fi.hoycomobackend.api.controller;
 
+import ar.uba.fi.hoycomobackend.api.dto.ComercioHoyComoAddDto;
 import ar.uba.fi.hoycomobackend.api.dto.ComercioHoyComoDto;
 import ar.uba.fi.hoycomobackend.api.service.BackofficeHoyComoService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,12 +26,12 @@ public class BackofficeHoyComoRestController {
     }
 
     @PostMapping(value = "/comercios", consumes = {"application/json"})
-    public ResponseEntity addComercio(@RequestBody ComercioHoyComoDto comercioHoyComoDto) {
-        return backofficeHoyComoService.addComercio(comercioHoyComoDto);
+    public ResponseEntity addComercio(@RequestBody ComercioHoyComoAddDto comercioHoyComoAddDto) {
+        return backofficeHoyComoService.addComercio(comercioHoyComoAddDto);
     }
 
     @PutMapping(value = "/comercios/{comercioId}", consumes = {"application/json"})
-    public ResponseEntity updateComercio(@PathVariable("comercioId") Long comercioId, @RequestBody ComercioHoyComoDto comercioHoyComoDto) {
-        return backofficeHoyComoService.updateComercio(comercioId, comercioHoyComoDto);
+    public ResponseEntity updateComercio(@PathVariable("comercioId") Long comercioId, @RequestBody ComercioHoyComoAddDto comercioHoyComoAddDto) {
+        return backofficeHoyComoService.updateComercio(comercioId, comercioHoyComoAddDto);
     }
 }
