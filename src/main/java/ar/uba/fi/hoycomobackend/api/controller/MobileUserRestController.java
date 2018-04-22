@@ -1,7 +1,7 @@
 package ar.uba.fi.hoycomobackend.api.controller;
 
 import ar.uba.fi.hoycomobackend.api.dto.AddressDto;
-import ar.uba.fi.hoycomobackend.api.dto.MobileUserDto;
+import ar.uba.fi.hoycomobackend.api.dto.MobileUserAddDto;
 import ar.uba.fi.hoycomobackend.api.service.MobileUserService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,13 +29,13 @@ public class MobileUserRestController {
         return mobileUserService.getMobileUserById(id);
     }
 
-    @GetMapping("/mobileUser/{id}/authorized")
-    public ResponseEntity getMobileUserAuthorized(@PathVariable("id") Long id) {
+    @GetMapping(value = "/mobileUser/{id}/authorized", produces = {"application/json"})
+    public ResponseEntity getMobileUserAuthorized(@PathVariable("id") Long id) throws JsonProcessingException {
         return mobileUserService.getMobileUserAuthorizedById(id);
     }
 
     @PostMapping(value = "/mobileUser")
-    public ResponseEntity addMobileUser(@RequestBody MobileUserDto mobileUser) {
+    public ResponseEntity addMobileUser(@RequestBody MobileUserAddDto mobileUser) {
         return mobileUserService.addMobileUser(mobileUser);
     }
 
