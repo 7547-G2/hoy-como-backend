@@ -2,10 +2,7 @@ package ar.uba.fi.hoycomobackend.api.service;
 
 import ar.uba.fi.hoycomobackend.api.businesslogic.ComercioPriceUpdater;
 import ar.uba.fi.hoycomobackend.api.businesslogic.TokenGenerator;
-import ar.uba.fi.hoycomobackend.api.dto.BackofficeComercioSessionDto;
-import ar.uba.fi.hoycomobackend.api.dto.ErrorMessage;
-import ar.uba.fi.hoycomobackend.api.dto.PlatoDto;
-import ar.uba.fi.hoycomobackend.api.dto.TokenDto;
+import ar.uba.fi.hoycomobackend.api.dto.*;
 import ar.uba.fi.hoycomobackend.database.entity.Comercio;
 import ar.uba.fi.hoycomobackend.database.entity.Plato;
 import ar.uba.fi.hoycomobackend.database.queries.ComercioQuery;
@@ -107,7 +104,7 @@ public class BackofficeComercioService {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ErrorMessage("No se encontró ningún comercio con id: " + comercioId));
     }
 
-    public ResponseEntity updatePlatoFromComercio(Long comercioId, Long platoId, PlatoDto platoDto) throws JsonProcessingException {
+    public ResponseEntity updatePlatoFromComercio(Long comercioId, Long platoId, PlatoUpdateDto platoUpdateDto) throws JsonProcessingException {
         Optional<Comercio> comercioOptional = comercioQuery.getComercioById(comercioId);
 
         if (comercioOptional.isPresent()) {
@@ -116,11 +113,11 @@ public class BackofficeComercioService {
             Optional<Plato> platoOptional = platoSet.stream().filter(plato -> plato.getId().equals(platoId)).findFirst();
 
             if (platoOptional.isPresent()) {
-                Plato plato = modelMapper.map(platoDto, Plato.class);
+                Plato plato = modelMapper.map(platoUpdateDto, Plato.class);
                 plato.setComercio(comercio);
                 plato.setId(platoId);
-                platoDto.setId(platoId);
-                String response = objectMapper.writeValueAsString(platoDto);
+                platoUpdateDto.setId(platoId);
+                String response = objectMapper.writeValueAsString(platoUpdateDto);
 
                 platoRepository.saveAndFlush(plato);
                 comercioPriceUpdater.updatePriceOfComercio(comercioId);

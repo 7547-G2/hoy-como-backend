@@ -2,6 +2,7 @@ package ar.uba.fi.hoycomobackend.api.controller;
 
 import ar.uba.fi.hoycomobackend.api.dto.BackofficeComercioSessionDto;
 import ar.uba.fi.hoycomobackend.api.dto.PlatoDto;
+import ar.uba.fi.hoycomobackend.api.dto.PlatoUpdateDto;
 import ar.uba.fi.hoycomobackend.api.service.BackofficeComercioService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,7 +37,7 @@ public class BackofficeComercioController {
     }
 
     @PutMapping(value = "/backofficeComercio/{comercioId}/platos/{platoId}")
-    public ResponseEntity updatePlato(@PathVariable("comercioId") Long comercioId, @PathVariable("platoId") Long platoId, @RequestBody PlatoDto platoDto) throws JsonProcessingException {
-        return backofficeComercioService.updatePlatoFromComercio(comercioId, platoId, platoDto);
+    public ResponseEntity updatePlato(@PathVariable("comercioId") Long comercioId, @PathVariable("platoId") Long platoId, @RequestBody PlatoUpdateDto platoUpdateDto) throws JsonProcessingException {
+        return backofficeComercioService.updatePlatoFromComercio(comercioId, platoId, platoUpdateDto);
     }
 }

@@ -2,6 +2,7 @@ package ar.uba.fi.hoycomobackend.integration;
 
 import ar.uba.fi.hoycomobackend.App;
 import ar.uba.fi.hoycomobackend.api.dto.PlatoDto;
+import ar.uba.fi.hoycomobackend.api.dto.PlatoUpdateDto;
 import ar.uba.fi.hoycomobackend.database.entity.Comercio;
 import ar.uba.fi.hoycomobackend.database.repository.ComercioRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -21,6 +22,7 @@ import java.util.Optional;
 
 import static ar.uba.fi.hoycomobackend.entity.DataTestBuilder.createDefaultComercio;
 import static ar.uba.fi.hoycomobackend.entity.DataTestBuilder.createDefaultPlatoDto;
+import static ar.uba.fi.hoycomobackend.entity.DataTestBuilder.createDefaultPlatoUpdateDto;
 import static org.assertj.core.api.Java6Assertions.assertThat;
 import static org.hamcrest.CoreMatchers.is;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -88,9 +90,9 @@ public class BackofficeComercioControllerIntegrationTest {
     public void updateExistingPlato() throws Exception {
         Long comercioId = createDefaultComercioInDatabase();
         String platoId = createComercioWithPlato(comercioId, createTestPlato()).andReturn().getResponse().getContentAsString();
-        PlatoDto platoDto = createDefaultPlatoDto();
-        platoDto.setPrecio(50.0f);
-        String platoDtoJson = objectMapper.writeValueAsString(platoDto);
+        PlatoUpdateDto platoUpdateDto = createDefaultPlatoUpdateDto();
+        platoUpdateDto.setPrecio(50.0f);
+        String platoDtoJson = objectMapper.writeValueAsString(platoUpdateDto);
 
         mockMvc.perform(put("/api/backofficeComercio/" + comercioId + "/platos/" + platoId)
                 .contentType(MediaType.APPLICATION_JSON)
