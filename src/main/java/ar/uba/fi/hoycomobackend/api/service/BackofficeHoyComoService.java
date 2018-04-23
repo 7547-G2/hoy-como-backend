@@ -91,8 +91,19 @@ public class BackofficeHoyComoService {
         } catch (DataIntegrityViolationException e) {
             LOGGER.error("Got the following error while trying to save a new Comercio: {}", e);
 
-            String cause = e.getCause().getCause().getMessage();
-            return ResponseEntity.status(HttpStatus.PRECONDITION_FAILED).body("No se pudo agregar el comercio debido a " + cause);
+            String causeDetail = getCauseDetail(e);
+            return ResponseEntity.status(HttpStatus.PRECONDITION_FAILED).body("No se pudo agregar el comercio debido a " + causeDetail);
+        }
+    }
+
+    private String getCauseDetail(DataIntegrityViolationException exception) {
+        try {
+            String cause =  exception.getCause().getCause().getMessage();
+            String[] causeSplit = cause.split("Detail: ");
+
+            return causeSplit[1];
+        } catch (Exception e) {
+            return e.getMessage();
         }
     }
 
