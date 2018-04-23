@@ -70,8 +70,7 @@ public class BackofficeHoyComoRestControllerIntegrationTest {
                 .andExpect(status().isPreconditionFailed())
                 .andReturn();
         String content = mvcResult.getResponse().getContentAsString();
-        assertThat(content).contains("Ya existe la llave");
-
+        assertThat(content).contains("Ya existe la llave (email)=");
     }
 
     @Test
