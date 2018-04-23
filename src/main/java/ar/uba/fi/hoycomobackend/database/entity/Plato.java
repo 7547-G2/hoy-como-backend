@@ -3,6 +3,7 @@ package ar.uba.fi.hoycomobackend.database.entity;
 import org.hibernate.annotations.DynamicInsert;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 
 @Entity
 @DynamicInsert
@@ -16,8 +17,10 @@ public class Plato {
     @Column(columnDefinition = "text")
     private String imagen;
     private Float precio;
-    @Column(columnDefinition = "boolean default true")
-    private Boolean habilitado = true;
+    @Column(length = 32, columnDefinition = "varchar(32) default 'ACTIVO'")
+    @Enumerated(value = EnumType.STRING)
+    @NotNull
+    private PlatoState state = PlatoState.ACTIVO;
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "comercio_id")
     private Comercio comercio;
@@ -62,11 +65,11 @@ public class Plato {
         this.comercio = comercio;
     }
 
-    public Boolean getHabilitado() {
-        return habilitado;
+    public PlatoState getState() {
+        return state;
     }
 
-    public void setHabilitado(Boolean habilitado) {
-        this.habilitado = habilitado;
+    public void setState(PlatoState state) {
+        this.state = state;
     }
 }

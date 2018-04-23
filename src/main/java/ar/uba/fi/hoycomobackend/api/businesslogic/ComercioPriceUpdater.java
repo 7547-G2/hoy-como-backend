@@ -2,6 +2,7 @@ package ar.uba.fi.hoycomobackend.api.businesslogic;
 
 import ar.uba.fi.hoycomobackend.database.entity.Comercio;
 import ar.uba.fi.hoycomobackend.database.entity.Plato;
+import ar.uba.fi.hoycomobackend.database.entity.PlatoState;
 import ar.uba.fi.hoycomobackend.database.queries.ComercioQuery;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -37,7 +38,7 @@ public class ComercioPriceUpdater {
     }
 
     private PriceRange getPriceRangeFromPlatos(Set<Plato> platoSet) {
-        Set<Float> filteredPrices = platoSet.stream().filter(plato -> plato.getHabilitado())
+        Set<Float> filteredPrices = platoSet.stream().filter(plato -> !PlatoState.BORRADO.equals(plato.getState().getValue()))
                 .map(Plato::getPrecio)
                 .collect(Collectors.toSet());
 

@@ -142,6 +142,18 @@ public class DataTestBuilder {
         return platoDto;
     }
 
+    public static PlatoUpdateDto createDefaultPlatoUpdateDto() {
+        PlatoUpdateDto platoUpdateDto = new PlatoUpdateDto();
+        platoUpdateDto.setImagen("imagen");
+        platoUpdateDto.setNombre("nombre");
+        platoUpdateDto.setPrecio(1.0f);
+        platoUpdateDto.setPlatoState(PlatoState.ACTIVO);
+
+        return platoUpdateDto;
+    }
+
+
+
     public static MobileUser createMobileUser(Long facebookId, String username, String firstName, String lastName, Boolean authorized) {
         MobileUser mobileUser = createMobileUser(facebookId, username, firstName, lastName);
         mobileUser.setState(DEFAULT_MOBILE_USER_STATE);
