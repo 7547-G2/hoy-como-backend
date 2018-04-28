@@ -23,7 +23,8 @@ public class BackofficeHoyComoServiceTest {
     private static String COMERCIO_NOMBRE = "nombre";
     private ComercioQuery comercioQuery = Mockito.mock(ComercioQuery.class);
     private ModelMapper modelMapper = Mockito.mock(ModelMapper.class);
-    private BackofficeHoyComoService backofficeHoyComoService = new BackofficeHoyComoService(comercioQuery, modelMapper);
+    private MailingService mailingService = Mockito.mock(MailingService.class);
+    private BackofficeHoyComoService backofficeHoyComoService = new BackofficeHoyComoService(comercioQuery, modelMapper, mailingService);
 
     @Before
     public void setUp() {

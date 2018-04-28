@@ -2,6 +2,7 @@ package ar.uba.fi.hoycomobackend.entity;
 
 import ar.uba.fi.hoycomobackend.api.dto.*;
 import ar.uba.fi.hoycomobackend.database.entity.*;
+import org.springframework.mail.SimpleMailMessage;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -170,5 +171,14 @@ public class DataTestBuilder {
         mobileUserDto.setLastName(lastName);
 
         return mobileUserDto;
+    }
+
+    public static SimpleMailMessage createDefaultSimpleMailMessage() {
+        SimpleMailMessage simpleMailMessage = new SimpleMailMessage();
+        simpleMailMessage.setTo("to");
+        simpleMailMessage.setSubject("subject");
+        simpleMailMessage.setText("text");
+
+        return simpleMailMessage;
     }
 }

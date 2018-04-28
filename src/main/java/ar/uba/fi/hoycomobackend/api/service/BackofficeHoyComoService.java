@@ -27,11 +27,13 @@ public class BackofficeHoyComoService {
 
     private ComercioQuery comercioQuery;
     private ModelMapper modelMapper;
+    private MailingService mailingService;
 
     @Autowired
-    public BackofficeHoyComoService(ComercioQuery comercioQuery, ModelMapper modelMapper) {
+    public BackofficeHoyComoService(ComercioQuery comercioQuery, ModelMapper modelMapper, MailingService mailingService) {
         this.comercioQuery = comercioQuery;
         this.modelMapper = modelMapper;
+        this.mailingService = mailingService;
     }
 
     public List<ComercioHoyComoDto> getComercioByNombre(String nombre) {
@@ -86,7 +88,8 @@ public class BackofficeHoyComoService {
         Address address = modelMapper.map(addressDto, Address.class);
         comercio.setAddress(address);
         try {
-            comercioQuery.saveAndFlush(comercio);
+            comercio = comercioQuery.saveAndFlush(comercio);
+            mailingService.sendMailToNewComercio(comercio);
             return ResponseEntity.ok(CREATION_SUCCESSFUL);
         } catch (DataIntegrityViolationException e) {
             LOGGER.error("Got the following error while trying to save a new Comercio: {}", e);

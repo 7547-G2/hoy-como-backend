@@ -46,9 +46,9 @@ public class ComercioQuery {
         return comercioOptional;
     }
 
-    public void saveAndFlush(Comercio comercio) {
+    public Comercio saveAndFlush(Comercio comercio) {
         LOGGER.info("Saving new comercio");
-        comercioRepository.saveAndFlush(comercio);
+        return comercioRepository.saveAndFlush(comercio);
     }
 
     public List<Comercio> findBySearchQuery(String search) {
