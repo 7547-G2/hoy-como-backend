@@ -4,7 +4,10 @@ import ar.uba.fi.hoycomobackend.App;
 import ar.uba.fi.hoycomobackend.api.dto.PlatoDto;
 import ar.uba.fi.hoycomobackend.api.dto.PlatoUpdateDto;
 import ar.uba.fi.hoycomobackend.database.entity.Comercio;
+import ar.uba.fi.hoycomobackend.database.entity.Plato;
+import ar.uba.fi.hoycomobackend.database.entity.PlatoState;
 import ar.uba.fi.hoycomobackend.database.repository.ComercioRepository;
+import ar.uba.fi.hoycomobackend.database.repository.PlatoRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.After;
 import org.junit.Test;
@@ -20,11 +23,10 @@ import org.springframework.test.web.servlet.ResultActions;
 
 import java.util.Optional;
 
-import static ar.uba.fi.hoycomobackend.entity.DataTestBuilder.createDefaultComercio;
-import static ar.uba.fi.hoycomobackend.entity.DataTestBuilder.createDefaultPlatoDto;
-import static ar.uba.fi.hoycomobackend.entity.DataTestBuilder.createDefaultPlatoUpdateDto;
+import static ar.uba.fi.hoycomobackend.entity.DataTestBuilder.*;
 import static org.assertj.core.api.Java6Assertions.assertThat;
 import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.Matchers.hasSize;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -39,6 +41,8 @@ public class BackofficeComercioControllerIntegrationTest {
     private ObjectMapper objectMapper;
     @Autowired
     private ComercioRepository comercioRepository;
+    @Autowired
+    private PlatoRepository platoRepository;
 
 
     @After
@@ -89,7 +93,7 @@ public class BackofficeComercioControllerIntegrationTest {
     @Test
     public void updateExistingPlato() throws Exception {
         Long comercioId = createDefaultComercioInDatabase();
-        String platoId = createComercioWithPlato(comercioId, createTestPlato()).andReturn().getResponse().getContentAsString();
+        String platoId = createComercioWithPlato(comercioId, createTestPlatoDto()).andReturn().getResponse().getContentAsString();
         PlatoUpdateDto platoUpdateDto = createDefaultPlatoUpdateDto();
         platoUpdateDto.setPrecio(50.0f);
         String platoDtoJson = objectMapper.writeValueAsString(platoUpdateDto);
@@ -117,7 +121,31 @@ public class BackofficeComercioControllerIntegrationTest {
         assertThat(comercio.getPrecioMinimo()).isEqualTo(50.0f);
     }
 
-    private PlatoDto createTestPlato() {
+    @Test
+    public void getPlatosOnlyReturnNonDeletedPlatos() throws Exception {
+        Long comercioId = createDefaultComercioInDatabase();
+        Comercio comercio = comercioRepository.getComercioById(comercioId).get();
+        Plato platoActivated = createDefaultPlato();
+        platoActivated.setComercio(comercio);
+        Plato platoDeactivated = createDefaultPlato();
+        platoDeactivated.setState(PlatoState.INACTIVO);
+        platoDeactivated.setComercio(comercio);
+        Plato platoDeleted = createDefaultPlato();
+        platoDeleted.setState(PlatoState.BORRADO);
+        platoDeleted.setComercio(comercio);
+        platoRepository.saveAndFlush(platoActivated);
+        platoRepository.saveAndFlush(platoDeactivated);
+        platoRepository.saveAndFlush(platoDeleted);
+
+        mockMvc.perform(get("/api/backofficeComercio/" + comercioId + "/platos")
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(content()
+                        .contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$", hasSize(2)));
+    }
+
+    private PlatoDto createTestPlatoDto() {
         PlatoDto platoDto = new PlatoDto();
         platoDto.setPrecio(2.0f);
         platoDto.setNombre("otherName");
