@@ -5,6 +5,7 @@ import ar.uba.fi.hoycomobackend.api.businesslogic.TokenGenerator;
 import ar.uba.fi.hoycomobackend.api.dto.*;
 import ar.uba.fi.hoycomobackend.database.entity.Comercio;
 import ar.uba.fi.hoycomobackend.database.entity.Plato;
+import ar.uba.fi.hoycomobackend.database.entity.PlatoState;
 import ar.uba.fi.hoycomobackend.database.queries.ComercioQuery;
 import ar.uba.fi.hoycomobackend.database.repository.PlatoRepository;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -19,6 +20,7 @@ import org.springframework.stereotype.Service;
 import java.lang.reflect.Type;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 public class BackofficeComercioService {
@@ -77,6 +79,7 @@ public class BackofficeComercioService {
         if (comercioOptional.isPresent()) {
             Comercio comercio = comercioOptional.get();
             Set<Plato> platoSet = comercio.getPlatos();
+            platoSet = platoSet.stream().filter(plato -> !PlatoState.BORRADO.equals(plato.getState())).collect(Collectors.toSet());
             Type setType = new TypeToken<Set<PlatoDto>>() {
             }.getType();
             Set<PlatoDto> platoDtoSet = modelMapper.map(platoSet, setType);

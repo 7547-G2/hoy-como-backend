@@ -25,7 +25,7 @@ public class JavaMailingServiceTest {
     @Test
     public void mailingServiceCallsJavaMailSenderSendMethod() {
         Comercio comercio = createDefaultComercio();
-         javaMailingService.sendMailToNewComercio(comercio);
+        javaMailingService.sendMailToNewComercio(comercio);
         verify(javaMailSender).send(any(SimpleMailMessage.class));
     }
 

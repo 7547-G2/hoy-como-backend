@@ -101,7 +101,7 @@ public class BackofficeHoyComoService {
 
     private String getCauseDetail(DataIntegrityViolationException exception) {
         try {
-            String cause =  exception.getCause().getCause().getMessage();
+            String cause = exception.getCause().getCause().getMessage();
             String[] causeSplit = cause.split("Detail: ");
 
             return causeSplit[1];

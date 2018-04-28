@@ -153,7 +153,15 @@ public class DataTestBuilder {
         return platoUpdateDto;
     }
 
+    public static Plato createDefaultPlato() {
+        Plato plato = new Plato();
+        plato.setImagen("imagen");
+        plato.setNombre("nombre");
+        plato.setPrecio(1.0f);
+        plato.setState(PlatoState.ACTIVO);
 
+        return plato;
+    }
 
     public static MobileUser createMobileUser(Long facebookId, String username, String firstName, String lastName, Boolean authorized) {
         MobileUser mobileUser = createMobileUser(facebookId, username, firstName, lastName);
