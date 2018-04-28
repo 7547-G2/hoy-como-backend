@@ -3,3 +3,14 @@ spring:
     active: prod
   application:
     name: hoy-como-backend
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: ${MAILER_USER}
+    password: ${MAILER_PASSWORD}
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
