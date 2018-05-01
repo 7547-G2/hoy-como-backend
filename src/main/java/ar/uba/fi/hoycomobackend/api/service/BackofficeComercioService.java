@@ -116,7 +116,8 @@ public class BackofficeComercioService {
             Optional<Plato> platoOptional = platoSet.stream().filter(plato -> plato.getId().equals(platoId)).findFirst();
 
             if (platoOptional.isPresent()) {
-                Plato plato = modelMapper.map(platoUpdateDto, Plato.class);
+                Plato plato = platoOptional.get();
+                modelMapper.map(platoUpdateDto, plato);
                 plato.setComercio(comercio);
                 plato.setId(platoId);
                 platoUpdateDto.setId(platoId);
