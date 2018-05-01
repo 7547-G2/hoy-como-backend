@@ -113,6 +113,28 @@ public class BackofficeComercioControllerIntegrationTest {
     }
 
     @Test
+    public void updateExistingPlatoWithNullValuesDoesntUpdateNullValues() throws Exception {
+        Long comercioId = createDefaultComercioInDatabase();
+        String platoId = createComercioWithPlato(comercioId, createTestPlatoDto()).andReturn().getResponse().getContentAsString();
+        PlatoUpdateDto platoUpdateDto = createDefaultPlatoUpdateDto();
+        platoUpdateDto.setPrecio(null);
+        String platoDtoJson = objectMapper.writeValueAsString(platoUpdateDto);
+
+        mockMvc.perform(put("/api/backofficeComercio/" + comercioId + "/platos/" + platoId)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(platoDtoJson));
+
+        mockMvc.perform(get("/api/backofficeComercio/" + comercioId + "/platos")
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(content()
+                        .contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$[0].nombre", is("nombre")))
+                .andExpect(jsonPath("$[0].imagen", is("imagen")))
+                .andExpect(jsonPath("$[0].precio", is(2.0)));
+    }
+
+    @Test
     public void updateExistingPlatoUpdatesComercioPrices() throws Exception {
         updateExistingPlato();
         Comercio comercio = comercioRepository.findAll().get(0);

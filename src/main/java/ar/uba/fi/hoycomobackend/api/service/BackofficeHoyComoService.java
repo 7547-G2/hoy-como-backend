@@ -7,6 +7,7 @@ import ar.uba.fi.hoycomobackend.database.entity.Address;
 import ar.uba.fi.hoycomobackend.database.entity.Comercio;
 import ar.uba.fi.hoycomobackend.database.queries.ComercioQuery;
 import org.modelmapper.ModelMapper;
+import org.modelmapper.spi.MappingContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,7 +24,6 @@ import java.util.Optional;
 public class BackofficeHoyComoService {
 
     private static Logger LOGGER = LoggerFactory.getLogger(BackofficeHoyComoService.class);
-    private static String CREATION_SUCCESSFUL = "Comercio creado correctamente";
 
     private ComercioQuery comercioQuery;
     private ModelMapper modelMapper;
@@ -77,20 +77,38 @@ public class BackofficeHoyComoService {
             Comercio comercio = comercioOptional.get();
             comercioHoyComoAddDto.setId(comercio.getId());
 
-            return addComercioToDatabaseFromDto(comercioHoyComoAddDto);
+            return updateComercioToDatabaseFromDto(comercioHoyComoAddDto, comercio);
         } else
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No se encontró ningún comercio con id: " + comercioId);
     }
 
+    private ResponseEntity updateComercioToDatabaseFromDto(ComercioHoyComoAddDto comercioHoyComoAddDto, Comercio comercio) {
+        modelMapper.map(comercioHoyComoAddDto, comercio);
+        AddressDto addressDto = comercioHoyComoAddDto.getAddressDto();
+        if (addressDto != null) {
+            Address address = modelMapper.map(addressDto, Address.class);
+            comercio.setAddress(address);
+        }
+        try {
+            comercioQuery.saveAndFlush(comercio);
+            return ResponseEntity.ok("Comercio updateado correctamente");
+        } catch (DataIntegrityViolationException e) {
+            LOGGER.error("Got the following error while trying to save a new Comercio: {}", e);
+
+            String causeDetail = getCauseDetail(e);
+            return ResponseEntity.status(HttpStatus.PRECONDITION_FAILED).body("No se pudo agregar el comercio debido a " + causeDetail);
+        }
+    }
+
     private ResponseEntity addComercioToDatabaseFromDto(ComercioHoyComoAddDto comercioHoyComoAddDto) {
-        Comercio comercio = modelMapper.map(comercioHoyComoAddDto, Comercio.class);
         AddressDto addressDto = comercioHoyComoAddDto.getAddressDto();
         Address address = modelMapper.map(addressDto, Address.class);
+        Comercio comercio = modelMapper.map(comercioHoyComoAddDto, Comercio.class);
         comercio.setAddress(address);
         try {
             comercio = comercioQuery.saveAndFlush(comercio);
             mailingService.sendMailToNewComercio(comercio);
-            return ResponseEntity.ok(CREATION_SUCCESSFUL);
+            return ResponseEntity.ok("Comercio creado correctamente");
         } catch (DataIntegrityViolationException e) {
             LOGGER.error("Got the following error while trying to save a new Comercio: {}", e);
 
