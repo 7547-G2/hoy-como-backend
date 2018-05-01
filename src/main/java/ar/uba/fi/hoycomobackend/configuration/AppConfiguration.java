@@ -13,6 +13,8 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 
+import java.util.Properties;
+
 @Configuration
 public class AppConfiguration {
 
@@ -35,9 +37,9 @@ public class AppConfiguration {
 
     @Bean
     @Profile("prod")
-    public MailingService productionMailingService() {
-        JavaMailSender javaMailingService = new JavaMailSenderImpl();
-        return new JavaMailingService(javaMailingService);
+    public MailingService productionMailingService(JavaMailSender javaMailSender) {
+        MailingService javaMailingService = new JavaMailingService(javaMailSender);
+        return javaMailingService;
     }
 
 }
