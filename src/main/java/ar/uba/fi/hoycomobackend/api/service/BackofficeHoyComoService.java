@@ -8,7 +8,6 @@ import ar.uba.fi.hoycomobackend.database.entity.Address;
 import ar.uba.fi.hoycomobackend.database.entity.Comercio;
 import ar.uba.fi.hoycomobackend.database.queries.ComercioQuery;
 import org.modelmapper.ModelMapper;
-import org.modelmapper.spi.MappingContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +16,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import java.awt.Stroke;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -27,6 +25,7 @@ import java.util.Set;
 @Service
 public class BackofficeHoyComoService {
 
+    public static final int MININUM_AMOUNT_OF_PLATOS = 5;
     private static Logger LOGGER = LoggerFactory.getLogger(BackofficeHoyComoService.class);
 
     private ComercioQuery comercioQuery;
@@ -80,18 +79,26 @@ public class BackofficeHoyComoService {
         if (comercioOptional.isPresent()) {
             Comercio comercio = comercioOptional.get();
             comercioHoyComoAddDto.setId(comercio.getId());
-            Set<Plato> platoSet = comercio.getPlatos();
-            platoSet = platoSet.stream().filter(plato -> !PlatoState.BORRADO.equals(plato.getState())).collect(Collectors.toSet());
-            long cantidad = platoSet.stream().count();
-            String estadoHabilitado = "habilitado";
-            String estadoPendienteMenu = "pendiente menu";
-            String estadoNuevo = comercioHoyComoAddDto.getEstado();
-            if(estadoNuevo == estadoHabilitado && cantidad < 5 && comercio.getEstado() == estadoPendienteMenu){
+            if (cannotChangeState(comercioHoyComoAddDto, comercio))
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("No se puede habilitar un comercio que no haya cargado al menos 5 platos");
-            }
             return updateComercioToDatabaseFromDto(comercioHoyComoAddDto, comercio);
         } else
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No se encontró ningún comercio con id: " + comercioId);
+    }
+
+    private boolean cannotChangeState(ComercioHoyComoAddDto comercioHoyComoAddDto, Comercio comercio) {
+        long amountOfPlatos = getAmountOfPlatos(comercio);
+        String newEstado = comercioHoyComoAddDto.getEstado();
+        if("habilitado".equalsIgnoreCase(newEstado) && amountOfPlatos < MININUM_AMOUNT_OF_PLATOS && "pendiente menu".equalsIgnoreCase(comercio.getEstado())){
+            return true;
+        }
+        return false;
+    }
+
+    private long getAmountOfPlatos(Comercio comercio) {
+        Set<Plato> platoSet = comercio.getPlatos();
+        platoSet = platoSet.stream().filter(plato -> !PlatoState.BORRADO.equals(plato.getState())).collect(Collectors.toSet());
+        return platoSet.stream().count();
     }
 
     private ResponseEntity updateComercioToDatabaseFromDto(ComercioHoyComoAddDto comercioHoyComoAddDto, Comercio comercio) {
