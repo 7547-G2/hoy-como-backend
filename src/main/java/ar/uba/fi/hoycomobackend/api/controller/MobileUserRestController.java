@@ -68,4 +68,9 @@ public class MobileUserRestController {
     public ResponseEntity getTipoComidaDtoSet() {
         return mobileUserService.getTipoComidaDtoSet();
     }
+
+    @GetMapping(value = "/mobileUser/menu/{comercioId}")
+    public ResponseEntity getMenuFromComercio(@PathVariable("comercioId") Long comercioId) {
+        return mobileUserService.getMenuFromComercio(comercioId);
+    }
 }
