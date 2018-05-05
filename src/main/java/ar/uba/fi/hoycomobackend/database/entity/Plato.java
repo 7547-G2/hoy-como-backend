@@ -24,6 +24,8 @@ public class Plato {
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "comercio_id")
     private Comercio comercio;
+    private Long categoria;
+    private Integer orden;
 
     public Long getId() {
         return id;
@@ -71,5 +73,21 @@ public class Plato {
 
     public void setState(PlatoState state) {
         this.state = state;
+    }
+
+    public Long getCategoria() {
+        return categoria;
+    }
+
+    public void setCategoria(Long categoria) {
+        this.categoria = categoria;
+    }
+
+    public Integer getOrden() {
+        return orden;
+    }
+
+    public void setOrden(Integer orden) {
+        this.orden = orden;
     }
 }

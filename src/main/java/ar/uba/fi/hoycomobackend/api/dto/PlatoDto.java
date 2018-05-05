@@ -5,6 +5,8 @@ public class PlatoDto {
     private String nombre;
     private String imagen;
     private Float precio;
+    private Long categoria;
+    private Integer orden;
 
 
     public String getNombre() {
@@ -37,5 +39,21 @@ public class PlatoDto {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public Long getCategoria() {
+        return categoria;
+    }
+
+    public void setCategoria(Long categoria) {
+        this.categoria = categoria;
+    }
+
+    public Integer getOrden() {
+        return orden;
+    }
+
+    public void setOrden(Integer orden) {
+        this.orden = orden;
     }
 }
