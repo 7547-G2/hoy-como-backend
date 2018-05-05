@@ -8,7 +8,8 @@ public class PlatoUpdateDto {
     private String imagen;
     private PlatoState platoState;
     private Float precio;
-
+    private Long categoria;
+    private Integer orden;
 
     public String getNombre() {
         return nombre;
@@ -48,5 +49,21 @@ public class PlatoUpdateDto {
 
     public void setPlatoState(PlatoState platoState) {
         this.platoState = platoState;
+    }
+
+    public Long getCategoria() {
+        return categoria;
+    }
+
+    public void setCategoria(Long categoria) {
+        this.categoria = categoria;
+    }
+
+    public Integer getOrden() {
+        return orden;
+    }
+
+    public void setOrden(Integer orden) {
+        this.orden = orden;
     }
 }
