@@ -155,6 +155,8 @@ public class DataTestBuilder {
         platoDto.setImagen("imagen");
         platoDto.setNombre("nombre");
         platoDto.setPrecio(1.0f);
+        platoDto.setCategoria(1L);
+        platoDto.setOrden(1);
 
         return platoDto;
     }
@@ -165,6 +167,8 @@ public class DataTestBuilder {
         platoUpdateDto.setNombre("nombre");
         platoUpdateDto.setPrecio(1.0f);
         platoUpdateDto.setPlatoState(PlatoState.ACTIVO);
+        platoUpdateDto.setCategoria(1L);
+        platoUpdateDto.setOrden(1);
 
         return platoUpdateDto;
     }
