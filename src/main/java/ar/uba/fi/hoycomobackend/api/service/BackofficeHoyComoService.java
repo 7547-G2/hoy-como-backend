@@ -1,5 +1,6 @@
 package ar.uba.fi.hoycomobackend.api.service;
-
+import ar.uba.fi.hoycomobackend.database.entity.Plato;
+import ar.uba.fi.hoycomobackend.database.entity.PlatoState;
 import ar.uba.fi.hoycomobackend.api.dto.AddressDto;
 import ar.uba.fi.hoycomobackend.api.dto.ComercioHoyComoAddDto;
 import ar.uba.fi.hoycomobackend.api.dto.ComercioHoyComoDto;
@@ -16,9 +17,12 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.awt.Stroke;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
+import java.util.Set;
 
 @Service
 public class BackofficeHoyComoService {
@@ -76,7 +80,15 @@ public class BackofficeHoyComoService {
         if (comercioOptional.isPresent()) {
             Comercio comercio = comercioOptional.get();
             comercioHoyComoAddDto.setId(comercio.getId());
-
+            Set<Plato> platoSet = comercio.getPlatos();
+            platoSet = platoSet.stream().filter(plato -> !PlatoState.BORRADO.equals(plato.getState())).collect(Collectors.toSet());
+            long cantidad = platoSet.stream().count();
+            String estadoHabilitado = "habilitado";
+            String estadoPendienteMenu = "pendiente menu";
+            String estadoNuevo = comercioHoyComoAddDto.getEstado();
+            if(estadoNuevo == estadoHabilitado && cantidad < 5 && comercio.getEstado() == estadoPendienteMenu){
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("No se puede habilitar un comercio que no haya cargado al menos 5 platos");
+            }
             return updateComercioToDatabaseFromDto(comercioHoyComoAddDto, comercio);
         } else
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No se encontró ningún comercio con id: " + comercioId);
