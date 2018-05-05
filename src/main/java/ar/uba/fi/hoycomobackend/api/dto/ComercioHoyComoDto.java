@@ -1,14 +1,12 @@
 package ar.uba.fi.hoycomobackend.api.dto;
 
-import java.util.Set;
-
 public class ComercioHoyComoDto {
 
     private Long id;
     private String email;
     private String nombre;
     private String razonSocial;
-    private Set<TipoComidaDto> tipoComidaSet;
+    private TipoComidaDto tipoComida;
     private String password;
     private String imagenLogo;
     private String estado;
@@ -78,11 +76,11 @@ public class ComercioHoyComoDto {
         this.estado = estado;
     }
 
-    public Set<TipoComidaDto> getTipoComidaSet() {
-        return tipoComidaSet;
+    public TipoComidaDto getTipoComida() {
+        return tipoComida;
     }
 
-    public void setTipoComidaSet(Set<TipoComidaDto> tipoComidaSet) {
-        this.tipoComidaSet = tipoComidaSet;
+    public void setTipoComida(TipoComidaDto tipoComida) {
+        this.tipoComida = tipoComida;
     }
 }

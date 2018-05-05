@@ -4,9 +4,6 @@ import ar.uba.fi.hoycomobackend.api.dto.*;
 import ar.uba.fi.hoycomobackend.database.entity.*;
 import org.springframework.mail.SimpleMailMessage;
 
-import java.util.HashSet;
-import java.util.Set;
-
 public class DataTestBuilder {
 
     private static MobileUserState DEFAULT_MOBILE_USER_STATE = MobileUserState.AUTHORIZED;
@@ -73,9 +70,7 @@ public class DataTestBuilder {
         Address address = createDefaultAddress();
         comercio.setAddress(address);
         TipoComida tipoComida = createDefaultTipoComida();
-        Set<TipoComida> tipoComidaSet = new HashSet<>();
-        tipoComidaSet.add(tipoComida);
-        comercio.setTipoComidaSet(tipoComidaSet);
+        comercio.setTipoComida(tipoComida);
         comercio.setEmail("email");
         comercio.setNombre("nombre");
         comercio.setRazonSocial("razonSocial");
@@ -106,15 +101,36 @@ public class DataTestBuilder {
         comercioHoyComoDto.setEmail("email");
         comercioHoyComoDto.setNombre("nombre");
         comercioHoyComoDto.setRazonSocial("razonSocial");
-        Set<TipoComidaDto> tipoComidaDtoSet = new HashSet<>();
-        tipoComidaDtoSet.add(tipoComida);
-        comercioHoyComoDto.setTipoComidaSet(tipoComidaDtoSet);
+        comercioHoyComoDto.setTipoComida(tipoComida);
         comercioHoyComoDto.setPassword("password");
         comercioHoyComoDto.setEstado("estado");
         comercioHoyComoDto.setImagenLogo("imagenLogo");
         comercioHoyComoDto.setAddressDto(addressDto);
 
         return comercioHoyComoDto;
+    }
+
+    public static ComercioHoyComoAddDto createDefaultComercioHoyComoAddDto() {
+        AddressDto addressDto = createDefaultAddressDto();
+        TipoComidaAddDto tipoComidaAddDto = createDefaultTipoComidaAddDto();
+        ComercioHoyComoAddDto comercioHoyComoAddDto = new ComercioHoyComoAddDto();
+        comercioHoyComoAddDto.setEmail("email");
+        comercioHoyComoAddDto.setNombre("nombre");
+        comercioHoyComoAddDto.setRazonSocial("razonSocial");
+        comercioHoyComoAddDto.setTipoComida(tipoComidaAddDto);
+        comercioHoyComoAddDto.setPassword("password");
+        comercioHoyComoAddDto.setEstado("estado");
+        comercioHoyComoAddDto.setImagenLogo("imagenLogo");
+        comercioHoyComoAddDto.setAddressDto(addressDto);
+
+        return comercioHoyComoAddDto;
+    }
+
+    private static TipoComidaAddDto createDefaultTipoComidaAddDto() {
+        TipoComidaAddDto tipoComidaAddDto = new TipoComidaAddDto();
+        tipoComidaAddDto.setTipo("tipo");
+
+        return  tipoComidaAddDto;
     }
 
     public static TipoComidaDto createDefaultTipoComidaDto() {

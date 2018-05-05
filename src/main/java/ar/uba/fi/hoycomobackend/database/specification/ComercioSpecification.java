@@ -20,7 +20,7 @@ public class ComercioSpecification implements Specification<Comercio> {
             return builder.lessThanOrEqualTo(root.get(searchCriteria.getKey()), searchCriteria.getValue().toString());
         } else if (searchCriteria.getOperation().equalsIgnoreCase(":")) {
             if (searchCriteria.getKey().equalsIgnoreCase("tipo")) {
-                Join join = root.join("tipoComidaSet");
+                Join join = root.join("tipoComida");
                 return builder.equal(join.get("tipo"), searchCriteria.getValue());
             } else if (root.get(searchCriteria.getKey()).getJavaType() == String.class) {
                 return builder.like(builder.lower((root.get(searchCriteria.getKey()))), "%" + searchCriteria.getValue().toString().toLowerCase() + "%");
