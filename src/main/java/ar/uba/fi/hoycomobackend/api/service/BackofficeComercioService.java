@@ -80,9 +80,9 @@ public class BackofficeComercioService {
             Comercio comercio = comercioOptional.get();
             Set<Plato> platoSet = comercio.getPlatos();
             platoSet = platoSet.stream().filter(plato -> !PlatoState.BORRADO.equals(plato.getState())).collect(Collectors.toSet());
-            Type setType = new TypeToken<Set<PlatoDto>>() {
+            Type setType = new TypeToken<Set<PlatoGetDto>>() {
             }.getType();
-            Set<PlatoDto> platoDtoSet = modelMapper.map(platoSet, setType);
+            Set<PlatoGetDto> platoDtoSet = modelMapper.map(platoSet, setType);
             String response = objectMapper.writeValueAsString(platoDtoSet);
 
             return ResponseEntity.ok(response);
