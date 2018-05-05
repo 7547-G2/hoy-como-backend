@@ -12,7 +12,7 @@ public class TipoComida {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     private String tipo;
-    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, mappedBy = "tipoComidaSet")
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, mappedBy = "tipoComida")
     private Set<Comercio> comercioSet;
 
     public Long getId() {

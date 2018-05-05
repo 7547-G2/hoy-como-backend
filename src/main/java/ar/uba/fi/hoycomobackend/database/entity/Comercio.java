@@ -22,11 +22,9 @@ public class Comercio {
     private String nombre;
     @Column(columnDefinition = "varchar(256) default ''")
     private String razonSocial;
-    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    @JoinTable(name = "comercio_tipo_comida",
-            joinColumns = {@JoinColumn(name = "comercio_id", referencedColumnName = "id")},
-            inverseJoinColumns = {@JoinColumn(name = "tipo_comida_id", referencedColumnName = "id")})
-    private Set<TipoComida> tipoComidaSet;
+    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @JoinColumn(name = "tipo_comida_id")
+    private TipoComida tipoComida;
     private String token;
     private Integer leadTime;
     private Float precioMinimo;
@@ -177,11 +175,11 @@ public class Comercio {
         this.rating = rating;
     }
 
-    public Set<TipoComida> getTipoComidaSet() {
-        return tipoComidaSet;
+    public TipoComida getTipoComida() {
+        return tipoComida;
     }
 
-    public void setTipoComidaSet(Set<TipoComida> tipoComidaSet) {
-        this.tipoComidaSet = tipoComidaSet;
+    public void setTipoComida(TipoComida tipoComida) {
+        this.tipoComida = tipoComida;
     }
 }

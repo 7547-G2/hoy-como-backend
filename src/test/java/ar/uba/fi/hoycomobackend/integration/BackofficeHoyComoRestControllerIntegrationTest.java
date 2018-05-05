@@ -1,6 +1,7 @@
 package ar.uba.fi.hoycomobackend.integration;
 
 import ar.uba.fi.hoycomobackend.App;
+import ar.uba.fi.hoycomobackend.api.dto.ComercioHoyComoAddDto;
 import ar.uba.fi.hoycomobackend.api.dto.ComercioHoyComoDto;
 import ar.uba.fi.hoycomobackend.database.entity.Address;
 import ar.uba.fi.hoycomobackend.database.entity.Comercio;
@@ -24,6 +25,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import static ar.uba.fi.hoycomobackend.entity.DataTestBuilder.createDefaultComercio;
+import static ar.uba.fi.hoycomobackend.entity.DataTestBuilder.createDefaultComercioHoyComoAddDto;
 import static ar.uba.fi.hoycomobackend.entity.DataTestBuilder.createDefaultComercioHoyComoDto;
 import static org.assertj.core.api.Java6Assertions.assertThat;
 import static org.hamcrest.CoreMatchers.is;
@@ -94,8 +96,7 @@ public class BackofficeHoyComoRestControllerIntegrationTest {
                 .andExpect(jsonPath("$[0].email", is("email")))
                 .andExpect(jsonPath("$[0].nombre", is("nombre")))
                 .andExpect(jsonPath("$[0].razonSocial", is("razonSocial")))
-                .andExpect(jsonPath("$[0].tipoComidaSet", hasSize(1)))
-                .andExpect(jsonPath("$[0].tipoComidaSet.[0].tipo", is("tipo")))
+                .andExpect(jsonPath("$[0].tipoComida.tipo", is("tipo")))
                 .andExpect(jsonPath("$[0].password", is("password")))
                 .andExpect(jsonPath("$[0].estado", is("estado")))
                 .andExpect(jsonPath("$[0].imagenLogo", is("imagenLogo")))
@@ -123,8 +124,8 @@ public class BackofficeHoyComoRestControllerIntegrationTest {
         Comercio comercio = createTestComercio();
         comercio = comercioRepository.saveAndFlush(comercio);
         Long comercioId = comercio.getId();
-        ComercioHoyComoDto comercioHoyComoDto = createDefaultComercioHoyComoDto();
-        String comercioHoyComoDtoJson = objectMapper.writeValueAsString(comercioHoyComoDto);
+        ComercioHoyComoAddDto comercioHoyComoAddDto = createDefaultComercioHoyComoAddDto();
+        String comercioHoyComoDtoJson = objectMapper.writeValueAsString(comercioHoyComoAddDto);
 
 
         mockMvc.perform(put("/api/comercios/" + comercioId)
@@ -140,10 +141,10 @@ public class BackofficeHoyComoRestControllerIntegrationTest {
         Comercio comercio = createTestComercio();
         comercio = comercioRepository.saveAndFlush(comercio);
         Long comercioId = comercio.getId();
-        ComercioHoyComoDto comercioHoyComoDto = createDefaultComercioHoyComoDto();
-        comercioHoyComoDto.setImagenLogo(null);
-        comercioHoyComoDto.setEstado(null);
-        String comercioHoyComoDtoJson = objectMapper.writeValueAsString(comercioHoyComoDto);
+        ComercioHoyComoAddDto comercioHoyComoAddDto = createDefaultComercioHoyComoAddDto();
+        comercioHoyComoAddDto.setImagenLogo(null);
+        comercioHoyComoAddDto.setEstado(null);
+        String comercioHoyComoDtoJson = objectMapper.writeValueAsString(comercioHoyComoAddDto);
 
 
         mockMvc.perform(put("/api/comercios/" + comercioId)
@@ -159,8 +160,7 @@ public class BackofficeHoyComoRestControllerIntegrationTest {
                 .andExpect(jsonPath("$[0].email", is("email")))
                 .andExpect(jsonPath("$[0].nombre", is("nombre")))
                 .andExpect(jsonPath("$[0].razonSocial", is("razonSocial")))
-                .andExpect(jsonPath("$[0].tipoComidaSet", hasSize(1)))
-                .andExpect(jsonPath("$[0].tipoComidaSet.[0].tipo", is("tipo")))
+                .andExpect(jsonPath("$[0].tipoComida.tipo", is("tipo")))
                 .andExpect(jsonPath("$[0].password", is("password")))
                 .andExpect(jsonPath("$[0].estado", is("anotherEstado")))
                 .andExpect(jsonPath("$[0].imagenLogo", is("anotherImagenLogo")))
@@ -179,8 +179,7 @@ public class BackofficeHoyComoRestControllerIntegrationTest {
                 .andExpect(jsonPath("$[0].email", is("email")))
                 .andExpect(jsonPath("$[0].nombre", is("nombre")))
                 .andExpect(jsonPath("$[0].razonSocial", is("razonSocial")))
-                .andExpect(jsonPath("$[0].tipoComidaSet", hasSize(1)))
-                .andExpect(jsonPath("$[0].tipoComidaSet.[0].tipo", is("tipo")))
+                .andExpect(jsonPath("$[0].tipoComida.tipo", is("tipo")))
                 .andExpect(jsonPath("$[0].password", is("password")))
                 .andExpect(jsonPath("$[0].estado", is("estado")))
                 .andExpect(jsonPath("$[0].imagenLogo", is("imagenLogo")))
@@ -209,9 +208,7 @@ public class BackofficeHoyComoRestControllerIntegrationTest {
         comercio.setAddress(address);
         TipoComida tipoComida = new TipoComida();
         tipoComida.setTipo("anotherTipo");
-        Set<TipoComida> tipoComidaSet = new HashSet<>();
-        tipoComidaSet.add(tipoComida);
-        comercio.setTipoComidaSet(tipoComidaSet);
+        comercio.setTipoComida(tipoComida);
         comercio.setEmail("anotherEmail");
         comercio.setNombre("anotherNombre");
         comercio.setRazonSocial("anotherRazonSocial");
