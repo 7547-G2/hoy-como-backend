@@ -1,6 +1,7 @@
 package ar.uba.fi.hoycomobackend.api.service;
 
 import ar.uba.fi.hoycomobackend.api.dto.*;
+import ar.uba.fi.hoycomobackend.api.service.menu.MenuDisplayer;
 import ar.uba.fi.hoycomobackend.database.entity.*;
 import ar.uba.fi.hoycomobackend.database.queries.ComercioQuery;
 import ar.uba.fi.hoycomobackend.database.queries.TipoComidaQuery;
@@ -30,14 +31,16 @@ public class MobileUserService {
     private TipoComidaQuery tipoComidaQuery;
     private ModelMapper modelMapper;
     private ObjectMapper objectMapper;
+    private MenuDisplayer menuDisplayer;
 
     @Autowired
-    public MobileUserService(MobileUserRepository mobileUserRepository, ComercioQuery comercioQuery, TipoComidaQuery tipoComidaQuery, ModelMapper modelMapper, ObjectMapper objectMapper) {
+    public MobileUserService(MobileUserRepository mobileUserRepository, ComercioQuery comercioQuery, TipoComidaQuery tipoComidaQuery, ModelMapper modelMapper, ObjectMapper objectMapper, MenuDisplayer menuDisplayer) {
         this.mobileUserRepository = mobileUserRepository;
         this.comercioQuery = comercioQuery;
         this.tipoComidaQuery = tipoComidaQuery;
         this.modelMapper = modelMapper;
         this.objectMapper = objectMapper;
+        this.menuDisplayer = menuDisplayer;
     }
 
     public ResponseEntity getMobileUserList() {
@@ -210,5 +213,15 @@ public class MobileUserService {
         }
 
         return tipoComidaDtoSet;
+    }
+
+    public ResponseEntity getMenuFromComercio(Long comercioId) {
+        Optional<Comercio> comercioOptional = comercioQuery.getComercioById(comercioId);
+        if (comercioOptional.isPresent()) {
+            Comercio comercio = comercioOptional.get();
+
+            return menuDisplayer.getMenuFromComercio(comercio);
+        }
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorMessage("No existe el comercio con id: " + comercioId));
     }
 }

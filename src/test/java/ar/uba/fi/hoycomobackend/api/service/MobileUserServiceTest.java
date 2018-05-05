@@ -2,6 +2,7 @@ package ar.uba.fi.hoycomobackend.api.service;
 
 import ar.uba.fi.hoycomobackend.api.dto.MobileUserAddDto;
 import ar.uba.fi.hoycomobackend.api.dto.MobileUserDto;
+import ar.uba.fi.hoycomobackend.api.service.menu.MenuDisplayer;
 import ar.uba.fi.hoycomobackend.database.entity.MobileUser;
 import ar.uba.fi.hoycomobackend.database.queries.ComercioQuery;
 import ar.uba.fi.hoycomobackend.database.queries.TipoComidaQuery;
@@ -28,7 +29,8 @@ public class MobileUserServiceTest {
     private TipoComidaQuery tipoComidaQuery = Mockito.mock(TipoComidaQuery.class);
     private ModelMapper modelMapper = Mockito.mock(ModelMapper.class);
     private ObjectMapper objectMapper = Mockito.mock(ObjectMapper.class);
-    private MobileUserService mobileUserService = new MobileUserService(mobileUserRepository, comercioQuery, tipoComidaQuery, modelMapper, objectMapper);
+    private MenuDisplayer menuDisplayer = Mockito.mock(MenuDisplayer.class);
+    private MobileUserService mobileUserService = new MobileUserService(mobileUserRepository, comercioQuery, tipoComidaQuery, modelMapper, objectMapper, menuDisplayer);
 
     @Test
     public void getMobileUserById_returnsMobileUserDto() {
