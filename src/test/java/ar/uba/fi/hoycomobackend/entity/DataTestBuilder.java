@@ -1,5 +1,6 @@
 package ar.uba.fi.hoycomobackend.entity;
 
+import ar.uba.fi.hoycomobackend.api.businesslogic.ComercioEstado;
 import ar.uba.fi.hoycomobackend.api.dto.*;
 import ar.uba.fi.hoycomobackend.database.entity.*;
 import org.springframework.mail.SimpleMailMessage;
@@ -76,7 +77,7 @@ public class DataTestBuilder {
         comercio.setRazonSocial("razonSocial");
         comercio.setToken("token");
         comercio.setPassword("password");
-        comercio.setEstado("estado");
+        comercio.setEstado(ComercioEstado.HABILITADO.toString());
         comercio.setImagenLogo("imagenLogo");
         comercio.setLeadTime(15);
         comercio.setPrecioMinimo(50f);

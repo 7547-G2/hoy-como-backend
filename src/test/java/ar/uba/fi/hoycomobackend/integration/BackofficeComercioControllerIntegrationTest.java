@@ -193,7 +193,7 @@ public class BackofficeComercioControllerIntegrationTest {
                 .andExpect(jsonPath("$.nombre", is("nombre")))
                 .andExpect(jsonPath("$.razonSocial", is("razonSocial")))
                 .andExpect(jsonPath("$.tipoComidaId", notNullValue()))
-                .andExpect(jsonPath("$.estado", is("estado")))
+                .andExpect(jsonPath("$.estado", is("habilitado")))
                 .andExpect(jsonPath("$.imagenLogo", is("imagenLogo")))
                 .andExpect(jsonPath("$.addressDto.street", is("street")))
                 .andExpect(jsonPath("$.addressDto.postalCode", is("postalCode")))
