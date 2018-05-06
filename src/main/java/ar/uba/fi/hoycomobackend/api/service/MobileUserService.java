@@ -28,16 +28,14 @@ public class MobileUserService {
 
     private MobileUserRepository mobileUserRepository;
     private ComercioQuery comercioQuery;
-    private TipoComidaQuery tipoComidaQuery;
     private ModelMapper modelMapper;
     private ObjectMapper objectMapper;
     private MenuDisplayer menuDisplayer;
 
     @Autowired
-    public MobileUserService(MobileUserRepository mobileUserRepository, ComercioQuery comercioQuery, TipoComidaQuery tipoComidaQuery, ModelMapper modelMapper, ObjectMapper objectMapper, MenuDisplayer menuDisplayer) {
+    public MobileUserService(MobileUserRepository mobileUserRepository, ComercioQuery comercioQuery, ModelMapper modelMapper, ObjectMapper objectMapper, MenuDisplayer menuDisplayer) {
         this.mobileUserRepository = mobileUserRepository;
         this.comercioQuery = comercioQuery;
-        this.tipoComidaQuery = tipoComidaQuery;
         this.modelMapper = modelMapper;
         this.objectMapper = objectMapper;
         this.menuDisplayer = menuDisplayer;
@@ -196,23 +194,6 @@ public class MobileUserService {
             return ResponseEntity.ok("Mobile user with id: " + mobileUserFacebookId + " changed state successfully to: " + mobileUserState.name());
         } else
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorMessage("No existe el usuario con id: " + mobileUserFacebookId));
-    }
-
-    public ResponseEntity getTipoComidaDtoSet() {
-        Set<TipoComida> tipoComidaSet = tipoComidaQuery.getAll();
-        Set<TipoComidaDto> tipoComidaDtoSet = getTipoComidaDtoSet(tipoComidaSet);
-
-        return ResponseEntity.ok(tipoComidaDtoSet);
-    }
-
-    private Set<TipoComidaDto> getTipoComidaDtoSet(Set<TipoComida> tipoComidaSet) {
-        Set<TipoComidaDto> tipoComidaDtoSet = new HashSet<>();
-        for (TipoComida tipoComida : tipoComidaSet) {
-            TipoComidaDto tipoComidaDto = modelMapper.map(tipoComida, TipoComidaDto.class);
-            tipoComidaDtoSet.add(tipoComidaDto);
-        }
-
-        return tipoComidaDtoSet;
     }
 
     public ResponseEntity getMenuFromComercio(Long comercioId) {
