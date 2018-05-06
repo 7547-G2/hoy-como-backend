@@ -1,7 +1,12 @@
 package ar.uba.fi.hoycomobackend.api.service.menu;
 
+import ar.uba.fi.hoycomobackend.api.dto.ErrorMessage;
+import ar.uba.fi.hoycomobackend.api.service.MobileUserService;
 import ar.uba.fi.hoycomobackend.database.entity.Comercio;
 import ar.uba.fi.hoycomobackend.database.entity.Plato;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 
@@ -10,10 +15,14 @@ import java.util.stream.Collectors;
 
 @Component
 public class MenuDisplayer {
+    private static Logger LOGGER = LoggerFactory.getLogger(MenuDisplayer.class);
+
     public ResponseEntity getMenuFromComercio(Comercio comercio) {
+        LOGGER.info("Trying to get menu from comercio");
         Set<Plato> platoSet = comercio.getPlatos();
         if (platoSet.isEmpty()) {
-            return null;
+            LOGGER.warn("No platos found for given comercio");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ErrorMessage("El comercio seleccionado no cuenta con platos habilitados."));
         }
         Map<Long, List<Plato>> platoCategoryMap = getPlatoCategoryMap(platoSet);
 
@@ -33,9 +42,10 @@ public class MenuDisplayer {
         Map<Long, List<Plato>> platoCategoryMap = new HashMap<>();
 
         for (Plato plato : platoSet) {
+            LOGGER.info("Mapping plato {}", plato.getId());
             platoCategoryMap = updatePlatoCategoryMap(platoCategoryMap, plato);
         }
-
+        LOGGER.info("Map succesfully built {}", platoCategoryMap.toString());
         return platoCategoryMap;
     }
 
