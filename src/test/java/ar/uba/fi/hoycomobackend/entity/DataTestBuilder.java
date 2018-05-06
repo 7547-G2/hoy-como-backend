@@ -48,6 +48,15 @@ public class DataTestBuilder {
         return mobileUser;
     }
 
+    public static PasswordUpdateDto createDefaultPasswordUpdateDto() {
+        PasswordUpdateDto passwordUpdateDto = new PasswordUpdateDto();
+        passwordUpdateDto.setEmail("email");
+        passwordUpdateDto.setOldPassword("password");
+        passwordUpdateDto.setNewPassword("newPassword");
+
+        return passwordUpdateDto;
+    }
+
     public static Address createDefaultAddress() {
         Address address = new Address();
         address.setDepartment("department");

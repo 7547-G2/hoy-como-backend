@@ -1,9 +1,11 @@
 package ar.uba.fi.hoycomobackend.api.controller;
 
 import ar.uba.fi.hoycomobackend.api.dto.BackofficeComercioSessionDto;
+import ar.uba.fi.hoycomobackend.api.dto.PasswordUpdateDto;
 import ar.uba.fi.hoycomobackend.api.dto.PlatoDto;
 import ar.uba.fi.hoycomobackend.api.dto.PlatoUpdateDto;
 import ar.uba.fi.hoycomobackend.api.service.BackofficeComercioService;
+import ar.uba.fi.hoycomobackend.api.service.ComercioService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -15,10 +17,12 @@ import org.springframework.web.bind.annotation.*;
 public class BackofficeComercioController {
 
     private BackofficeComercioService backofficeComercioService;
+    private ComercioService comercioService;
 
     @Autowired
-    public BackofficeComercioController(BackofficeComercioService backofficeComercioSessionService) {
+    public BackofficeComercioController(BackofficeComercioService backofficeComercioSessionService, ComercioService comercioService) {
         this.backofficeComercioService = backofficeComercioSessionService;
+        this.comercioService = comercioService;
     }
 
     @PostMapping(value = "/backofficeComercio/session", produces = {"application/json"})
@@ -44,5 +48,10 @@ public class BackofficeComercioController {
     @GetMapping(value = "/backofficeComercio/{comercioId}", produces = {"application/json"})
     public ResponseEntity getComercioById(@PathVariable("comercioId") Long comercioId) {
         return backofficeComercioService.getComercioById(comercioId);
+    }
+
+    @RequestMapping(value = "/backofficeComercio/passwordUpdate", method = {RequestMethod.POST, RequestMethod.PUT})
+    public ResponseEntity addPlato(@RequestBody PasswordUpdateDto passwordUpdateDto) {
+        return comercioService.updatePassword(passwordUpdateDto);
     }
 }
