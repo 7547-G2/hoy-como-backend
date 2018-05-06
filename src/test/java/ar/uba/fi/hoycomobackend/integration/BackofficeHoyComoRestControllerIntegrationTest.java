@@ -8,6 +8,7 @@ import ar.uba.fi.hoycomobackend.database.entity.Comercio;
 import ar.uba.fi.hoycomobackend.database.entity.TipoComida;
 import ar.uba.fi.hoycomobackend.database.repository.ComercioRepository;
 import ar.uba.fi.hoycomobackend.database.repository.TipoComidaRepository;
+import ar.uba.fi.hoycomobackend.entity.DatabaseFiller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.After;
 import org.junit.Test;
@@ -101,10 +102,10 @@ public class BackofficeHoyComoRestControllerIntegrationTest {
 
     @Test
     public void getCreatedComerciosWithMatchingFilters() throws Exception {
-        Comercio comercio = createDefaultComercio();
-        comercioRepository.saveAndFlush(comercio);
+        DatabaseFiller.createDefaultComercioInDatabase(comercioRepository, tipoComidaRepository);
+        Long tipoComidaId = comercioRepository.findAll().get(0).getTipoComida().getId();
 
-        mockMvc.perform(get("/api/comercios?search=estado:estado,nombre:nombre,razonSocial:rAzOnSocIAL")
+        mockMvc.perform(get("/api/comercios?search=tipoId:" + tipoComidaId + ",tipo:tipo,estado:estado,nombre:nombre,razonSocial:rAzOnSocIAL")
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(content()

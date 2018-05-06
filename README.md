@@ -1,6 +1,19 @@
 # Hoy Como Backend
 https://hoy-como-backend.herokuapp.com/swagger-ui.html
 
+## Para filtrar comercios
+Case insensitive, separado por comas filtros que acepta:
+* tipoId
+* tipo
+* estado
+* nombre
+* razonSocial
+
+Ejemplo:
+```
+/api/comercios?search=tipoId:1,tipo:tipo,estado:estado,nombre:nombre,razonSocial:rAzOnSocIAL
+```
+
 ## ¿Cómo correrlo localmente?
 
 Bajarse PostgreSQL versión 10.
