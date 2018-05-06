@@ -166,7 +166,7 @@ public class DataTestBuilder {
         platoUpdateDto.setImagen("imagen");
         platoUpdateDto.setNombre("nombre");
         platoUpdateDto.setPrecio(1.0f);
-        platoUpdateDto.setPlatoState(PlatoState.ACTIVO);
+        platoUpdateDto.setState(PlatoState.ACTIVO);
         platoUpdateDto.setCategoria(1L);
         platoUpdateDto.setOrden(1);
 

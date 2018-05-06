@@ -115,7 +115,10 @@ public class BackofficeComercioControllerIntegrationTest {
                         .contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$[0].nombre", is("nombre")))
                 .andExpect(jsonPath("$[0].imagen", is("imagen")))
-                .andExpect(jsonPath("$[0].precio", is(50.0)));
+                .andExpect(jsonPath("$[0].precio", is(50.0)))
+                .andExpect(jsonPath("$[0].state", is("ACTIVO")))
+                .andExpect(jsonPath("$[0].categoria", is(1)))
+                .andExpect(jsonPath("$[0].orden", is(1)));
     }
 
     @Test
