@@ -5,7 +5,6 @@ public class ComercioHoyComoAddDto {
     private String email;
     private String nombre;
     private String razonSocial;
-    private TipoComidaAddDto tipoComidaAdd;
     private String password;
     private String imagenLogo;
     private String estado;
@@ -76,19 +75,11 @@ public class ComercioHoyComoAddDto {
         this.estado = estado;
     }
 
-    public TipoComidaAddDto getTipoComida() {
-        return tipoComidaAdd;
-    }
-
-    public void setTipoComida(TipoComidaAddDto tipoComidaAddSet) {
-        this.tipoComidaAdd = tipoComidaAddSet;
-    }
-
     public Long getTipoComidaId() {
         return this.tipoComidaId;
     }
 
-    public void setTipoComida(Long tipoComidaId) {
+    public void setTipoComidaId(Long tipoComidaId) {
         this.tipoComidaId = tipoComidaId;
     }
 }

@@ -7,6 +7,7 @@ import ar.uba.fi.hoycomobackend.database.entity.Address;
 import ar.uba.fi.hoycomobackend.database.entity.Comercio;
 import ar.uba.fi.hoycomobackend.database.entity.TipoComida;
 import ar.uba.fi.hoycomobackend.database.repository.ComercioRepository;
+import ar.uba.fi.hoycomobackend.database.repository.TipoComidaRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.After;
 import org.junit.Test;
@@ -21,15 +22,9 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.ResultActions;
 
-import java.util.HashSet;
-import java.util.Set;
-
-import static ar.uba.fi.hoycomobackend.entity.DataTestBuilder.createDefaultComercio;
-import static ar.uba.fi.hoycomobackend.entity.DataTestBuilder.createDefaultComercioHoyComoAddDto;
-import static ar.uba.fi.hoycomobackend.entity.DataTestBuilder.createDefaultComercioHoyComoDto;
+import static ar.uba.fi.hoycomobackend.entity.DataTestBuilder.*;
 import static org.assertj.core.api.Java6Assertions.assertThat;
 import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.Matchers.hasSize;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -45,10 +40,13 @@ public class BackofficeHoyComoRestControllerIntegrationTest {
     private ObjectMapper objectMapper;
     @Autowired
     private ComercioRepository comercioRepository;
+    @Autowired
+    private TipoComidaRepository tipoComidaRepository;
 
     @After
     public void tearDown() {
         comercioRepository.deleteAll();
+        tipoComidaRepository.deleteAll();
     }
 
     @Test
@@ -121,10 +119,14 @@ public class BackofficeHoyComoRestControllerIntegrationTest {
 
     @Test
     public void updateExistingComercio() throws Exception {
+        TipoComida tipoComida = new TipoComida();
+        tipoComida.setTipo("tipo");
+        tipoComida = tipoComidaRepository.saveAndFlush(tipoComida);
         Comercio comercio = createTestComercio();
         comercio = comercioRepository.saveAndFlush(comercio);
         Long comercioId = comercio.getId();
         ComercioHoyComoAddDto comercioHoyComoAddDto = createDefaultComercioHoyComoAddDto();
+        comercioHoyComoAddDto.setTipoComidaId(tipoComida.getId());
         String comercioHoyComoDtoJson = objectMapper.writeValueAsString(comercioHoyComoAddDto);
 
 
@@ -140,10 +142,14 @@ public class BackofficeHoyComoRestControllerIntegrationTest {
     public void updateExistingComercioWithNullValuesDoesntUpdateNullValues() throws Exception {
         Comercio comercio = createTestComercio();
         comercio = comercioRepository.saveAndFlush(comercio);
+        TipoComida tipoComida = new TipoComida();
+        tipoComida.setTipo("tipo");
+        tipoComida = tipoComidaRepository.saveAndFlush(tipoComida);
         Long comercioId = comercio.getId();
         ComercioHoyComoAddDto comercioHoyComoAddDto = createDefaultComercioHoyComoAddDto();
         comercioHoyComoAddDto.setImagenLogo(null);
         comercioHoyComoAddDto.setEstado(null);
+        comercioHoyComoAddDto.setTipoComidaId(tipoComida.getId());
         String comercioHoyComoDtoJson = objectMapper.writeValueAsString(comercioHoyComoAddDto);
 
 

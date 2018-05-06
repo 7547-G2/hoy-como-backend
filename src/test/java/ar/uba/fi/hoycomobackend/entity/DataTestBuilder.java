@@ -112,25 +112,17 @@ public class DataTestBuilder {
 
     public static ComercioHoyComoAddDto createDefaultComercioHoyComoAddDto() {
         AddressDto addressDto = createDefaultAddressDto();
-        TipoComidaAddDto tipoComidaAddDto = createDefaultTipoComidaAddDto();
         ComercioHoyComoAddDto comercioHoyComoAddDto = new ComercioHoyComoAddDto();
         comercioHoyComoAddDto.setEmail("email");
         comercioHoyComoAddDto.setNombre("nombre");
         comercioHoyComoAddDto.setRazonSocial("razonSocial");
-        comercioHoyComoAddDto.setTipoComida(tipoComidaAddDto);
+        comercioHoyComoAddDto.setTipoComidaId(1L);
         comercioHoyComoAddDto.setPassword("password");
         comercioHoyComoAddDto.setEstado("estado");
         comercioHoyComoAddDto.setImagenLogo("imagenLogo");
         comercioHoyComoAddDto.setAddressDto(addressDto);
 
         return comercioHoyComoAddDto;
-    }
-
-    private static TipoComidaAddDto createDefaultTipoComidaAddDto() {
-        TipoComidaAddDto tipoComidaAddDto = new TipoComidaAddDto();
-        tipoComidaAddDto.setTipo("tipo");
-
-        return  tipoComidaAddDto;
     }
 
     public static TipoComidaDto createDefaultTipoComidaDto() {

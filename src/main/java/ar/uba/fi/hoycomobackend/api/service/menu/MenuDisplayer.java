@@ -39,11 +39,11 @@ public class MenuDisplayer {
         return platoCategoryMap;
     }
 
-    private Map<Long,List<Plato>> updatePlatoCategoryMap(final Map platoCategoryMap, Plato plato) {
+    private Map<Long, List<Plato>> updatePlatoCategoryMap(final Map platoCategoryMap, Plato plato) {
         Long categoria = plato.getCategoria();
         List<Plato> platoList;
         if (platoCategoryMap.containsKey(categoria)) {
-            platoList = ((List<Plato>)platoCategoryMap.get(categoria));
+            platoList = ((List<Plato>) platoCategoryMap.get(categoria));
             platoList.add(plato);
         } else {
             platoList = Arrays.asList(plato);
