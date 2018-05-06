@@ -35,5 +35,6 @@ public class ComercioServiceTest {
         Comercio comercio = comercioRepository.findAll().get(0);
 
         assertThat(comercio.getPassword()).isEqualTo("newPassword");
+        assertThat(comercio.getEstado()).isEqualTo("pendiente menu");
     }
 }
