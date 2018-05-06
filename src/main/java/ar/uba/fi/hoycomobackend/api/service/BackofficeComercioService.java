@@ -132,4 +132,20 @@ public class BackofficeComercioService {
         } else
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ErrorMessage("No se encontró ningún comercio con id: " + comercioId));
     }
+
+    public ResponseEntity getComercioById(Long comercioId) {
+        Optional<Comercio> comercioOptional = comercioQuery.getComercioById(comercioId);
+
+        if (comercioOptional.isPresent()) {
+            Comercio comercio = comercioOptional.get();
+            AddressDto addressDto = modelMapper.map(comercio.getAddress(), AddressDto.class);
+            ComercioBackofficeDto comercioBackofficeDto = modelMapper.map(comercio, ComercioBackofficeDto.class);
+            comercioBackofficeDto.setAddressDto(addressDto);
+            comercioBackofficeDto.setTipoComidaId(comercio.getTipoComida().getId());
+
+            return ResponseEntity.ok(comercioBackofficeDto);
+        } else
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ErrorMessage("No se encontró ningún comercio con id: " + comercioId));
+
+    }
 }
