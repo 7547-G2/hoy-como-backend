@@ -40,4 +40,9 @@ public class BackofficeComercioController {
     public ResponseEntity updatePlato(@PathVariable("comercioId") Long comercioId, @PathVariable("platoId") Long platoId, @RequestBody PlatoUpdateDto platoUpdateDto) throws JsonProcessingException {
         return backofficeComercioService.updatePlatoFromComercio(comercioId, platoId, platoUpdateDto);
     }
+
+    @GetMapping(value = "/backofficeComercio/{comercioId}", produces = {"application/json"})
+    public ResponseEntity getComercioById(@PathVariable("comercioId") Long comercioId) {
+        return backofficeComercioService.getComercioById(comercioId);
+    }
 }

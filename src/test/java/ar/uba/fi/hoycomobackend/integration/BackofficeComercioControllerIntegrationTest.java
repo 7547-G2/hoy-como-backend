@@ -27,6 +27,7 @@ import static ar.uba.fi.hoycomobackend.entity.DataTestBuilder.*;
 import static org.assertj.core.api.Java6Assertions.assertThat;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.Matchers.hasSize;
+import static org.hamcrest.Matchers.notNullValue;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -174,6 +175,27 @@ public class BackofficeComercioControllerIntegrationTest {
                 .andExpect(content()
                         .contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$", hasSize(2)));
+    }
+
+    @Test
+    public void getComercioById() throws Exception {
+        Long comercioId = createDefaultComercioInDatabase();
+
+        mockMvc.perform(get("/api/backofficeComercio/" + comercioId)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(content()
+                        .contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.email", is("email")))
+                .andExpect(jsonPath("$.nombre", is("nombre")))
+                .andExpect(jsonPath("$.razonSocial", is("razonSocial")))
+                .andExpect(jsonPath("$.tipoComidaId", notNullValue()))
+                .andExpect(jsonPath("$.estado", is("estado")))
+                .andExpect(jsonPath("$.imagenLogo", is("imagenLogo")))
+                .andExpect(jsonPath("$.addressDto.street", is("street")))
+                .andExpect(jsonPath("$.addressDto.postalCode", is("postalCode")))
+                .andExpect(jsonPath("$.addressDto.floor", is("floor")))
+                .andExpect(jsonPath("$.addressDto.department", is("department")));
     }
 
     private PlatoDto createTestPlatoDto() {

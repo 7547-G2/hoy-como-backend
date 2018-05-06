@@ -16,13 +16,6 @@ public class DataTestBuilder {
         return comercio;
     }
 
-    public static Comercio createComercio(Long id, String email, String nombre) {
-        Comercio comercio = createComercio(email, nombre);
-        comercio.setId(id);
-
-        return comercio;
-    }
-
     public static ComercioHoyComoDto createComercioDto(Long id, String email, String nombre) {
         ComercioHoyComoDto comercioHoyComoDto = new ComercioHoyComoDto();
         comercioHoyComoDto.setEmail(email);
