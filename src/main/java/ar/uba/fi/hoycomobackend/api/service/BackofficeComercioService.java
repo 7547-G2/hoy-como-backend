@@ -146,6 +146,5 @@ public class BackofficeComercioService {
             return ResponseEntity.ok(comercioBackofficeDto);
         } else
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ErrorMessage("No se encontró ningún comercio con id: " + comercioId));
-
     }
 }

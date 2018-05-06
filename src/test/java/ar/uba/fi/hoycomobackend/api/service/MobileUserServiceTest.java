@@ -26,7 +26,6 @@ public class MobileUserServiceTest {
 
     private MobileUserRepository mobileUserRepository = Mockito.mock(MobileUserRepository.class);
     private ComercioQuery comercioQuery = Mockito.mock(ComercioQuery.class);
-    private TipoComidaQuery tipoComidaQuery = Mockito.mock(TipoComidaQuery.class);
     private ModelMapper modelMapper = Mockito.mock(ModelMapper.class);
     private ObjectMapper objectMapper = Mockito.mock(ObjectMapper.class);
     private MenuDisplayer menuDisplayer = Mockito.mock(MenuDisplayer.class);
