@@ -19,6 +19,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class MobileUserService {
@@ -165,6 +166,7 @@ public class MobileUserService {
     public ResponseEntity getComercioMobileUserDtoSet(String search) {
         List<Comercio> comercioList = comercioQuery.findBySearchQuery(search);
         List<ComercioMobileUserDto> comercioMobileUserDtoList = getComercioDtos(comercioList);
+        comercioMobileUserDtoList = comercioMobileUserDtoList.stream().filter(comercio -> "habilitado".equals(comercio.getEstado())).collect(Collectors.toList());
 
         return ResponseEntity.ok(comercioMobileUserDtoList);
     }

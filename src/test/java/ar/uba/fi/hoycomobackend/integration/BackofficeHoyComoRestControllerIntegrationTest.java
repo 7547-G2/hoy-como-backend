@@ -92,7 +92,7 @@ public class BackofficeHoyComoRestControllerIntegrationTest {
                 .andExpect(jsonPath("$[0].nombre", is("nombre")))
                 .andExpect(jsonPath("$[0].razonSocial", is("razonSocial")))
                 .andExpect(jsonPath("$[0].password", is("password")))
-                .andExpect(jsonPath("$[0].estado", is("estado")))
+                .andExpect(jsonPath("$[0].estado", is("habilitado")))
                 .andExpect(jsonPath("$[0].imagenLogo", is("imagenLogo")))
                 .andExpect(jsonPath("$[0].addressDto.street", is("street")))
                 .andExpect(jsonPath("$[0].addressDto.postalCode", is("postalCode")))
@@ -105,7 +105,7 @@ public class BackofficeHoyComoRestControllerIntegrationTest {
         DatabaseFiller.createDefaultComercioInDatabase(comercioRepository, tipoComidaRepository);
         Long tipoComidaId = comercioRepository.findAll().get(0).getTipoComida().getId();
 
-        mockMvc.perform(get("/api/comercios?search=tipoId:" + tipoComidaId + ",tipo:tipo,estado:estado,nombre:nombre,razonSocial:rAzOnSocIAL")
+        mockMvc.perform(get("/api/comercios?search=tipoId:" + tipoComidaId + ",tipo:tipo,estado:habilitado,nombre:nombre,razonSocial:rAzOnSocIAL")
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(content()
@@ -114,7 +114,7 @@ public class BackofficeHoyComoRestControllerIntegrationTest {
                 .andExpect(jsonPath("$[0].nombre", is("nombre")))
                 .andExpect(jsonPath("$[0].razonSocial", is("razonSocial")))
                 .andExpect(jsonPath("$[0].password", is("password")))
-                .andExpect(jsonPath("$[0].estado", is("estado")))
+                .andExpect(jsonPath("$[0].estado", is("habilitado")))
                 .andExpect(jsonPath("$[0].imagenLogo", is("imagenLogo")))
                 .andExpect(jsonPath("$[0].addressDto.street", is("street")))
                 .andExpect(jsonPath("$[0].addressDto.postalCode", is("postalCode")))
