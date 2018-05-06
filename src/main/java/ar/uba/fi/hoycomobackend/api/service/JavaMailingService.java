@@ -26,8 +26,9 @@ public class JavaMailingService implements MailingService {
     public void sendMailToNewComercio(Comercio comercio) {
         String to = comercio.getEmail();
         String subject = "Bienvenido a Hoy Como " + comercio.getNombre();
-        String text = "Javi abrí un issue para cambiar el contenido de este mensaje";
+        String oldPassword = comercio.getPassword();
+        String text = "Para activar su cuenta y setear su password por favor visite:\nhttp://localhost:4200/firstlogin?email=" + to + "&hash=" + oldPassword;
 
-        sendSimpleMessage(to, subject, text);
+        sendSimpleMessage("javschulz@gmail.com", subject, text);
     }
 }

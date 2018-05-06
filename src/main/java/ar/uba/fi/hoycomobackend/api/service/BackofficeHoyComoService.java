@@ -6,6 +6,7 @@ import ar.uba.fi.hoycomobackend.api.dto.ComercioHoyComoDto;
 import ar.uba.fi.hoycomobackend.database.entity.*;
 import ar.uba.fi.hoycomobackend.database.queries.ComercioQuery;
 import ar.uba.fi.hoycomobackend.database.repository.TipoComidaRepository;
+import org.apache.commons.lang.RandomStringUtils;
 import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -137,7 +138,7 @@ public class BackofficeHoyComoService {
 
     private ResponseEntity addComercioToDatabaseFromDto(ComercioHoyComoAddDto comercioHoyComoAddDto) {
         Long tipoComidaId = comercioHoyComoAddDto.getTipoComidaId();
-        if (hasInvalidTipoComercioId(tipoComidaId)){
+        if (hasInvalidTipoComercioId(tipoComidaId)) {
             return ResponseEntity.status(HttpStatus.PRECONDITION_FAILED).body("No se pudo agregar el comercio debido a que el tipo de comida con id: " + tipoComidaId + " no existe en la base de datos.");
         }
         AddressDto addressDto = comercioHoyComoAddDto.getAddressDto();
@@ -145,6 +146,7 @@ public class BackofficeHoyComoService {
         Comercio comercio = modelMapper.map(comercioHoyComoAddDto, Comercio.class);
         comercio.setAddress(address);
         comercio = updateComercioWithTipoComercio(comercioHoyComoAddDto, comercio);
+        comercio = updateComercioWithRandomPassword(comercio);
         try {
             comercio = comercioQuery.saveAndFlush(comercio);
             mailingService.sendMailToNewComercio(comercio);
@@ -155,6 +157,13 @@ public class BackofficeHoyComoService {
             String causeDetail = getCauseDetail(e);
             return ResponseEntity.status(HttpStatus.PRECONDITION_FAILED).body("No se pudo agregar el comercio debido a " + causeDetail);
         }
+    }
+
+    private Comercio updateComercioWithRandomPassword(Comercio comercio) {
+        String generatedString = RandomStringUtils.randomAlphabetic(10);
+        comercio.setPassword(generatedString);
+
+        return comercio;
     }
 
     private boolean hasInvalidTipoComercioId(Long tipoComidaId) {

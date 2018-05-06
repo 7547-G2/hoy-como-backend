@@ -24,7 +24,7 @@ public class ComercioService {
     public ResponseEntity updatePassword(PasswordUpdateDto passwordUpdateDto) {
         String email = passwordUpdateDto.getEmail();
         Optional<Comercio> comercioOptional = comercioQuery.getComercioByEmail(email);
-        if(passwordsMatch(comercioOptional, passwordUpdateDto)) {
+        if (passwordsMatch(comercioOptional, passwordUpdateDto)) {
             Comercio comercio = comercioOptional.get();
             String newPassword = passwordUpdateDto.getNewPassword();
             comercio.setPassword(newPassword);
