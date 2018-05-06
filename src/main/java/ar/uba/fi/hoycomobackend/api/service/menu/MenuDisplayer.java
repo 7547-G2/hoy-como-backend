@@ -50,6 +50,8 @@ public class MenuDisplayer {
     }
 
     private Map<Long, List<Plato>> updatePlatoCategoryMap(final Map platoCategoryMap, Plato plato) {
+        LOGGER.info("Current platoCategoryMap {}", platoCategoryMap);
+        LOGGER.info("Mapping plato {}", plato);
         Long categoria = plato.getCategoria();
         List<Plato> platoList;
         if (platoCategoryMap.containsKey(categoria)) {
