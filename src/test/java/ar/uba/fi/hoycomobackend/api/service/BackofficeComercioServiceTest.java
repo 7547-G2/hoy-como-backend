@@ -15,9 +15,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import static ar.uba.fi.hoycomobackend.entity.DataTestBuilder.createDefaultComercio;
-import static ar.uba.fi.hoycomobackend.entity.DataTestBuilder.createDefaultPlatoDto;
-import static ar.uba.fi.hoycomobackend.entity.DataTestBuilder.createDefaultPlatoUpdateDto;
+import static ar.uba.fi.hoycomobackend.entity.DataTestBuilder.*;
 import static org.assertj.core.api.Java6Assertions.assertThat;
 
 @RunWith(SpringRunner.class)

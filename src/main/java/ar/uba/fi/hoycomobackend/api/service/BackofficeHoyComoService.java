@@ -1,12 +1,11 @@
 package ar.uba.fi.hoycomobackend.api.service;
-import ar.uba.fi.hoycomobackend.database.entity.Plato;
-import ar.uba.fi.hoycomobackend.database.entity.PlatoState;
+
 import ar.uba.fi.hoycomobackend.api.dto.AddressDto;
 import ar.uba.fi.hoycomobackend.api.dto.ComercioHoyComoAddDto;
 import ar.uba.fi.hoycomobackend.api.dto.ComercioHoyComoDto;
-import ar.uba.fi.hoycomobackend.database.entity.Address;
-import ar.uba.fi.hoycomobackend.database.entity.Comercio;
+import ar.uba.fi.hoycomobackend.database.entity.*;
 import ar.uba.fi.hoycomobackend.database.queries.ComercioQuery;
+import ar.uba.fi.hoycomobackend.database.repository.TipoComidaRepository;
 import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,8 +18,8 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 public class BackofficeHoyComoService {
@@ -31,12 +30,14 @@ public class BackofficeHoyComoService {
     private ComercioQuery comercioQuery;
     private ModelMapper modelMapper;
     private MailingService mailingService;
+    private TipoComidaRepository tipoComidaRepository;
 
     @Autowired
-    public BackofficeHoyComoService(ComercioQuery comercioQuery, ModelMapper modelMapper, MailingService mailingService) {
+    public BackofficeHoyComoService(ComercioQuery comercioQuery, ModelMapper modelMapper, MailingService mailingService, TipoComidaRepository tipoComidaRepository) {
         this.comercioQuery = comercioQuery;
         this.modelMapper = modelMapper;
         this.mailingService = mailingService;
+        this.tipoComidaRepository = tipoComidaRepository;
     }
 
     public List<ComercioHoyComoDto> getComercioByNombre(String nombre) {
@@ -89,7 +90,7 @@ public class BackofficeHoyComoService {
     private boolean cannotChangeState(ComercioHoyComoAddDto comercioHoyComoAddDto, Comercio comercio) {
         long amountOfPlatos = getAmountOfPlatos(comercio);
         String newEstado = comercioHoyComoAddDto.getEstado();
-        if("habilitado".equalsIgnoreCase(newEstado) && amountOfPlatos < MININUM_AMOUNT_OF_PLATOS && "pendiente menu".equalsIgnoreCase(comercio.getEstado())){
+        if ("habilitado".equalsIgnoreCase(newEstado) && amountOfPlatos < MININUM_AMOUNT_OF_PLATOS && "pendiente menu".equalsIgnoreCase(comercio.getEstado())) {
             return true;
         }
         return false;
@@ -102,12 +103,7 @@ public class BackofficeHoyComoService {
     }
 
     private ResponseEntity updateComercioToDatabaseFromDto(ComercioHoyComoAddDto comercioHoyComoAddDto, Comercio comercio) {
-        modelMapper.map(comercioHoyComoAddDto, comercio);
-        AddressDto addressDto = comercioHoyComoAddDto.getAddressDto();
-        if (addressDto != null) {
-            Address address = modelMapper.map(addressDto, Address.class);
-            comercio.setAddress(address);
-        }
+        comercio = getUpdatedComercio(comercioHoyComoAddDto, comercio);
         try {
             comercioQuery.saveAndFlush(comercio);
             return ResponseEntity.ok("Comercio updateado correctamente");
@@ -119,11 +115,32 @@ public class BackofficeHoyComoService {
         }
     }
 
+    private Comercio getUpdatedComercio(ComercioHoyComoAddDto comercioHoyComoAddDto, Comercio comercio) {
+        modelMapper.map(comercioHoyComoAddDto, comercio);
+        AddressDto addressDto = comercioHoyComoAddDto.getAddressDto();
+        if (addressDto != null) {
+            Address address = modelMapper.map(addressDto, Address.class);
+            comercio.setAddress(address);
+        }
+        comercio = updateComercioWithTipoComercio(comercioHoyComoAddDto, comercio);
+        return comercio;
+    }
+
+    private Comercio updateComercioWithTipoComercio(ComercioHoyComoAddDto comercioHoyComoAddDto, Comercio comercio) {
+        Long tipoComidaId = comercioHoyComoAddDto.getTipoComidaId();
+        if (tipoComidaId != null) {
+            Optional<TipoComida> tipoComidaOptional = tipoComidaRepository.findById(tipoComidaId);
+            tipoComidaOptional.ifPresent(tipoComida -> comercio.setTipoComida(tipoComida));
+        }
+        return comercio;
+    }
+
     private ResponseEntity addComercioToDatabaseFromDto(ComercioHoyComoAddDto comercioHoyComoAddDto) {
         AddressDto addressDto = comercioHoyComoAddDto.getAddressDto();
         Address address = modelMapper.map(addressDto, Address.class);
         Comercio comercio = modelMapper.map(comercioHoyComoAddDto, Comercio.class);
         comercio.setAddress(address);
+        comercio = updateComercioWithTipoComercio(comercioHoyComoAddDto, comercio);
         try {
             comercio = comercioQuery.saveAndFlush(comercio);
             mailingService.sendMailToNewComercio(comercio);
