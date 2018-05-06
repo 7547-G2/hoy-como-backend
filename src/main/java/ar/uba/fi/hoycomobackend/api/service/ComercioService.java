@@ -15,6 +15,7 @@ import java.util.Optional;
 @Service
 public class ComercioService {
 
+    private static final String PENDIENTE_MENU = "pendiente menu";
     private ComercioQuery comercioQuery;
 
     @Autowired
@@ -29,6 +30,7 @@ public class ComercioService {
             Comercio comercio = comercioOptional.get();
             String newPassword = passwordUpdateDto.getNewPassword();
             comercio.setPassword(newPassword);
+            comercio.setEstado(PENDIENTE_MENU);
             comercioQuery.saveAndFlush(comercio);
 
             return ResponseEntity.ok(new Message("Contraseña actualizada correctamente."));
