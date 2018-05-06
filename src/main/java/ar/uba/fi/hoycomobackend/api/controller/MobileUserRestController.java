@@ -2,7 +2,7 @@ package ar.uba.fi.hoycomobackend.api.controller;
 
 import ar.uba.fi.hoycomobackend.api.dto.AddressDto;
 import ar.uba.fi.hoycomobackend.api.dto.MobileUserAddDto;
-import ar.uba.fi.hoycomobackend.api.service.CategoriaComidaService;
+import ar.uba.fi.hoycomobackend.api.service.ComidasService;
 import ar.uba.fi.hoycomobackend.api.service.MobileUserService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,12 +14,12 @@ import org.springframework.web.bind.annotation.*;
 public class MobileUserRestController {
 
     private MobileUserService mobileUserService;
-    private CategoriaComidaService categoriaComidaService;
+    private ComidasService comidasService;
 
     @Autowired
-    public MobileUserRestController(MobileUserService mobileUserService, CategoriaComidaService categoriaComidaService) {
+    public MobileUserRestController(MobileUserService mobileUserService, ComidasService comidasService) {
         this.mobileUserService = mobileUserService;
-        this.categoriaComidaService = categoriaComidaService;
+        this.comidasService = comidasService;
     }
 
     @GetMapping(value = "/mobileUser")
@@ -69,7 +69,7 @@ public class MobileUserRestController {
 
     @GetMapping(value = "/mobileUser/tipoComida")
     public ResponseEntity getTipoComidaDtoSet() {
-        return categoriaComidaService.getCategoriaComida();
+        return comidasService.getTipoComidaComercio();
     }
 
     @GetMapping(value = "/mobileUser/menu/{comercioId}")

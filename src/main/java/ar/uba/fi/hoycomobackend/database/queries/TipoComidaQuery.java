@@ -22,11 +22,10 @@ public class TipoComidaQuery {
         this.tipoComidaRepository = tipoComidaRepository;
     }
 
-    public Set<TipoComida> getAll() {
+    public List<TipoComida> getAll() {
         LOGGER.info("Getting all the tipoComida");
         List<TipoComida> tipoComidaList = tipoComidaRepository.findAll();
-        Set<TipoComida> tipoComidaSet = new HashSet<>(tipoComidaList);
 
-        return tipoComidaSet;
+        return tipoComidaList;
     }
 }
