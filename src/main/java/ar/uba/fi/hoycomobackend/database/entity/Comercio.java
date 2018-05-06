@@ -22,7 +22,7 @@ public class Comercio {
     private String nombre;
     @Column(columnDefinition = "varchar(256) default ''")
     private String razonSocial;
-    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.MERGE)
     @JoinColumn(name = "tipo_comida_id")
     private TipoComida tipoComida;
     private String token;

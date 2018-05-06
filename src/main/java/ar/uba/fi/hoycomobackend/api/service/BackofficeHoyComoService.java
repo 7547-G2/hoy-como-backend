@@ -136,6 +136,10 @@ public class BackofficeHoyComoService {
     }
 
     private ResponseEntity addComercioToDatabaseFromDto(ComercioHoyComoAddDto comercioHoyComoAddDto) {
+        Long tipoComidaId = comercioHoyComoAddDto.getTipoComidaId();
+        if (hasInvalidTipoComercioId(tipoComidaId)){
+            return ResponseEntity.status(HttpStatus.PRECONDITION_FAILED).body("No se pudo agregar el comercio debido a que el tipo de comida con id: " + tipoComidaId + " no existe en la base de datos.");
+        }
         AddressDto addressDto = comercioHoyComoAddDto.getAddressDto();
         Address address = modelMapper.map(addressDto, Address.class);
         Comercio comercio = modelMapper.map(comercioHoyComoAddDto, Comercio.class);
@@ -151,6 +155,10 @@ public class BackofficeHoyComoService {
             String causeDetail = getCauseDetail(e);
             return ResponseEntity.status(HttpStatus.PRECONDITION_FAILED).body("No se pudo agregar el comercio debido a " + causeDetail);
         }
+    }
+
+    private boolean hasInvalidTipoComercioId(Long tipoComidaId) {
+        return !tipoComidaRepository.findById(tipoComidaId).isPresent();
     }
 
     private String getCauseDetail(DataIntegrityViolationException exception) {

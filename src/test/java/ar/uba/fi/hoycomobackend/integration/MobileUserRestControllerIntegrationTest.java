@@ -176,7 +176,11 @@ public class MobileUserRestControllerIntegrationTest {
 
     @Test
     public void getComerciosWithoutFilters() throws Exception {
+        TipoComida tipoComida = new TipoComida();
+        tipoComida.setTipo("tipo");
+        tipoComida = tipoComidaRepository.saveAndFlush(tipoComida);
         Comercio comercio = createDefaultComercio();
+        comercio.setTipoComida(tipoComida);
         comercio = comercioRepository.saveAndFlush(comercio);
 
         mockMvc.perform(get("/api/mobileUser/comercios")
@@ -186,8 +190,7 @@ public class MobileUserRestControllerIntegrationTest {
                         .contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$[0].id", is(comercio.getId().intValue())))
                 .andExpect(jsonPath("$[0].nombre", is("nombre")))
-                .andExpect(jsonPath("$[0].tipoComidaSet", hasSize(1)))
-                .andExpect(jsonPath("$[0].tipoComidaSet.[0].tipo", is("tipo")))
+                .andExpect(jsonPath("$[0].tipoComida.tipo", is("tipo")))
                 .andExpect(jsonPath("$[0].imagenLogo", is("imagenLogo")))
                 .andExpect(jsonPath("$[0].estado", is("estado")))
                 .andExpect(jsonPath("$[0].rating", is("4.5")))
@@ -202,7 +205,11 @@ public class MobileUserRestControllerIntegrationTest {
 
     @Test
     public void getComerciosWithMatchingFilters() throws Exception {
+        TipoComida tipoComida = new TipoComida();
+        tipoComida.setTipo("tipo");
+        tipoComida = tipoComidaRepository.saveAndFlush(tipoComida);
         Comercio comercio = createDefaultComercio();
+        comercio.setTipoComida(tipoComida);
         comercio = comercioRepository.saveAndFlush(comercio);
 
         mockMvc.perform(get("/api/mobileUser/comercios/?search=tipo:tipo,leadTime<60,precioMinimo>50,precioMaximo<120,totalPedidos>10,rating>1")
@@ -212,8 +219,7 @@ public class MobileUserRestControllerIntegrationTest {
                         .contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$[0].id", is(comercio.getId().intValue())))
                 .andExpect(jsonPath("$[0].nombre", is("nombre")))
-                .andExpect(jsonPath("$[0].tipoComidaSet", hasSize(1)))
-                .andExpect(jsonPath("$[0].tipoComidaSet.[0].tipo", is("tipo")))
+                .andExpect(jsonPath("$[0].tipoComida.tipo", is("tipo")))
                 .andExpect(jsonPath("$[0].imagenLogo", is("imagenLogo")))
                 .andExpect(jsonPath("$[0].estado", is("estado")))
                 .andExpect(jsonPath("$[0].rating", is("4.5")))

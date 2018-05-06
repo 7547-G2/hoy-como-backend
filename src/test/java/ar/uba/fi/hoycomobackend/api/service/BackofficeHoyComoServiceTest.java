@@ -1,5 +1,6 @@
 package ar.uba.fi.hoycomobackend.api.service;
 
+import ar.uba.fi.hoycomobackend.api.dto.ComercioHoyComoAddDto;
 import ar.uba.fi.hoycomobackend.api.dto.ComercioHoyComoDto;
 import ar.uba.fi.hoycomobackend.api.dto.TipoComidaDto;
 import ar.uba.fi.hoycomobackend.database.entity.Comercio;

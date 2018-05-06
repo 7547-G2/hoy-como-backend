@@ -6,8 +6,10 @@ import ar.uba.fi.hoycomobackend.api.dto.PlatoUpdateDto;
 import ar.uba.fi.hoycomobackend.database.entity.Comercio;
 import ar.uba.fi.hoycomobackend.database.entity.Plato;
 import ar.uba.fi.hoycomobackend.database.entity.PlatoState;
+import ar.uba.fi.hoycomobackend.database.entity.TipoComida;
 import ar.uba.fi.hoycomobackend.database.repository.ComercioRepository;
 import ar.uba.fi.hoycomobackend.database.repository.PlatoRepository;
+import ar.uba.fi.hoycomobackend.database.repository.TipoComidaRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.After;
 import org.junit.Test;
@@ -44,7 +46,8 @@ public class BackofficeComercioControllerIntegrationTest {
     private ComercioRepository comercioRepository;
     @Autowired
     private PlatoRepository platoRepository;
-
+    @Autowired
+    private TipoComidaRepository tipoComidaRepository;
 
     @After
     public void tearDown() {
@@ -221,7 +224,11 @@ public class BackofficeComercioControllerIntegrationTest {
     }
 
     private Long createDefaultComercioInDatabase() {
+        TipoComida tipoComida = new TipoComida();
+        tipoComida.setTipo("tipo");
+        tipoComida = tipoComidaRepository.saveAndFlush(tipoComida);
         Comercio comercio = createDefaultComercio();
+        comercio.setTipoComida(tipoComida);
         comercio = comercioRepository.saveAndFlush(comercio);
         return comercio.getId();
     }

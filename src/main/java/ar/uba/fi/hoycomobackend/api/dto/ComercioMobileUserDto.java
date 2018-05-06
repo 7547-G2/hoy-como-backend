@@ -6,7 +6,7 @@ public class ComercioMobileUserDto {
 
     private Long id;
     private String nombre;
-    private Set<TipoComidaDto> tipoComidaSet;
+    private TipoComidaDto tipoComida;
     private String imagenLogo;
     private String estado;
     private String rating;
@@ -87,11 +87,11 @@ public class ComercioMobileUserDto {
         this.rating = rating;
     }
 
-    public Set<TipoComidaDto> getTipoComidaSet() {
-        return tipoComidaSet;
+    public TipoComidaDto getTipoComida() {
+        return tipoComida;
     }
 
-    public void setTipoComidaSet(Set<TipoComidaDto> tipoComidaSet) {
-        this.tipoComidaSet = tipoComidaSet;
+    public void setTipoComida(TipoComidaDto tipoComida) {
+        this.tipoComida = tipoComida;
     }
 }

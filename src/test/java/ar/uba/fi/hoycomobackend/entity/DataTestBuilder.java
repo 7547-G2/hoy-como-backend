@@ -62,8 +62,6 @@ public class DataTestBuilder {
         Comercio comercio = new Comercio();
         Address address = createDefaultAddress();
         comercio.setAddress(address);
-        TipoComida tipoComida = createDefaultTipoComida();
-        comercio.setTipoComida(tipoComida);
         comercio.setEmail("email");
         comercio.setNombre("nombre");
         comercio.setRazonSocial("razonSocial");
