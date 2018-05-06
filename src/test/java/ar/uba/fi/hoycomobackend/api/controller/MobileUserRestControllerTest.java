@@ -1,6 +1,7 @@
 package ar.uba.fi.hoycomobackend.api.controller;
 
 import ar.uba.fi.hoycomobackend.api.dto.MobileUserDto;
+import ar.uba.fi.hoycomobackend.api.service.CategoriaComidaService;
 import ar.uba.fi.hoycomobackend.api.service.MobileUserService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.Test;
@@ -35,6 +36,8 @@ public class MobileUserRestControllerTest {
     private MockMvc mockMvc;
     @MockBean
     private MobileUserService mobileUserService;
+    @MockBean
+    private CategoriaComidaService categoriaComidaService;
 
     @Test
     public void whenGetMobileUserList_thenReturnJsonArray() throws Exception {
