@@ -58,8 +58,12 @@ public class BackofficeHoyComoRestControllerIntegrationTest {
 
     @Test
     public void addComercioWithExistingEmailSendsCorrectConstraintInformation() throws Exception {
-        ComercioHoyComoDto comercioHoyComoDto = createDefaultComercioHoyComoDto();
-        String comercioHoyComoDtoJson = objectMapper.writeValueAsString(comercioHoyComoDto);
+        TipoComida tipoComida = new TipoComida();
+        tipoComida.setTipo("tipo");
+        tipoComida = tipoComidaRepository.saveAndFlush(tipoComida);
+        ComercioHoyComoAddDto comercioHoyComoAddDto = createDefaultComercioHoyComoAddDto();
+        comercioHoyComoAddDto.setTipoComidaId(tipoComida.getId());
+        String comercioHoyComoDtoJson = objectMapper.writeValueAsString(comercioHoyComoAddDto);
 
         mockMvc.perform(post("/api/comercios/")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -78,7 +82,21 @@ public class BackofficeHoyComoRestControllerIntegrationTest {
         Comercio comercio = createDefaultComercio();
         comercioRepository.saveAndFlush(comercio);
 
-        expectDefaultComercioGot();
+        mockMvc.perform(get("/api/comercios")
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(content()
+                        .contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$[0].email", is("email")))
+                .andExpect(jsonPath("$[0].nombre", is("nombre")))
+                .andExpect(jsonPath("$[0].razonSocial", is("razonSocial")))
+                .andExpect(jsonPath("$[0].password", is("password")))
+                .andExpect(jsonPath("$[0].estado", is("estado")))
+                .andExpect(jsonPath("$[0].imagenLogo", is("imagenLogo")))
+                .andExpect(jsonPath("$[0].addressDto.street", is("street")))
+                .andExpect(jsonPath("$[0].addressDto.postalCode", is("postalCode")))
+                .andExpect(jsonPath("$[0].addressDto.floor", is("floor")))
+                .andExpect(jsonPath("$[0].addressDto.department", is("department")));
     }
 
     @Test
@@ -94,7 +112,6 @@ public class BackofficeHoyComoRestControllerIntegrationTest {
                 .andExpect(jsonPath("$[0].email", is("email")))
                 .andExpect(jsonPath("$[0].nombre", is("nombre")))
                 .andExpect(jsonPath("$[0].razonSocial", is("razonSocial")))
-                .andExpect(jsonPath("$[0].tipoComida.tipo", is("tipo")))
                 .andExpect(jsonPath("$[0].password", is("password")))
                 .andExpect(jsonPath("$[0].estado", is("estado")))
                 .andExpect(jsonPath("$[0].imagenLogo", is("imagenLogo")))
@@ -121,12 +138,15 @@ public class BackofficeHoyComoRestControllerIntegrationTest {
     public void updateExistingComercio() throws Exception {
         TipoComida tipoComida = new TipoComida();
         tipoComida.setTipo("tipo");
-        tipoComida = tipoComidaRepository.saveAndFlush(tipoComida);
+        tipoComidaRepository.saveAndFlush(tipoComida);
+        TipoComida newTipoComida = new TipoComida();
+        newTipoComida.setTipo("newTipo");
+        newTipoComida = tipoComidaRepository.saveAndFlush(newTipoComida);
         Comercio comercio = createTestComercio();
         comercio = comercioRepository.saveAndFlush(comercio);
         Long comercioId = comercio.getId();
         ComercioHoyComoAddDto comercioHoyComoAddDto = createDefaultComercioHoyComoAddDto();
-        comercioHoyComoAddDto.setTipoComidaId(tipoComida.getId());
+        comercioHoyComoAddDto.setTipoComidaId(newTipoComida.getId());
         String comercioHoyComoDtoJson = objectMapper.writeValueAsString(comercioHoyComoAddDto);
 
 
@@ -135,7 +155,22 @@ public class BackofficeHoyComoRestControllerIntegrationTest {
                 .content(comercioHoyComoDtoJson))
                 .andExpect(status().isOk());
 
-        expectDefaultComercioGot();
+        mockMvc.perform(get("/api/comercios")
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(content()
+                        .contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$[0].email", is("email")))
+                .andExpect(jsonPath("$[0].nombre", is("nombre")))
+                .andExpect(jsonPath("$[0].razonSocial", is("razonSocial")))
+                .andExpect(jsonPath("$[0].tipoComida.tipo", is("newTipo")))
+                .andExpect(jsonPath("$[0].password", is("password")))
+                .andExpect(jsonPath("$[0].estado", is("estado")))
+                .andExpect(jsonPath("$[0].imagenLogo", is("imagenLogo")))
+                .andExpect(jsonPath("$[0].addressDto.street", is("street")))
+                .andExpect(jsonPath("$[0].addressDto.postalCode", is("postalCode")))
+                .andExpect(jsonPath("$[0].addressDto.floor", is("floor")))
+                .andExpect(jsonPath("$[0].addressDto.department", is("department")));
     }
 
     @Test
@@ -196,8 +231,12 @@ public class BackofficeHoyComoRestControllerIntegrationTest {
     }
 
     private ResultActions createComercio() throws Exception {
-        ComercioHoyComoDto comercioHoyComoDto = createDefaultComercioHoyComoDto();
-        String comercioHoyComoDtoJson = objectMapper.writeValueAsString(comercioHoyComoDto);
+        TipoComida tipoComida = new TipoComida();
+        tipoComida.setTipo("tipo");
+        tipoComida = tipoComidaRepository.saveAndFlush(tipoComida);
+        ComercioHoyComoAddDto defaultComercioHoyComoAddDto = createDefaultComercioHoyComoAddDto();
+        defaultComercioHoyComoAddDto.setTipoComidaId(tipoComida.getId());
+        String comercioHoyComoDtoJson = objectMapper.writeValueAsString(defaultComercioHoyComoAddDto);
 
         return mockMvc.perform(post("/api/comercios/")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -212,9 +251,6 @@ public class BackofficeHoyComoRestControllerIntegrationTest {
         address.setFloor("anotherFloor");
         address.setDepartment("anotherDepartment");
         comercio.setAddress(address);
-        TipoComida tipoComida = new TipoComida();
-        tipoComida.setTipo("anotherTipo");
-        comercio.setTipoComida(tipoComida);
         comercio.setEmail("anotherEmail");
         comercio.setNombre("anotherNombre");
         comercio.setRazonSocial("anotherRazonSocial");

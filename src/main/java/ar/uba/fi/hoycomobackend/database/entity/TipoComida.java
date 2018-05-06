@@ -12,8 +12,6 @@ public class TipoComida {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     private String tipo;
-    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, mappedBy = "tipoComida")
-    private Set<Comercio> comercioSet;
 
     public Long getId() {
         return id;
@@ -29,13 +27,5 @@ public class TipoComida {
 
     public void setTipo(String tipo) {
         this.tipo = tipo;
-    }
-
-    public Set<Comercio> getComercioSet() {
-        return comercioSet;
-    }
-
-    public void setComercioSet(Set<Comercio> comercioSet) {
-        this.comercioSet = comercioSet;
     }
 }
