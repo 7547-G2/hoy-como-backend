@@ -22,11 +22,10 @@ public class ComercioSpecification implements Specification<Comercio> {
             if (searchCriteria.getKey().equalsIgnoreCase("tipo")) {
                 Join join = root.join("tipoComida");
                 return builder.equal(join.get("tipo"), searchCriteria.getValue());
-            } else if (searchCriteria.getKey().equalsIgnoreCase("tipoId")){
+            } else if (searchCriteria.getKey().equalsIgnoreCase("tipoId")) {
                 Join join = root.join("tipoComida");
                 return builder.equal(join.get("id"), searchCriteria.getValue());
-            }
-            else if (root.get(searchCriteria.getKey()).getJavaType() == String.class) {
+            } else if (root.get(searchCriteria.getKey()).getJavaType() == String.class) {
                 return builder.like(builder.lower((root.get(searchCriteria.getKey()))), "%" + searchCriteria.getValue().toString().toLowerCase() + "%");
             } else {
                 return builder.equal(root.get(searchCriteria.getKey()), searchCriteria.getValue());

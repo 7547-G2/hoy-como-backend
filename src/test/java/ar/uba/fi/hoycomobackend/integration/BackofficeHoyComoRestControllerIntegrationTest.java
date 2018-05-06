@@ -2,7 +2,6 @@ package ar.uba.fi.hoycomobackend.integration;
 
 import ar.uba.fi.hoycomobackend.App;
 import ar.uba.fi.hoycomobackend.api.dto.ComercioHoyComoAddDto;
-import ar.uba.fi.hoycomobackend.api.dto.ComercioHoyComoDto;
 import ar.uba.fi.hoycomobackend.database.entity.Address;
 import ar.uba.fi.hoycomobackend.database.entity.Comercio;
 import ar.uba.fi.hoycomobackend.database.entity.TipoComida;
@@ -23,7 +22,8 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.ResultActions;
 
-import static ar.uba.fi.hoycomobackend.entity.DataTestBuilder.*;
+import static ar.uba.fi.hoycomobackend.entity.DataTestBuilder.createDefaultComercio;
+import static ar.uba.fi.hoycomobackend.entity.DataTestBuilder.createDefaultComercioHoyComoAddDto;
 import static org.assertj.core.api.Java6Assertions.assertThat;
 import static org.hamcrest.CoreMatchers.is;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;

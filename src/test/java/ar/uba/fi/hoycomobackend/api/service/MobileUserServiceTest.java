@@ -5,7 +5,6 @@ import ar.uba.fi.hoycomobackend.api.dto.MobileUserDto;
 import ar.uba.fi.hoycomobackend.api.service.menu.MenuDisplayer;
 import ar.uba.fi.hoycomobackend.database.entity.MobileUser;
 import ar.uba.fi.hoycomobackend.database.queries.ComercioQuery;
-import ar.uba.fi.hoycomobackend.database.queries.TipoComidaQuery;
 import ar.uba.fi.hoycomobackend.database.repository.MobileUserRepository;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;

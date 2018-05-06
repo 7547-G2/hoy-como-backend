@@ -1,7 +1,6 @@
 package ar.uba.fi.hoycomobackend.database.entity;
 
 import javax.persistence.*;
-import java.util.Set;
 
 @Entity
 @Table(name = "tipo_comida")

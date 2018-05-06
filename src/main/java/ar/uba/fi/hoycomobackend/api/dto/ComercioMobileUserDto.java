@@ -1,7 +1,5 @@
 package ar.uba.fi.hoycomobackend.api.dto;
 
-import java.util.Set;
-
 public class ComercioMobileUserDto {
 
     private Long id;
