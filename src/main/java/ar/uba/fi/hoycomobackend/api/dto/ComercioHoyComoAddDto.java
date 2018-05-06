@@ -10,6 +10,7 @@ public class ComercioHoyComoAddDto {
     private String imagenLogo;
     private String estado;
     private AddressDto addressDto;
+    private Long tipoComidaId;
 
     public Long getId() {
         return id;
@@ -81,5 +82,13 @@ public class ComercioHoyComoAddDto {
 
     public void setTipoComida(TipoComidaAddDto tipoComidaAddSet) {
         this.tipoComidaAdd = tipoComidaAddSet;
+    }
+
+    public Long getTipoComidaId() {
+        return this.tipoComidaId;
+    }
+
+    public void setTipoComida(Long tipoComidaId) {
+        this.tipoComidaId = tipoComidaId;
     }
 }
