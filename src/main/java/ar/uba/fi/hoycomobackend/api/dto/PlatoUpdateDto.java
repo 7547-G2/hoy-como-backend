@@ -6,7 +6,7 @@ public class PlatoUpdateDto {
     private Long id;
     private String nombre;
     private String imagen;
-    private PlatoState platoState;
+    private PlatoState state;
     private Float precio;
     private Long categoria;
     private Integer orden;
@@ -43,12 +43,12 @@ public class PlatoUpdateDto {
         this.id = id;
     }
 
-    public PlatoState getPlatoState() {
-        return platoState;
+    public PlatoState getState() {
+        return state;
     }
 
-    public void setPlatoState(PlatoState platoState) {
-        this.platoState = platoState;
+    public void setState(PlatoState state) {
+        this.state = state;
     }
 
     public Long getCategoria() {
