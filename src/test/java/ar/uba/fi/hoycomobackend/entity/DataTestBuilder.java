@@ -88,6 +88,14 @@ public class DataTestBuilder {
         return comercio;
     }
 
+    public static CategoriaComida createDefaultCategoriaComida() {
+        CategoriaComida categoriaComida = new CategoriaComida();
+        categoriaComida.setId(1L);
+        categoriaComida.setTipo("tipo");
+
+        return categoriaComida;
+    }
+
     public static TipoComida createDefaultTipoComida() {
         TipoComida tipoComida = new TipoComida();
         tipoComida.setTipo("tipo");

@@ -12,10 +12,10 @@ public class MenuDto {
     private Integer orden_categ;
     private List<PlatoMenu> platos;
 
-    public MenuDto(List<Plato> platoList) {
+    public MenuDto(List<Plato> platoList, String nombre_categ) {
         Plato firstPlato = platoList.get(0);
         this.id_categ = firstPlato.getCategoria();
-        this.nombre_categ = ""; //TODO ver como consigo el nombre de la categoria
+        this.nombre_categ = nombre_categ;
         this.orden_categ = firstPlato.getOrden();
         this.platos = platoList.stream().map(plato -> new PlatoMenu(plato)).collect(Collectors.toList());
     }
