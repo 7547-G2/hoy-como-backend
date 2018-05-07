@@ -2,13 +2,12 @@ package ar.uba.fi.hoycomobackend.database.entity;
 
 import javax.persistence.*;
 @Entity
-@Table(name = "categorias_comidas")
+@Table(name = "categorias_comida")
 public class CategoriaComida {
     @Id
-    @Column(name = "Id")
+    @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-    @Column(name = "Descripcion")
     private String tipo;
 
     public Long getId() {
