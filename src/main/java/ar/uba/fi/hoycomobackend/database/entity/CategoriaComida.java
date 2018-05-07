@@ -5,9 +5,10 @@ import javax.persistence.*;
 @Table(name = "categorias_comidas")
 public class CategoriaComida {
     @Id
-    @Column(name = "id")
+    @Column(name = "Id")
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
+    @Column(name = "Descripcion")
     private String tipo;
 
     public Long getId() {
