@@ -22,8 +22,9 @@ public class ComidasService {
     private ModelMapper modelMapper;
 
     @Autowired
-    public ComidasService(TipoComidaQuery tipoComidaQuery, ModelMapper modelMapper) {
+    public ComidasService(TipoComidaQuery tipoComidaQuery, CategoriaComidaRepository categoriaComidaRepository, ModelMapper modelMapper) {
         this.tipoComidaQuery = tipoComidaQuery;
+        this.categoriaComidaRepository = categoriaComidaRepository;
         this.modelMapper = modelMapper;
     }
 
