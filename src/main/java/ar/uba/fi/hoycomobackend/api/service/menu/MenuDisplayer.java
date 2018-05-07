@@ -2,11 +2,12 @@ package ar.uba.fi.hoycomobackend.api.service.menu;
 
 import ar.uba.fi.hoycomobackend.api.dto.ErrorMessage;
 import ar.uba.fi.hoycomobackend.api.dto.MenuDto;
-import ar.uba.fi.hoycomobackend.api.service.MobileUserService;
 import ar.uba.fi.hoycomobackend.database.entity.Comercio;
 import ar.uba.fi.hoycomobackend.database.entity.Plato;
+import ar.uba.fi.hoycomobackend.database.repository.CategoriaComidaRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
@@ -17,6 +18,12 @@ import java.util.stream.Collectors;
 @Component
 public class MenuDisplayer {
     private static Logger LOGGER = LoggerFactory.getLogger(MenuDisplayer.class);
+    private CategoriaComidaRepository categoriaComidaRepository;
+
+    @Autowired
+    public MenuDisplayer(CategoriaComidaRepository categoriaComidaRepository) {
+        this.categoriaComidaRepository = categoriaComidaRepository;
+    }
 
     public ResponseEntity getMenuFromComercio(Comercio comercio) {
         LOGGER.info("Trying to get menu from comercio");
@@ -35,7 +42,8 @@ public class MenuDisplayer {
     private List<MenuDto> getMenuListFromPlatoCategoryMap(Map<Long, List<Plato>> platoCategoryMap) {
         return platoCategoryMap.keySet().stream().map(categoria -> {
             List<Plato> platoList = platoCategoryMap.get(categoria);
-            return new MenuDto(platoList);
+            String categoriaName = categoriaComidaRepository.findById(categoria).get().getTipo();
+            return new MenuDto(platoList, categoriaName);
         }).collect(Collectors.toList());
     }
 
