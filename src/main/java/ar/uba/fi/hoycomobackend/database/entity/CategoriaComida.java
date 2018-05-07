@@ -2,7 +2,7 @@ package ar.uba.fi.hoycomobackend.database.entity;
 
 import javax.persistence.*;
 @Entity
-@Table(name = "categorias_comida")
+@Table(name = "categorias_comidas")
 public class CategoriaComida {
     @Id
     @Column(name = "id")
