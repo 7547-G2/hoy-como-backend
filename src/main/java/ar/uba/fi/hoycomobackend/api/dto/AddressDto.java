@@ -37,4 +37,17 @@ public class AddressDto {
     public void setDepartment(String department) {
         this.department = department;
     }
+
+    public AddressDto removeNulls() {
+        if(street == null)
+            street = "";
+        if(postalCode == null)
+            postalCode = "";
+        if(floor == null)
+             floor = "";
+        if(department == null)
+             department = "";
+
+        return this;
+    }
 }

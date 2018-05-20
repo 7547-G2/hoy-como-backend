@@ -19,4 +19,14 @@ public class TipoComidaDto {
     public void setTipo(String tipo) {
         this.tipo = tipo;
     }
+
+    public TipoComidaDto removeNulls() {
+        if (id == null) {
+            id = 0L;
+        }
+        if (tipo == null) {
+            tipo = "";
+        }
+        return this;
+    }
 }

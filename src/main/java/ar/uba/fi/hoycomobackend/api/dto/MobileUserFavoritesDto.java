@@ -1,5 +1,6 @@
 package ar.uba.fi.hoycomobackend.api.dto;
 
+import java.util.HashSet;
 import java.util.Set;
 
 public class MobileUserFavoritesDto {
@@ -11,5 +12,12 @@ public class MobileUserFavoritesDto {
 
     public void setFavorites(Set<Long> favorites) {
         this.favorites = favorites;
+    }
+
+    public MobileUserFavoritesDto removeNulls() {
+        if (favorites == null)
+            favorites = new HashSet<>();
+
+        return this;
     }
 }
