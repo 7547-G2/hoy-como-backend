@@ -67,7 +67,7 @@ public class MobileUserDto {
             lastName = "";
         if (mobileUserState == null)
             mobileUserState = MobileUserState.NOT_FOUND;
-        if(addressDto == null) {
+        if (addressDto == null) {
             addressDto = new AddressDto();
             addressDto = addressDto.removeNulls();
         }

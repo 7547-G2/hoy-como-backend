@@ -3,11 +3,13 @@ package ar.uba.fi.hoycomobackend.api.service;
 import ar.uba.fi.hoycomobackend.api.businesslogic.ComercioPriceUpdater;
 import ar.uba.fi.hoycomobackend.api.businesslogic.TokenGenerator;
 import ar.uba.fi.hoycomobackend.api.dto.*;
-import ar.uba.fi.hoycomobackend.database.entity.*;
+import ar.uba.fi.hoycomobackend.database.entity.CategoriaComida;
+import ar.uba.fi.hoycomobackend.database.entity.Comercio;
+import ar.uba.fi.hoycomobackend.database.entity.Plato;
+import ar.uba.fi.hoycomobackend.database.entity.PlatoState;
 import ar.uba.fi.hoycomobackend.database.queries.ComercioQuery;
 import ar.uba.fi.hoycomobackend.database.repository.CategoriaComidaRepository;
 import ar.uba.fi.hoycomobackend.database.repository.PlatoRepository;
-import ar.uba.fi.hoycomobackend.database.repository.TipoComidaRepository;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.modelmapper.ModelMapper;
@@ -95,14 +97,13 @@ public class BackofficeComercioService {
 
     private Set<PlatoGetDto> fillCategoryDescriptionToPlatoDtoSet(Set<PlatoGetDto> platoDtoSet) {
         platoDtoSet.forEach(platoGetDto -> {
-            if(platoGetDto.getCategoria() != null) {
+            if (platoGetDto.getCategoria() != null) {
                 Optional<CategoriaComida> categoriaComidaOptional = categoriaComidaRepository.findById(platoGetDto.getCategoria());
                 if (categoriaComidaOptional.isPresent())
                     platoGetDto.setDescCategoria(categoriaComidaOptional.get().getTipo());
                 else
                     platoGetDto.setDescCategoria("");
-            }
-            else
+            } else
                 platoGetDto.setDescCategoria("");
         });
 
