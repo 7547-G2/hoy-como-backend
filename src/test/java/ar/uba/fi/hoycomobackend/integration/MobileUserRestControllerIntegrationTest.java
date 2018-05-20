@@ -3,13 +3,13 @@ package ar.uba.fi.hoycomobackend.integration;
 import ar.uba.fi.hoycomobackend.App;
 import ar.uba.fi.hoycomobackend.api.dto.AddressDto;
 import ar.uba.fi.hoycomobackend.api.dto.MobileUserDto;
-import ar.uba.fi.hoycomobackend.database.entity.Comercio;
-import ar.uba.fi.hoycomobackend.database.entity.MobileUser;
-import ar.uba.fi.hoycomobackend.database.entity.MobileUserState;
-import ar.uba.fi.hoycomobackend.database.entity.TipoComida;
+import ar.uba.fi.hoycomobackend.api.dto.PostPedidoDto;
+import ar.uba.fi.hoycomobackend.database.entity.*;
 import ar.uba.fi.hoycomobackend.database.repository.ComercioRepository;
 import ar.uba.fi.hoycomobackend.database.repository.MobileUserRepository;
+import ar.uba.fi.hoycomobackend.database.repository.PedidoRepository;
 import ar.uba.fi.hoycomobackend.database.repository.TipoComidaRepository;
+import ar.uba.fi.hoycomobackend.entity.DatabaseFiller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.After;
 import org.junit.Test;
@@ -23,6 +23,8 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.ResultActions;
+
+import java.util.List;
 
 import static ar.uba.fi.hoycomobackend.entity.DataTestBuilder.*;
 import static org.assertj.core.api.Java6Assertions.assertThat;
@@ -58,12 +60,15 @@ public class MobileUserRestControllerIntegrationTest {
     private TipoComidaRepository tipoComidaRepository;
     @Autowired
     private ComercioRepository comercioRepository;
+    @Autowired
+    private PedidoRepository pedidoRepository;
 
     @After
     public void tearDown() {
         mobileUserRepository.deleteAll();
         comercioRepository.deleteAll();
         tipoComidaRepository.deleteAll();
+        pedidoRepository.deleteAll();
     }
 
     @Test
@@ -272,6 +277,43 @@ public class MobileUserRestControllerIntegrationTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$", hasSize(1)))
                 .andExpect(jsonPath("$[0].tipo", is(tipoComida.getTipo())));
+    }
+
+    @Test
+    public void savePedido() throws Exception {
+        Long comercioId = DatabaseFiller.createDefaultComercioInDatabase(comercioRepository, tipoComidaRepository);
+        MobileUser mobileUser = new MobileUser();
+        mobileUser.setFacebookId(1L);
+        mobileUserRepository.saveAndFlush(mobileUser);
+        PostPedidoDto postPedidoDto = createDefaultPostPedidoDto();
+        postPedidoDto.setStore_id(comercioId);
+        String postPedidoDtoJson = objectMapper.writeValueAsString(postPedidoDto);
+
+        mockMvc.perform(post("/api/mobileUser/pedido")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(postPedidoDtoJson));
+
+        List<Pedido> pedidoList = pedidoRepository.findAll();
+        assertThat(pedidoList).hasSize(1);
+        Pedido pedido = pedidoList.get(0);
+        assertThat(pedido.getAddress()).isEqualTo("address");
+        assertThat(pedido.getCodigoTC()).isEqualTo("codigoTC");
+        assertThat(pedido.getDep()).isEqualTo("dep");
+        assertThat(pedido.getFacebook_id()).isEqualTo(1);
+        assertThat(pedido.getFechaTC()).isEqualTo("fechaTC");
+        assertThat(pedido.getFloor()).isEqualTo("floor");
+        assertThat(pedido.getMedioPago()).isEqualTo("medioPago");
+        assertThat(pedido.getNombreTC()).isEqualTo("nombreTC");
+        assertThat(pedido.getNumeroTC()).isEqualTo("numeroTC");
+        assertThat(pedido.getStore_id()).isEqualTo(comercioId);
+        assertThat(pedido.getTotal()).isEqualTo(1.0);
+        List<Orden> ordenList = pedido.getOrden();
+        assertThat(ordenList).hasSize(1);
+        Orden orden = ordenList.get(0);
+        assertThat(orden.getCantidad()).isEqualTo(1);
+        assertThat(orden.getId_plato()).isEqualTo(1);
+        assertThat(orden.getObs()).isEqualTo("obs");
+        assertThat(orden.getSub_total()).isEqualTo(1.0);
     }
 
     private ResultActions createPostNewMobileUser() throws Exception {

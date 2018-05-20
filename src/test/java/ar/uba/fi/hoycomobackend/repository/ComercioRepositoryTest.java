@@ -1,4 +1,4 @@
-package ar.uba.fi.hoycomobackend.repository.comercio;
+package ar.uba.fi.hoycomobackend.repository;
 
 import ar.uba.fi.hoycomobackend.database.entity.Comercio;
 import ar.uba.fi.hoycomobackend.database.repository.ComercioRepository;

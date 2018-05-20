@@ -1,4 +1,4 @@
-package ar.uba.fi.hoycomobackend.repository.usuario;
+package ar.uba.fi.hoycomobackend.repository;
 
 import ar.uba.fi.hoycomobackend.database.entity.MobileUser;
 import ar.uba.fi.hoycomobackend.database.repository.MobileUserRepository;

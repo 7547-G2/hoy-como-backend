@@ -2,6 +2,7 @@ package ar.uba.fi.hoycomobackend.api.controller;
 
 import ar.uba.fi.hoycomobackend.api.dto.AddressDto;
 import ar.uba.fi.hoycomobackend.api.dto.MobileUserAddDto;
+import ar.uba.fi.hoycomobackend.api.dto.PostPedidoDto;
 import ar.uba.fi.hoycomobackend.api.service.ComidasService;
 import ar.uba.fi.hoycomobackend.api.service.MobileUserService;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -76,4 +77,10 @@ public class MobileUserRestController {
     public ResponseEntity getMenuFromComercio(@PathVariable("comercioId") Long comercioId) {
         return mobileUserService.getMenuFromComercio(comercioId);
     }
+
+    @PostMapping(value = "/mobileUser/pedido")
+    public ResponseEntity postPedido(@RequestBody PostPedidoDto postPedidoDto) {
+        return mobileUserService.postPedido(postPedidoDto);
+    }
+
 }

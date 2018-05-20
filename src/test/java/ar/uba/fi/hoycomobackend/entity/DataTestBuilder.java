@@ -5,6 +5,9 @@ import ar.uba.fi.hoycomobackend.api.dto.*;
 import ar.uba.fi.hoycomobackend.database.entity.*;
 import org.springframework.mail.SimpleMailMessage;
 
+import java.util.LinkedList;
+import java.util.List;
+
 public class DataTestBuilder {
 
     private static MobileUserState DEFAULT_MOBILE_USER_STATE = MobileUserState.AUTHORIZED;
@@ -103,6 +106,37 @@ public class DataTestBuilder {
         tipoComida.setTipo("tipo");
 
         return tipoComida;
+    }
+
+    public static PostPedidoDto createDefaultPostPedidoDto() {
+        PostPedidoDto postPedidoDto = new PostPedidoDto();
+        postPedidoDto.setAddress("address");
+        postPedidoDto.setCodigoTC("codigoTC");
+        postPedidoDto.setDep("dep");
+        postPedidoDto.setFacebook_id(1L);
+        postPedidoDto.setFechaTC("fechaTC");
+        postPedidoDto.setFloor("floor");
+        postPedidoDto.setMedioPago("medioPago");
+        postPedidoDto.setNombreTC("nombreTC");
+        postPedidoDto.setNumeroTC("numeroTC");
+        postPedidoDto.setStore_id(1L);
+        postPedidoDto.setTotal(1.0);
+        OrderDto orderDto = createDefaultOrderDto();
+        List<OrderDto> orderDtoList = new LinkedList<>();
+        orderDtoList.add(orderDto);
+        postPedidoDto.setOrden(orderDtoList);
+
+        return postPedidoDto;
+    }
+
+    private static OrderDto createDefaultOrderDto() {
+        OrderDto orderDto = new OrderDto();
+        orderDto.setCantidad(1);
+        orderDto.setId_plato(1L);
+        orderDto.setObs("obs");
+        orderDto.setSub_total(1.0);
+
+        return orderDto;
     }
 
     public static ComercioHoyComoDto createDefaultComercioHoyComoDto() {

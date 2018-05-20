@@ -2,11 +2,9 @@ package ar.uba.fi.hoycomobackend.api.service;
 
 import ar.uba.fi.hoycomobackend.api.dto.*;
 import ar.uba.fi.hoycomobackend.api.service.menu.MenuDisplayer;
-import ar.uba.fi.hoycomobackend.database.entity.Address;
-import ar.uba.fi.hoycomobackend.database.entity.Comercio;
-import ar.uba.fi.hoycomobackend.database.entity.MobileUser;
-import ar.uba.fi.hoycomobackend.database.entity.MobileUserState;
+import ar.uba.fi.hoycomobackend.database.entity.*;
 import ar.uba.fi.hoycomobackend.database.queries.ComercioQuery;
+import ar.uba.fi.hoycomobackend.database.queries.PedidoQuery;
 import ar.uba.fi.hoycomobackend.database.repository.MobileUserRepository;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -34,14 +32,16 @@ public class MobileUserService {
     private ModelMapper modelMapper;
     private ObjectMapper objectMapper;
     private MenuDisplayer menuDisplayer;
+    private PedidoQuery pedidoQuery;
 
     @Autowired
-    public MobileUserService(MobileUserRepository mobileUserRepository, ComercioQuery comercioQuery, ModelMapper modelMapper, ObjectMapper objectMapper, MenuDisplayer menuDisplayer) {
+    public MobileUserService(MobileUserRepository mobileUserRepository, ComercioQuery comercioQuery, ModelMapper modelMapper, ObjectMapper objectMapper, MenuDisplayer menuDisplayer, PedidoQuery pedidoQuery) {
         this.mobileUserRepository = mobileUserRepository;
         this.comercioQuery = comercioQuery;
         this.modelMapper = modelMapper;
         this.objectMapper = objectMapper;
         this.menuDisplayer = menuDisplayer;
+        this.pedidoQuery = pedidoQuery;
     }
 
     public ResponseEntity getMobileUserList() {
@@ -213,5 +213,26 @@ public class MobileUserService {
             return menuDisplayer.getMenuFromComercio(comercio);
         }
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorMessage("No existe el comercio con id: " + comercioId));
+    }
+
+    public ResponseEntity postPedido(PostPedidoDto postPedidoDto) {
+        Optional<Comercio> comercioOptional = comercioQuery.getComercioById(postPedidoDto.getStore_id());
+        Optional<MobileUser> mobileUserOptional = mobileUserRepository.findById(postPedidoDto.getFacebook_id());
+
+        if(comercioOptional.isPresent() && mobileUserOptional.isPresent()) {
+            try {
+                Pedido pedido = modelMapper.map(postPedidoDto, Pedido.class);
+                pedido.getOrden().forEach(orden -> {
+                    orden.setId(null);
+                    orden.setPedido(pedido);
+                } );
+                pedidoQuery.savePedido(pedido);
+                return ResponseEntity.ok().build();
+            } catch (Exception e) {
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ErrorMessage("Problema al intentar salvar el pedido. Razón: " + e));
+            }
+        }
+
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorMessage("No existe el comercio con id: " + postPedidoDto.getStore_id() + " O el usuario con id: " + postPedidoDto.getFacebook_id()));
     }
 }

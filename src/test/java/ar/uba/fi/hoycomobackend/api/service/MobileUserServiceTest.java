@@ -5,6 +5,7 @@ import ar.uba.fi.hoycomobackend.api.dto.MobileUserDto;
 import ar.uba.fi.hoycomobackend.api.service.menu.MenuDisplayer;
 import ar.uba.fi.hoycomobackend.database.entity.MobileUser;
 import ar.uba.fi.hoycomobackend.database.queries.ComercioQuery;
+import ar.uba.fi.hoycomobackend.database.queries.PedidoQuery;
 import ar.uba.fi.hoycomobackend.database.repository.MobileUserRepository;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -28,7 +29,8 @@ public class MobileUserServiceTest {
     private ModelMapper modelMapper = Mockito.mock(ModelMapper.class);
     private ObjectMapper objectMapper = Mockito.mock(ObjectMapper.class);
     private MenuDisplayer menuDisplayer = Mockito.mock(MenuDisplayer.class);
-    private MobileUserService mobileUserService = new MobileUserService(mobileUserRepository, comercioQuery, modelMapper, objectMapper, menuDisplayer);
+    private PedidoQuery pedidoQuery = Mockito.mock(PedidoQuery.class);
+    private MobileUserService mobileUserService = new MobileUserService(mobileUserRepository, comercioQuery, modelMapper, objectMapper, menuDisplayer, pedidoQuery);
 
     @Test
     public void getMobileUserById_returnsMobileUserDto() {
