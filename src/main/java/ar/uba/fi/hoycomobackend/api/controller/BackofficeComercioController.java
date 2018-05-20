@@ -35,7 +35,7 @@ public class BackofficeComercioController {
 
     @GetMapping(value = "/backofficeComercio/{comercioId}/platos", produces = {"application/json"})
     public ResponseEntity getPlatosFromComercio(@PathVariable("comercioId") Long comercioId) throws JsonProcessingException {
-        return backofficeComercioService.getPlatosFromComercio(comercioId);
+        return backofficeComercioService.getPlatosHabilitadosFromComercio(comercioId);
     }
 
     @PostMapping(value = "/backofficeComercio/{comercioId}/platos")
