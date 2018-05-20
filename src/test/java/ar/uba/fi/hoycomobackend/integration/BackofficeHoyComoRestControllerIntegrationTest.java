@@ -97,7 +97,9 @@ public class BackofficeHoyComoRestControllerIntegrationTest {
                 .andExpect(jsonPath("$[0].addressDto.street", is("street")))
                 .andExpect(jsonPath("$[0].addressDto.postalCode", is("postalCode")))
                 .andExpect(jsonPath("$[0].addressDto.floor", is("floor")))
-                .andExpect(jsonPath("$[0].addressDto.department", is("department")));
+                .andExpect(jsonPath("$[0].addressDto.department", is("department")))
+                .andExpect(jsonPath("$[0].latitud", is(12.34)))
+                .andExpect(jsonPath("$[0].longitud", is(12.34)));
     }
 
     @Test
@@ -119,7 +121,9 @@ public class BackofficeHoyComoRestControllerIntegrationTest {
                 .andExpect(jsonPath("$[0].addressDto.street", is("street")))
                 .andExpect(jsonPath("$[0].addressDto.postalCode", is("postalCode")))
                 .andExpect(jsonPath("$[0].addressDto.floor", is("floor")))
-                .andExpect(jsonPath("$[0].addressDto.department", is("department")));
+                .andExpect(jsonPath("$[0].addressDto.department", is("department")))
+                .andExpect(jsonPath("$[0].latitud", is(12.34)))
+                .andExpect(jsonPath("$[0].longitud", is(12.34)));
     }
 
     @Test
@@ -171,7 +175,9 @@ public class BackofficeHoyComoRestControllerIntegrationTest {
                 .andExpect(jsonPath("$[0].addressDto.street", is("street")))
                 .andExpect(jsonPath("$[0].addressDto.postalCode", is("postalCode")))
                 .andExpect(jsonPath("$[0].addressDto.floor", is("floor")))
-                .andExpect(jsonPath("$[0].addressDto.department", is("department")));
+                .andExpect(jsonPath("$[0].addressDto.department", is("department")))
+                .andExpect(jsonPath("$[0].latitud", is(12.34)))
+                .andExpect(jsonPath("$[0].longitud", is(12.34)));
     }
 
     @Test
@@ -209,26 +215,9 @@ public class BackofficeHoyComoRestControllerIntegrationTest {
                 .andExpect(jsonPath("$[0].addressDto.street", is("street")))
                 .andExpect(jsonPath("$[0].addressDto.postalCode", is("postalCode")))
                 .andExpect(jsonPath("$[0].addressDto.floor", is("floor")))
-                .andExpect(jsonPath("$[0].addressDto.department", is("department")));
-    }
-
-    private void expectDefaultComercioGot() throws Exception {
-        mockMvc.perform(get("/api/comercios")
-                .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andExpect(content()
-                        .contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$[0].email", is("email")))
-                .andExpect(jsonPath("$[0].nombre", is("nombre")))
-                .andExpect(jsonPath("$[0].razonSocial", is("razonSocial")))
-                .andExpect(jsonPath("$[0].tipoComida.tipo", is("tipo")))
-                .andExpect(jsonPath("$[0].password", is("password")))
-                .andExpect(jsonPath("$[0].estado", is("estado")))
-                .andExpect(jsonPath("$[0].imagenLogo", is("imagenLogo")))
-                .andExpect(jsonPath("$[0].addressDto.street", is("street")))
-                .andExpect(jsonPath("$[0].addressDto.postalCode", is("postalCode")))
-                .andExpect(jsonPath("$[0].addressDto.floor", is("floor")))
-                .andExpect(jsonPath("$[0].addressDto.department", is("department")));
+                .andExpect(jsonPath("$[0].addressDto.department", is("department")))
+                .andExpect(jsonPath("$[0].latitud", is(12.34)))
+                .andExpect(jsonPath("$[0].longitud", is(12.34)));
     }
 
     private ResultActions createComercio() throws Exception {
@@ -259,6 +248,8 @@ public class BackofficeHoyComoRestControllerIntegrationTest {
         comercio.setPassword("anotherPassword");
         comercio.setEstado("anotherEstado");
         comercio.setImagenLogo("anotherImagenLogo");
+        comercio.setLatitud(12.34);
+        comercio.setLongitud(12.34);
 
         return comercio;
     }

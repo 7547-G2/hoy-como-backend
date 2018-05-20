@@ -10,6 +10,8 @@ public class ComercioHoyComoAddDto {
     private String estado;
     private AddressDto addressDto;
     private Long tipoComidaId;
+    private Double latitud;
+    private Double longitud;
 
     public Long getId() {
         return id;
@@ -81,5 +83,21 @@ public class ComercioHoyComoAddDto {
 
     public void setTipoComidaId(Long tipoComidaId) {
         this.tipoComidaId = tipoComidaId;
+    }
+
+    public Double getLatitud() {
+        return latitud;
+    }
+
+    public void setLatitud(Double latitud) {
+        this.latitud = latitud;
+    }
+
+    public Double getLongitud() {
+        return longitud;
+    }
+
+    public void setLongitud(Double longitud) {
+        this.longitud = longitud;
     }
 }

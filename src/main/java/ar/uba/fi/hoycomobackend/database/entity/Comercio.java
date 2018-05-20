@@ -44,6 +44,8 @@ public class Comercio {
     @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinColumn(name = "address_id")
     private Address address;
+    private Double latitud;
+    private Double longitud;
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "comercio", cascade = CascadeType.ALL)
     private Set<Plato> platos;
 
@@ -181,5 +183,21 @@ public class Comercio {
 
     public void setTipoComida(TipoComida tipoComida) {
         this.tipoComida = tipoComida;
+    }
+
+    public Double getLatitud() {
+        return latitud;
+    }
+
+    public void setLatitud(Double latitud) {
+        this.latitud = latitud;
+    }
+
+    public Double getLongitud() {
+        return longitud;
+    }
+
+    public void setLongitud(Double longitud) {
+        this.longitud = longitud;
     }
 }

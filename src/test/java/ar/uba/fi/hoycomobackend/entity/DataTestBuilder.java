@@ -84,6 +84,8 @@ public class DataTestBuilder {
         comercio.setPrecioMaximo(100f);
         comercio.setTotalPedidos(20);
         comercio.setRating(4.5f);
+        comercio.setLatitud(12.34);
+        comercio.setLongitud(12.34);
 
         return comercio;
     }
@@ -130,6 +132,8 @@ public class DataTestBuilder {
         comercioHoyComoAddDto.setEstado("estado");
         comercioHoyComoAddDto.setImagenLogo("imagenLogo");
         comercioHoyComoAddDto.setAddressDto(addressDto);
+        comercioHoyComoAddDto.setLatitud(12.34);
+        comercioHoyComoAddDto.setLongitud(12.34);
 
         return comercioHoyComoAddDto;
     }
