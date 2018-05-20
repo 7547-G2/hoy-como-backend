@@ -62,4 +62,14 @@ public class BackofficeComercioController {
     public ResponseEntity getCategoriasComida() {
         return comidasService.getTipoComidaPlatos();
     }
+
+    @GetMapping(value = "/backofficeComercio/{comercioId}/categoriasComida", produces = {"application/json"})
+    public ResponseEntity getCategoriaComidaFromGivenComercio(@PathVariable("comercioId") Long comercioId) {
+        return comidasService.getTipoComidaComercioById(comercioId);
+    }
+
+    @RequestMapping(value = "/backofficeComercio/{comercioId}/categoriasComida", method = {RequestMethod.POST, RequestMethod.PUT})
+    public ResponseEntity setCategoriaComidaFromGivenComercio(@PathVariable("comercioId") Long comercioId, @RequestBody String tipoComida) {
+        return comercioService.setTipoComidaComercioById(comercioId, tipoComida);
+    }
 }

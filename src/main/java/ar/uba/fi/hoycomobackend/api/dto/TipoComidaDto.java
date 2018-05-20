@@ -29,4 +29,5 @@ public class TipoComidaDto {
         }
         return this;
     }
+
 }

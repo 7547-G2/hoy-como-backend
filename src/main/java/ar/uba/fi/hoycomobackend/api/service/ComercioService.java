@@ -4,6 +4,7 @@ import ar.uba.fi.hoycomobackend.api.dto.ErrorMessage;
 import ar.uba.fi.hoycomobackend.api.dto.MessageWithId;
 import ar.uba.fi.hoycomobackend.api.dto.PasswordUpdateDto;
 import ar.uba.fi.hoycomobackend.database.entity.Comercio;
+import ar.uba.fi.hoycomobackend.database.entity.TipoComida;
 import ar.uba.fi.hoycomobackend.database.queries.ComercioQuery;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -45,5 +46,20 @@ public class ComercioService {
             return comercio.getPassword().equals(passwordUpdateDto.getOldPassword());
         }
         return false;
+    }
+
+    public ResponseEntity setTipoComidaComercioById(Long comercioId, String tipoComidaString) {
+        Optional<Comercio> comercioOptional = comercioQuery.getComercioById(comercioId);
+        if (comercioOptional.isPresent()) {
+            Comercio comercio = comercioOptional.get();
+            TipoComida tipoComida = new TipoComida();
+            tipoComida.setTipo(tipoComidaString);
+            //TODO REVISAR ESTO tipoComida.setComercio(comercio);
+            comercio.setTipoComida(tipoComida);
+            comercioQuery.saveAndFlush(comercio);
+
+            return ResponseEntity.ok("Comercio id: " + comercioId + " tipo comida: " + tipoComidaString);
+        }
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorMessage("Comercio no encontrado"));
     }
 }
