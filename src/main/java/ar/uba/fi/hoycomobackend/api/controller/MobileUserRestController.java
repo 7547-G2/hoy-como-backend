@@ -5,6 +5,7 @@ import ar.uba.fi.hoycomobackend.api.dto.MobileUserAddDto;
 import ar.uba.fi.hoycomobackend.api.dto.PostPedidoDto;
 import ar.uba.fi.hoycomobackend.api.service.ComidasService;
 import ar.uba.fi.hoycomobackend.api.service.MobileUserService;
+import ar.uba.fi.hoycomobackend.api.service.PedidoService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -16,11 +17,13 @@ public class MobileUserRestController {
 
     private MobileUserService mobileUserService;
     private ComidasService comidasService;
+    private PedidoService pedidoService;
 
     @Autowired
-    public MobileUserRestController(MobileUserService mobileUserService, ComidasService comidasService) {
+    public MobileUserRestController(MobileUserService mobileUserService, ComidasService comidasService, PedidoService pedidoService) {
         this.mobileUserService = mobileUserService;
         this.comidasService = comidasService;
+        this.pedidoService = pedidoService;
     }
 
     @GetMapping(value = "/mobileUser")
@@ -86,5 +89,10 @@ public class MobileUserRestController {
     @GetMapping(value = "/mobileUser/{facebookId}/pedido")
     public ResponseEntity postPedido(@PathVariable("facebookId") Long facebookId) {
         return mobileUserService.getPedidosOfUser(facebookId);
+    }
+
+    @GetMapping(value = "/mobileUser/plato/{platoId}")
+    public ResponseEntity getPlato(@PathVariable("platoId") Long platoId) {
+        return pedidoService.getPlatoByIdForMobile(platoId);
     }
 }

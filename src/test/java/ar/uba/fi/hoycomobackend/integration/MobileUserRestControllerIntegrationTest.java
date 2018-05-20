@@ -5,10 +5,7 @@ import ar.uba.fi.hoycomobackend.api.dto.AddressDto;
 import ar.uba.fi.hoycomobackend.api.dto.MobileUserDto;
 import ar.uba.fi.hoycomobackend.api.dto.PostPedidoDto;
 import ar.uba.fi.hoycomobackend.database.entity.*;
-import ar.uba.fi.hoycomobackend.database.repository.ComercioRepository;
-import ar.uba.fi.hoycomobackend.database.repository.MobileUserRepository;
-import ar.uba.fi.hoycomobackend.database.repository.PedidoRepository;
-import ar.uba.fi.hoycomobackend.database.repository.TipoComidaRepository;
+import ar.uba.fi.hoycomobackend.database.repository.*;
 import ar.uba.fi.hoycomobackend.entity.DatabaseFiller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.After;
@@ -62,6 +59,8 @@ public class MobileUserRestControllerIntegrationTest {
     private ComercioRepository comercioRepository;
     @Autowired
     private PedidoRepository pedidoRepository;
+    @Autowired
+    private PlatoRepository platoRepository;
 
     @After
     public void tearDown() {
@@ -69,6 +68,7 @@ public class MobileUserRestControllerIntegrationTest {
         comercioRepository.deleteAll();
         tipoComidaRepository.deleteAll();
         pedidoRepository.deleteAll();
+        platoRepository.deleteAll();
     }
 
     @Test
@@ -335,6 +335,18 @@ public class MobileUserRestControllerIntegrationTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$", hasSize(1)))
                 .andExpect(jsonPath("$[0].store_name", is("nombre")));
+    }
+
+    @Test
+    public void getPlatosForMobileUser() throws Exception {
+        Long platoId = DatabaseFiller.createDefaultPlatoInDatabase(platoRepository);
+
+        mockMvc.perform(get("/api/mobileUser/plato/" + platoId)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.nombre", is("nombre")))
+                .andExpect(jsonPath("$.imagen", is("imagen")))
+                .andExpect(jsonPath("$.precio", is(12.34)));
     }
 
     private ResultActions createPostNewMobileUser() throws Exception {

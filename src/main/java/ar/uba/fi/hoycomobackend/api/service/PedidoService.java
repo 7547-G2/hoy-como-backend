@@ -1,8 +1,10 @@
 package ar.uba.fi.hoycomobackend.api.service;
 
 import ar.uba.fi.hoycomobackend.api.dto.ErrorMessage;
+import ar.uba.fi.hoycomobackend.api.dto.PlatoMobileUserDto;
 import ar.uba.fi.hoycomobackend.api.dto.PlatoPedidoComercioDto;
 import ar.uba.fi.hoycomobackend.database.entity.Pedido;
+import ar.uba.fi.hoycomobackend.database.entity.Plato;
 import ar.uba.fi.hoycomobackend.database.queries.PedidoQuery;
 import ar.uba.fi.hoycomobackend.database.repository.PlatoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
 
@@ -52,5 +55,21 @@ public class PedidoService {
         } catch (Exception e) {
             return "nombre placeholder";
         }
+    }
+
+    public ResponseEntity getPlatoByIdForMobile(Long platoId) {
+        Optional<Plato> platoOptional = platoRepository.findById(platoId);
+        if(platoOptional.isPresent()) {
+            PlatoMobileUserDto platoMobileUserDto = new PlatoMobileUserDto();
+            Plato plato = platoOptional.get();
+            platoMobileUserDto.setId_plato(plato.getId());
+            platoMobileUserDto.setImagen(plato.getImagen());
+            platoMobileUserDto.setNombre(plato.getNombre());
+            platoMobileUserDto.setPrecio(plato.getPrecio());
+            platoMobileUserDto.setOpcionales(new LinkedList<>());
+
+            return ResponseEntity.ok(platoMobileUserDto);
+        } else
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorMessage("No se pudo encontrar el plato solicitado"));
     }
 }
