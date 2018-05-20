@@ -2,6 +2,7 @@ package ar.uba.fi.hoycomobackend.api.service.menu;
 
 import ar.uba.fi.hoycomobackend.api.dto.ErrorMessage;
 import ar.uba.fi.hoycomobackend.api.dto.MenuDto;
+import ar.uba.fi.hoycomobackend.api.dto.MenuWithLogoDto;
 import ar.uba.fi.hoycomobackend.database.entity.Comercio;
 import ar.uba.fi.hoycomobackend.database.entity.Plato;
 import ar.uba.fi.hoycomobackend.database.repository.CategoriaComidaRepository;
@@ -36,8 +37,11 @@ public class MenuDisplayer {
 
         List<MenuDto> menuList = getMenuListFromPlatoCategoryMap(platoCategoryMap);
         menuList.forEach(MenuDto::removeNulls);
+        MenuWithLogoDto menuWithLogoDto = new MenuWithLogoDto();
+        menuWithLogoDto.setImagen_comercio(comercio.getImagenLogo());
+        menuWithLogoDto.setMenu(menuList);
 
-        return ResponseEntity.ok(menuList);
+        return ResponseEntity.ok(menuWithLogoDto);
     }
 
     private List<MenuDto> getMenuListFromPlatoCategoryMap(Map<Long, List<Plato>> platoCategoryMap) {
