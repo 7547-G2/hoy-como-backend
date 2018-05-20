@@ -230,7 +230,7 @@ public class MobileUserService {
                 });
                 pedidoQuery.savePedido(pedido);
                 return ResponseEntity.ok().build();
-            } catch (Exception e) {
+            } catch (Throwable e) {
                 return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ErrorMessage("Problema al intentar salvar el pedido. Razón: " + e.getMessage()));
             }
         }
