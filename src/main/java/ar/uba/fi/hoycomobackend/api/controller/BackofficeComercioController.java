@@ -59,7 +59,7 @@ public class BackofficeComercioController {
     }
 
     @GetMapping(value = "/backofficeComercio/categoriasComida", produces = {"application/json"})
-    public ResponseEntity getCategoriasComida(){
+    public ResponseEntity getCategoriasComida() {
         return comidasService.getTipoComidaPlatos();
     }
 }

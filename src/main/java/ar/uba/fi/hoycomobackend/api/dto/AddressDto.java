@@ -39,14 +39,14 @@ public class AddressDto {
     }
 
     public AddressDto removeNulls() {
-        if(street == null)
+        if (street == null)
             street = "";
-        if(postalCode == null)
+        if (postalCode == null)
             postalCode = "";
-        if(floor == null)
-             floor = "";
-        if(department == null)
-             department = "";
+        if (floor == null)
+            floor = "";
+        if (department == null)
+            department = "";
 
         return this;
     }
