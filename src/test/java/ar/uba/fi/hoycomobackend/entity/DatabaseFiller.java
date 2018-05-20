@@ -9,12 +9,14 @@ import static ar.uba.fi.hoycomobackend.entity.DataTestBuilder.createDefaultComer
 
 public class DatabaseFiller {
 
-    public static void createDefaultComercioInDatabase(ComercioRepository comercioRepository, TipoComidaRepository tipoComidaRepository) {
+    public static Long createDefaultComercioInDatabase(ComercioRepository comercioRepository, TipoComidaRepository tipoComidaRepository) {
         TipoComida tipoComida = new TipoComida();
         tipoComida.setTipo("tipo");
         tipoComida = tipoComidaRepository.saveAndFlush(tipoComida);
         Comercio comercio = createDefaultComercio();
         comercio.setTipoComida(tipoComida);
-        comercioRepository.saveAndFlush(comercio);
+        comercio = comercioRepository.saveAndFlush(comercio);
+
+        return comercio.getId();
     }
 }
