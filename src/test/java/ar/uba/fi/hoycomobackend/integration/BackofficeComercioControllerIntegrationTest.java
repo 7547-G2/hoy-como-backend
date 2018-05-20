@@ -157,7 +157,7 @@ public class BackofficeComercioControllerIntegrationTest {
     }
 
     @Test
-    public void getPlatosOnlyReturnNonDeletedPlatos() throws Exception {
+    public void getPlatosOnlyReturnPlatosHabilitados() throws Exception {
         Long comercioId = createDefaultComercioInDatabase();
         Comercio comercio = comercioRepository.getComercioById(comercioId).get();
         Plato platoActivated = createDefaultPlato();
@@ -177,7 +177,7 @@ public class BackofficeComercioControllerIntegrationTest {
                 .andExpect(status().isOk())
                 .andExpect(content()
                         .contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$", hasSize(2)));
+                .andExpect(jsonPath("$", hasSize(1)));
     }
 
     @Test
