@@ -83,4 +83,8 @@ public class MobileUserRestController {
         return mobileUserService.postPedido(postPedidoDto);
     }
 
+    @GetMapping(value = "/mobileUser/{facebookId}/pedido")
+    public ResponseEntity postPedido(@PathVariable("facebookId") Long facebookId) {
+        return mobileUserService.getPedidosOfUser(facebookId);
+    }
 }

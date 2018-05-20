@@ -5,6 +5,8 @@ import ar.uba.fi.hoycomobackend.database.repository.PedidoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
+
 @Component
 public class PedidoQuery {
 
@@ -22,5 +24,10 @@ public class PedidoQuery {
 
     public Pedido getPedido() {
         return pedidoRepository.findAll().get(0);
+    }
+
+    public List<Pedido> getpedidosOfUser(Long facebookId) {
+        List<Pedido> pedidoList = pedidoRepository.findByFacebookId(facebookId);
+        return pedidoList;
     }
 }

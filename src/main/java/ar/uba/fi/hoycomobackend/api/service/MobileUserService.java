@@ -219,13 +219,14 @@ public class MobileUserService {
         Optional<Comercio> comercioOptional = comercioQuery.getComercioById(postPedidoDto.getStore_id());
         Optional<MobileUser> mobileUserOptional = mobileUserRepository.findById(postPedidoDto.getFacebook_id());
 
-        if(comercioOptional.isPresent() && mobileUserOptional.isPresent()) {
+        if (comercioOptional.isPresent() && mobileUserOptional.isPresent()) {
             try {
                 Pedido pedido = modelMapper.map(postPedidoDto, Pedido.class);
+                pedido.setFacebookId(postPedidoDto.getFacebook_id());
                 pedido.getOrden().forEach(orden -> {
                     orden.setId(null);
                     orden.setPedido(pedido);
-                } );
+                });
                 pedidoQuery.savePedido(pedido);
                 return ResponseEntity.ok().build();
             } catch (Exception e) {
@@ -234,5 +235,33 @@ public class MobileUserService {
         }
 
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorMessage("No existe el comercio con id: " + postPedidoDto.getStore_id() + " O el usuario con id: " + postPedidoDto.getFacebook_id()));
+    }
+
+    public ResponseEntity getPedidosOfUser(Long facebookId) {
+        try {
+            List<Pedido> pedidoList = pedidoQuery.getpedidosOfUser(facebookId);
+            List<PedidoMobileUserDto> pedidoMobileUserDtoList = transformPedidoToPedidoMobileUserDto(pedidoList);
+            return ResponseEntity.ok(pedidoMobileUserDtoList);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ErrorMessage("Problema al interno intentando obtener pedidos. Razón: " + e));
+        }
+    }
+
+    private List<PedidoMobileUserDto> transformPedidoToPedidoMobileUserDto(List<Pedido> pedidoList) {
+        List<PedidoMobileUserDto> pedidoMobileUserDtoList = new ArrayList<>();
+        pedidoList.forEach(pedido -> {
+            pedido.getOrden().forEach(orden -> {
+                PedidoMobileUserDto pedidoMobileUserDto = new PedidoMobileUserDto();
+                pedidoMobileUserDto.setOrder_id(orden.getId());
+                Long comercioId = pedido.getStore_id();
+                pedidoMobileUserDto.setStore_id(comercioId);
+                String storeName = comercioQuery.getComercioById(comercioId).get().getNombre();
+                pedidoMobileUserDto.setStore_name(storeName);
+                pedidoMobileUserDto.setStatus("notYetImplemented");
+                pedidoMobileUserDtoList.add(pedidoMobileUserDto);
+            });
+        });
+
+        return pedidoMobileUserDtoList;
     }
 }

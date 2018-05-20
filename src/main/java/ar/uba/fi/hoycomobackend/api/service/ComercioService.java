@@ -1,7 +1,6 @@
 package ar.uba.fi.hoycomobackend.api.service;
 
 import ar.uba.fi.hoycomobackend.api.dto.ErrorMessage;
-import ar.uba.fi.hoycomobackend.api.dto.Message;
 import ar.uba.fi.hoycomobackend.api.dto.MessageWithId;
 import ar.uba.fi.hoycomobackend.api.dto.PasswordUpdateDto;
 import ar.uba.fi.hoycomobackend.database.entity.Comercio;
