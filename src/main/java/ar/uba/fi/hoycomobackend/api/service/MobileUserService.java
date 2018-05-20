@@ -222,6 +222,7 @@ public class MobileUserService {
         if (comercioOptional.isPresent() && mobileUserOptional.isPresent()) {
             try {
                 Pedido pedido = modelMapper.map(postPedidoDto, Pedido.class);
+                pedido.setStoreId(postPedidoDto.getStore_id());
                 pedido.setFacebookId(postPedidoDto.getFacebook_id());
                 pedido.getOrden().forEach(orden -> {
                     orden.setId(null);
@@ -230,7 +231,7 @@ public class MobileUserService {
                 pedidoQuery.savePedido(pedido);
                 return ResponseEntity.ok().build();
             } catch (Exception e) {
-                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ErrorMessage("Problema al intentar salvar el pedido. Razón: " + e));
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ErrorMessage("Problema al intentar salvar el pedido. Razón: " + e.getMessage()));
             }
         }
 
@@ -253,7 +254,7 @@ public class MobileUserService {
             pedido.getOrden().forEach(orden -> {
                 PedidoMobileUserDto pedidoMobileUserDto = new PedidoMobileUserDto();
                 pedidoMobileUserDto.setOrder_id(orden.getId());
-                Long comercioId = pedido.getStore_id();
+                Long comercioId = pedido.getStoreId();
                 pedidoMobileUserDto.setStore_id(comercioId);
                 String storeName = comercioQuery.getComercioById(comercioId).get().getNombre();
                 pedidoMobileUserDto.setStore_name(storeName);

@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+import java.util.Optional;
 
 @Component
 public class PedidoQuery {
@@ -29,5 +30,13 @@ public class PedidoQuery {
     public List<Pedido> getpedidosOfUser(Long facebookId) {
         List<Pedido> pedidoList = pedidoRepository.findByFacebookId(facebookId);
         return pedidoList;
+    }
+
+    public List<Pedido> getPedidosOfComercio(Long comercioId) {
+        return pedidoRepository.findByStoreId(comercioId);
+    }
+
+    public Optional<Pedido> getPedidoById(Long pedidoId) {
+        return pedidoRepository.findById(pedidoId);
     }
 }

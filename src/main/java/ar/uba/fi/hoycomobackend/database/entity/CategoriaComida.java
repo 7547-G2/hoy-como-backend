@@ -11,6 +11,7 @@ public class CategoriaComida {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     private String tipo;
+    private Long comercioId;
 
     public Long getId() {
         return id;
@@ -26,5 +27,13 @@ public class CategoriaComida {
 
     public void setTipo(String tipo) {
         this.tipo = tipo;
+    }
+
+    public Long getComercioId() {
+        return comercioId;
+    }
+
+    public void setComercioId(Long comercioId) {
+        this.comercioId = comercioId;
     }
 }
