@@ -299,7 +299,7 @@ public class MobileUserRestControllerIntegrationTest {
         assertThat(pedido.getAddress()).isEqualTo("address");
         assertThat(pedido.getCodigoTC()).isEqualTo("codigoTC");
         assertThat(pedido.getDep()).isEqualTo("dep");
-        assertThat(pedido.getFacebook_id()).isEqualTo(1);
+        assertThat(pedido.getFacebookId()).isEqualTo(1);
         assertThat(pedido.getFechaTC()).isEqualTo("fechaTC");
         assertThat(pedido.getFloor()).isEqualTo("floor");
         assertThat(pedido.getMedioPago()).isEqualTo("medioPago");
@@ -314,6 +314,27 @@ public class MobileUserRestControllerIntegrationTest {
         assertThat(orden.getId_plato()).isEqualTo(1);
         assertThat(orden.getObs()).isEqualTo("obs");
         assertThat(orden.getSub_total()).isEqualTo(1.0);
+    }
+
+    @Test
+    public void getPedidosByUser() throws Exception {
+        Long comercioId = DatabaseFiller.createDefaultComercioInDatabase(comercioRepository, tipoComidaRepository);
+        MobileUser mobileUser = new MobileUser();
+        mobileUser.setFacebookId(1L);
+        mobileUser = mobileUserRepository.saveAndFlush(mobileUser);
+        PostPedidoDto postPedidoDto = createDefaultPostPedidoDto();
+        postPedidoDto.setStore_id(comercioId);
+        String postPedidoDtoJson = objectMapper.writeValueAsString(postPedidoDto);
+
+        mockMvc.perform(post("/api/mobileUser/pedido")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(postPedidoDtoJson));
+
+        mockMvc.perform(get("/api/mobileUser/" + mobileUser.getFacebookId() + "/pedido")
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$", hasSize(1)))
+                .andExpect(jsonPath("$[0].store_name", is("nombre")));
     }
 
     private ResultActions createPostNewMobileUser() throws Exception {

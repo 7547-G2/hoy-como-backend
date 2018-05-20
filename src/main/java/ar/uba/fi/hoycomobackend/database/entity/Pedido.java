@@ -10,7 +10,7 @@ public class Pedido {
     @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-    private Long facebook_id;
+    private Long facebookId;
     private Long store_id;
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "pedido", cascade = CascadeType.ALL)
     private List<Orden> orden;
@@ -32,12 +32,12 @@ public class Pedido {
         this.id = id;
     }
 
-    public Long getFacebook_id() {
-        return facebook_id;
+    public Long getFacebookId() {
+        return facebookId;
     }
 
-    public void setFacebook_id(Long facebook_id) {
-        this.facebook_id = facebook_id;
+    public void setFacebookId(Long facebookId) {
+        this.facebookId = facebookId;
     }
 
     public Long getStore_id() {
