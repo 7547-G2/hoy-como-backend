@@ -1,6 +1,7 @@
 package ar.uba.fi.hoycomobackend.api.service.menu;
 
 import ar.uba.fi.hoycomobackend.api.dto.MenuDto;
+import ar.uba.fi.hoycomobackend.api.dto.MenuWithLogoDto;
 import ar.uba.fi.hoycomobackend.database.entity.Comercio;
 import ar.uba.fi.hoycomobackend.database.entity.Plato;
 import ar.uba.fi.hoycomobackend.database.entity.PlatoState;
@@ -29,14 +30,17 @@ public class MenuDisplayerTest {
         Mockito.when(categoriaComidaRepository.findById(any())).thenReturn(Optional.of(createDefaultCategoriaComida()));
         Comercio comercio = createTestComercio();
         ResponseEntity response = menuDisplayer.getMenuFromComercio(comercio);
-        List<MenuDto> menuList = (List<MenuDto>) response.getBody();
+        MenuWithLogoDto menuWithLogoDto = (MenuWithLogoDto) response.getBody();
 
-        assertThat(menuList).hasSize(2);
-        assertThat(menuList.get(0).getNombre_categ()).isEqualTo("tipo");
+        assertThat(menuWithLogoDto.getImagen_comercio()).isEqualTo("imagenLogo");
+        List<MenuDto> menu = menuWithLogoDto.getMenu();
+        assertThat(menu).hasSize(2);
+        assertThat(menu.get(0).getNombre_categ()).isEqualTo("tipo");
     }
 
     private Comercio createTestComercio() {
         Comercio comercio = new Comercio();
+        comercio.setImagenLogo("imagenLogo");
         Set<Plato> platoSet = createTestPlatoSet();
         comercio.setPlatos(platoSet);
 
