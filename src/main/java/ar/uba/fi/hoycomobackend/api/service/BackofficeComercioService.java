@@ -77,13 +77,13 @@ public class BackofficeComercioService {
         return tokenDto;
     }
 
-    public ResponseEntity getPlatosHabilitadosFromComercio(Long comercioId) throws JsonProcessingException {
+    public ResponseEntity getPlatosNotDeletedFromComercio(Long comercioId) throws JsonProcessingException {
         Optional<Comercio> comercioOptional = comercioQuery.getComercioById(comercioId);
 
         if (comercioOptional.isPresent()) {
             Comercio comercio = comercioOptional.get();
             Set<Plato> platoSet = comercio.getPlatos();
-            platoSet = platoSet.stream().filter(plato -> PlatoState.ACTIVO.equals(plato.getState())).collect(Collectors.toSet());
+            platoSet = platoSet.stream().filter(plato -> !PlatoState.BORRADO.equals(plato.getState())).collect(Collectors.toSet());
             Type setType = new TypeToken<Set<PlatoGetDto>>() {
             }.getType();
             Set<PlatoGetDto> platoDtoSet = modelMapper.map(platoSet, setType);
