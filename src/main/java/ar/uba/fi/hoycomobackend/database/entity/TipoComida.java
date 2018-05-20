@@ -4,6 +4,7 @@ import javax.persistence.*;
 
 @Entity
 @Table(name = "tipo_comida")
+// Para los comercios
 public class TipoComida {
 
     @Id
