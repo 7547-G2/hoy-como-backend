@@ -2,7 +2,6 @@ package ar.uba.fi.hoycomobackend.api.service;
 
 import ar.uba.fi.hoycomobackend.api.dto.ErrorMessage;
 import ar.uba.fi.hoycomobackend.api.dto.TipoComidaDto;
-import ar.uba.fi.hoycomobackend.database.entity.CategoriaComida;
 import ar.uba.fi.hoycomobackend.database.entity.TipoComida;
 import ar.uba.fi.hoycomobackend.database.queries.TipoComidaQuery;
 import ar.uba.fi.hoycomobackend.database.repository.CategoriaComidaRepository;
@@ -12,36 +11,35 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 
 @Service
 public class ComidasService {
 
     private TipoComidaQuery tipoComidaQuery;
-    private CategoriaComidaRepository categoriaComidaRepository;
     private ModelMapper modelMapper;
 
     @Autowired
     public ComidasService(TipoComidaQuery tipoComidaQuery, CategoriaComidaRepository categoriaComidaRepository, ModelMapper modelMapper) {
         this.tipoComidaQuery = tipoComidaQuery;
-        this.categoriaComidaRepository = categoriaComidaRepository;
         this.modelMapper = modelMapper;
     }
 
     public ResponseEntity getTipoComidaPlatos() {
-        List<CategoriaComida> categoriaComidaSet = categoriaComidaRepository.findAll();
-        Set<TipoComidaDto> tipoComidaDtoSet = getTipoComidaDtoSet(categoriaComidaSet);
+        List<TipoComida> tipoComidaList = tipoComidaQuery.getAll();
+        Set<TipoComidaDto> tipoComidaDtoSet = getTipoComidaDtoSet(tipoComidaList);
 
         return ResponseEntity.ok(tipoComidaDtoSet);
     }
 
-    private <T> Set<TipoComidaDto> getTipoComidaDtoSet(List<T> categoriaComidaSet) {
+    private Set<TipoComidaDto> getTipoComidaDtoSet(List<TipoComida> categoriaComidaSet) {
         Set<TipoComidaDto> tipoComidaDtoSet = new HashSet<>();
-        for (T tipoComida : categoriaComidaSet) {
+        for (TipoComida tipoComida : categoriaComidaSet) {
             TipoComidaDto tipoComidaDto = modelMapper.map(tipoComida, TipoComidaDto.class);
+            tipoComidaDto.setComercioId(new LinkedList<>());
+            tipoComida.getComercio().forEach(comercio -> {
+                tipoComidaDto.getComercioId().add(comercio.getId());
+            });
             tipoComidaDtoSet.add(tipoComidaDto);
         }
 
@@ -57,7 +55,7 @@ public class ComidasService {
 
     public ResponseEntity getTipoComidaComercioById(Long comercioId) {
         Optional<TipoComida> tipoComidaOptional = tipoComidaQuery.getTipoComidaByComercioId(comercioId);
-        if(tipoComidaOptional.isPresent()) {
+        if (tipoComidaOptional.isPresent()) {
             TipoComida tipoComida = tipoComidaOptional.get();
             TipoComidaDto tipoComidaDto = new TipoComidaDto();
             tipoComidaDto.setTipo(tipoComida.getTipo());

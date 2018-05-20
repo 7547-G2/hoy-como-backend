@@ -21,6 +21,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 
+import java.util.Arrays;
 import java.util.Optional;
 
 import static ar.uba.fi.hoycomobackend.entity.DataTestBuilder.*;
@@ -163,7 +164,7 @@ public class BackofficeComercioControllerIntegrationTest {
     }
 
     @Test
-    public void getPlatosOnlyReturnPlatosHabilitados() throws Exception {
+    public void getPlatosOnlyReturnPlatosThatArentDeleted() throws Exception {
         Long comercioId = createDefaultComercioInDatabase();
         Comercio comercio = comercioRepository.getComercioById(comercioId).get();
         Plato platoActivated = createDefaultPlato();
@@ -183,7 +184,7 @@ public class BackofficeComercioControllerIntegrationTest {
                 .andExpect(status().isOk())
                 .andExpect(content()
                         .contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$", hasSize(1)));
+                .andExpect(jsonPath("$", hasSize(2)));
     }
 
     @Test
@@ -224,6 +225,19 @@ public class BackofficeComercioControllerIntegrationTest {
                 .andExpect(jsonPath("$.tipo", is(commerceType)));
     }
 
+    @Test
+    public void getTipoComercios() throws Exception {
+        Long comercioId = createDefaultComercioInDatabase();
+
+        mockMvc.perform(get("/api/backofficeComercio/categoriasComida")
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(content()
+                        .contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$[0].tipo", is("tipoComidaComercio")))
+                .andExpect(jsonPath("$[0].comercioId[0]", is(comercioId.intValue())));
+    }
+
     private PlatoDto createTestPlatoDto() {
         PlatoDto platoDto = new PlatoDto();
         platoDto.setPrecio(2.0f);
@@ -257,6 +271,7 @@ public class BackofficeComercioControllerIntegrationTest {
         tipoComida.setTipo("tipoComidaComercio");
         tipoComida = tipoComidaRepository.saveAndFlush(tipoComida);
         Comercio comercio = createDefaultComercio();
+        tipoComida.setComercio(Arrays.asList(comercio));
         comercio.setTipoComida(tipoComida);
         comercio = comercioRepository.saveAndFlush(comercio);
         return comercio.getId();
