@@ -11,7 +11,7 @@ public class Pedido {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     private Long facebookId;
-    private Long store_id;
+    private Long storeId;
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "pedido", cascade = CascadeType.ALL)
     private List<Orden> orden;
     private Double total;
@@ -23,6 +23,7 @@ public class Pedido {
     private String numeroTC;
     private String fechaTC;
     private String codigoTC;
+    private String estado = "pendiente";
 
     public Long getId() {
         return id;
@@ -40,12 +41,12 @@ public class Pedido {
         this.facebookId = facebookId;
     }
 
-    public Long getStore_id() {
-        return store_id;
+    public Long getStoreId() {
+        return storeId;
     }
 
-    public void setStore_id(Long store_id) {
-        this.store_id = store_id;
+    public void setStoreId(Long storeId) {
+        this.storeId = storeId;
     }
 
     public List<Orden> getOrden() {
@@ -126,5 +127,13 @@ public class Pedido {
 
     public void setCodigoTC(String codigoTC) {
         this.codigoTC = codigoTC;
+    }
+
+    public String getEstado() {
+        return estado;
+    }
+
+    public void setEstado(String estado) {
+        this.estado = estado;
     }
 }

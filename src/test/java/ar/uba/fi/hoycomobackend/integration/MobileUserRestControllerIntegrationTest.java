@@ -305,7 +305,7 @@ public class MobileUserRestControllerIntegrationTest {
         assertThat(pedido.getMedioPago()).isEqualTo("medioPago");
         assertThat(pedido.getNombreTC()).isEqualTo("nombreTC");
         assertThat(pedido.getNumeroTC()).isEqualTo("numeroTC");
-        assertThat(pedido.getStore_id()).isEqualTo(comercioId);
+        assertThat(pedido.getStoreId()).isEqualTo(comercioId);
         assertThat(pedido.getTotal()).isEqualTo(1.0);
         List<Orden> ordenList = pedido.getOrden();
         assertThat(ordenList).hasSize(1);

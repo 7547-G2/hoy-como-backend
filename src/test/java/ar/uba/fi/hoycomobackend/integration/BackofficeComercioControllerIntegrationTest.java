@@ -213,11 +213,11 @@ public class BackofficeComercioControllerIntegrationTest {
         Long comercioId = createDefaultComercioInDatabase();
         String commerceType = "commerceType";
 
-        mockMvc.perform(post("/api/backofficeComercio/" + comercioId + "/categoriasComida")
+        mockMvc.perform(post("/api/backofficeComercio/" + comercioId + "/tipoComidaComercio")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(commerceType));
 
-        mockMvc.perform(get("/api/backofficeComercio/" + comercioId + "/categoriasComida")
+        mockMvc.perform(get("/api/backofficeComercio/" + comercioId + "/tipoComidaComercio")
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(content()
@@ -229,13 +229,30 @@ public class BackofficeComercioControllerIntegrationTest {
     public void getTipoComercios() throws Exception {
         Long comercioId = createDefaultComercioInDatabase();
 
-        mockMvc.perform(get("/api/backofficeComercio/categoriasComida")
+        mockMvc.perform(get("/api/backofficeComercio/tipoComidaComercio")
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(content()
                         .contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$[0].tipo", is("tipoComidaComercio")))
                 .andExpect(jsonPath("$[0].comercioId[0]", is(comercioId.intValue())));
+    }
+
+    @Test
+    public void setCategoriaComidaToAComercioAndThenFindIt() throws Exception {
+        Long comercioId = createDefaultComercioInDatabase();
+        String commerceType = "commerceType";
+
+        mockMvc.perform(post("/api/backofficeComercio/" + comercioId + "/categoriasComida")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(commerceType));
+
+        mockMvc.perform(get("/api/backofficeComercio/" + comercioId + "/categoriasComida")
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(content()
+                        .contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.tipo", is(commerceType)));
     }
 
     private PlatoDto createTestPlatoDto() {

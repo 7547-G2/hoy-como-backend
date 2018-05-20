@@ -10,4 +10,6 @@ import java.util.List;
 public interface PedidoRepository extends JpaRepository<Pedido, Long> {
 
     List<Pedido> findByFacebookId(Long facebookId);
+
+    List<Pedido> findByStoreId(Long storeId);
 }
