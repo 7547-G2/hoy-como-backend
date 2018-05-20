@@ -1,5 +1,6 @@
 package ar.uba.fi.hoycomobackend.api.service;
 
+import ar.uba.fi.hoycomobackend.api.dto.ErrorMessage;
 import ar.uba.fi.hoycomobackend.api.dto.TipoComidaDto;
 import ar.uba.fi.hoycomobackend.database.entity.CategoriaComida;
 import ar.uba.fi.hoycomobackend.database.entity.TipoComida;
@@ -7,11 +8,13 @@ import ar.uba.fi.hoycomobackend.database.queries.TipoComidaQuery;
 import ar.uba.fi.hoycomobackend.database.repository.CategoriaComidaRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 @Service
@@ -51,4 +54,17 @@ public class ComidasService {
 
         return ResponseEntity.ok(tipoComidaDtoSet);
     }
+
+    public ResponseEntity getTipoComidaComercioById(Long comercioId) {
+        Optional<TipoComida> tipoComidaOptional = tipoComidaQuery.getTipoComidaByComercioId(comercioId);
+        if(tipoComidaOptional.isPresent()) {
+            TipoComida tipoComida = tipoComidaOptional.get();
+            TipoComidaDto tipoComidaDto = new TipoComidaDto();
+            tipoComidaDto.setTipo(tipoComida.getTipo());
+            tipoComidaDto.setId(tipoComida.getId());
+            return ResponseEntity.ok(tipoComidaDto);
+        }
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorMessage("Comercio con id: " + comercioId + "no encontrado"));
+    }
+
 }

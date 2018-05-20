@@ -51,10 +51,10 @@ public class BackofficeComercioControllerIntegrationTest {
 
     @After
     public void tearDown() {
-        comercioRepository.deleteAll();
-        platoRepository.deleteAll();
-        tipoComidaRepository.deleteAll();
         categoriaComidaRepository.deleteAll();
+        platoRepository.deleteAll();
+        comercioRepository.deleteAll();
+        tipoComidaRepository.deleteAll();
     }
 
     @Test
@@ -205,6 +205,23 @@ public class BackofficeComercioControllerIntegrationTest {
                 .andExpect(jsonPath("$.addressDto.postalCode", is("postalCode")))
                 .andExpect(jsonPath("$.addressDto.floor", is("floor")))
                 .andExpect(jsonPath("$.addressDto.department", is("department")));
+    }
+
+    @Test
+    public void setComercioTipoComidaAndThenFindIt() throws Exception {
+        Long comercioId = createDefaultComercioInDatabase();
+        String commerceType = "commerceType";
+
+        mockMvc.perform(post("/api/backofficeComercio/" + comercioId + "/categoriasComida")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(commerceType));
+
+        mockMvc.perform(get("/api/backofficeComercio/" + comercioId + "/categoriasComida")
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(content()
+                        .contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.tipo", is(commerceType)));
     }
 
     private PlatoDto createTestPlatoDto() {
