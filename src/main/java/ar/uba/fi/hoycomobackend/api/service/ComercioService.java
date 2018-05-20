@@ -2,6 +2,7 @@ package ar.uba.fi.hoycomobackend.api.service;
 
 import ar.uba.fi.hoycomobackend.api.dto.ErrorMessage;
 import ar.uba.fi.hoycomobackend.api.dto.Message;
+import ar.uba.fi.hoycomobackend.api.dto.MessageWithId;
 import ar.uba.fi.hoycomobackend.api.dto.PasswordUpdateDto;
 import ar.uba.fi.hoycomobackend.database.entity.Comercio;
 import ar.uba.fi.hoycomobackend.database.queries.ComercioQuery;
@@ -31,9 +32,9 @@ public class ComercioService {
             String newPassword = passwordUpdateDto.getNewPassword();
             comercio.setPassword(newPassword);
             comercio.setEstado(PENDIENTE_MENU);
-            comercioQuery.saveAndFlush(comercio);
+            comercio = comercioQuery.saveAndFlush(comercio);
 
-            return ResponseEntity.ok(new Message("Contraseña actualizada correctamente."));
+            return ResponseEntity.ok(new MessageWithId("Contraseña actualizada correctamente.", comercio.getId()));
         }
 
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorMessage("Email no encontrado o Hash no matchea."));
