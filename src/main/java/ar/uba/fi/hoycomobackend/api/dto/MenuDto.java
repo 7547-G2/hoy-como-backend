@@ -2,6 +2,7 @@ package ar.uba.fi.hoycomobackend.api.dto;
 
 import ar.uba.fi.hoycomobackend.database.entity.Plato;
 
+import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -50,6 +51,20 @@ public class MenuDto {
 
     public void setPlatos(List<PlatoMenu> platos) {
         this.platos = platos;
+    }
+
+    public MenuDto removeNulls() {
+        if (id_categ == null)
+            id_categ = 0L;
+        if (nombre_categ == null)
+            nombre_categ = "";
+        if (orden_categ == null)
+            orden_categ = 0;
+        if (platos == null) {
+            platos = new LinkedList<>();
+        }
+
+        return this;
     }
 
     class PlatoMenu {

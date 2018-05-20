@@ -57,4 +57,21 @@ public class MobileUserDto {
     public void setMobileUserState(MobileUserState mobileUserState) {
         this.mobileUserState = mobileUserState;
     }
+
+    public MobileUserDto removeNulls() {
+        if (username == null)
+            username = "";
+        if (firstName == null)
+            firstName = "";
+        if (lastName == null)
+            lastName = "";
+        if (mobileUserState == null)
+            mobileUserState = MobileUserState.NOT_FOUND;
+        if(addressDto == null) {
+            addressDto = new AddressDto();
+            addressDto = addressDto.removeNulls();
+        }
+
+        return this;
+    }
 }

@@ -53,6 +53,7 @@ public class MobileUserService {
             AddressDto addressDto = modelMapper.map(address, AddressDto.class);
             MobileUserDto mobileUserDto = modelMapper.map(mobileUser, MobileUserDto.class);
             mobileUserDto.setAddressDto(addressDto);
+            mobileUserDto.removeNulls();
             mobileUserDtoList.add(mobileUserDto);
         }
 
@@ -68,6 +69,7 @@ public class MobileUserService {
             AddressDto addressDto = modelMapper.map(address, AddressDto.class);
             MobileUserDto mobileUserDto = modelMapper.map(mobileUser, MobileUserDto.class);
             mobileUserDto.setAddressDto(addressDto);
+            mobileUserDto.removeNulls();
 
             return ResponseEntity.ok(mobileUserDto);
         } else
@@ -129,6 +131,8 @@ public class MobileUserService {
         if (mobileUserOptional.isPresent()) {
             MobileUser mobileUser = mobileUserOptional.get();
             MobileUserFavoritesDto mobileUserFavoritesDto = getMobileUserFavoritesDtoFromMobileUser(mobileUser);
+            mobileUserFavoritesDto.removeNulls();
+
             return ResponseEntity.ok(objectMapper.writeValueAsString(mobileUserFavoritesDto));
         } else {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorMessage("No existe el usuario con id: " + id));
@@ -167,6 +171,7 @@ public class MobileUserService {
         List<Comercio> comercioList = comercioQuery.findBySearchQuery(search);
         List<ComercioMobileUserDto> comercioMobileUserDtoList = getComercioDtos(comercioList);
         comercioMobileUserDtoList = comercioMobileUserDtoList.stream().filter(comercio -> "habilitado".equals(comercio.getEstado())).collect(Collectors.toList());
+        comercioMobileUserDtoList.forEach(ComercioMobileUserDto::removeNulls);
 
         return ResponseEntity.ok(comercioMobileUserDtoList);
     }

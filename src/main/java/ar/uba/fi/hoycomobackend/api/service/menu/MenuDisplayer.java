@@ -35,6 +35,7 @@ public class MenuDisplayer {
         Map<Long, List<Plato>> platoCategoryMap = getPlatoCategoryMap(platoSet);
 
         List<MenuDto> menuList = getMenuListFromPlatoCategoryMap(platoCategoryMap);
+        menuList.forEach(MenuDto::removeNulls);
 
         return ResponseEntity.ok(menuList);
     }

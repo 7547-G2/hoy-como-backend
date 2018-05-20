@@ -92,4 +92,33 @@ public class ComercioMobileUserDto {
     public void setTipoComida(TipoComidaDto tipoComida) {
         this.tipoComida = tipoComida;
     }
+
+    public ComercioMobileUserDto removeNulls() {
+        if (id == null)
+            id = 0L;
+        if (nombre == null)
+            nombre = "";
+        if (tipoComida == null) {
+            tipoComida = new TipoComidaDto();
+            tipoComida = tipoComida.removeNulls();
+        }
+        if (imagenLogo == null)
+            imagenLogo = "";
+        if (estado == null)
+            estado = "";
+        if (rating == null)
+            rating = "";
+        if (leadTime == null)
+            leadTime = "";
+        if (precioMinimo == null)
+            precioMinimo = "";
+        if (precioMaximo == null)
+            precioMaximo = "";
+        if (addressDto == null) {
+            addressDto = new AddressDto();
+            addressDto = addressDto.removeNulls();
+        }
+
+        return this;
+    }
 }
