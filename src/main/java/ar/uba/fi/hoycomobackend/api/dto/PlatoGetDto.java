@@ -9,6 +9,7 @@ public class PlatoGetDto {
     private Float precio;
     private PlatoState state;
     private Long categoria;
+    private String descCategoria;
     private Integer orden;
 
 
@@ -66,5 +67,13 @@ public class PlatoGetDto {
 
     public void setState(PlatoState state) {
         this.state = state;
+    }
+
+    public String getDescCategoria() {
+        return descCategoria;
+    }
+
+    public void setDescCategoria(String descCategoria) {
+        this.descCategoria = descCategoria;
     }
 }

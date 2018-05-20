@@ -3,10 +3,8 @@ package ar.uba.fi.hoycomobackend.integration;
 import ar.uba.fi.hoycomobackend.App;
 import ar.uba.fi.hoycomobackend.api.dto.PlatoDto;
 import ar.uba.fi.hoycomobackend.api.dto.PlatoUpdateDto;
-import ar.uba.fi.hoycomobackend.database.entity.Comercio;
-import ar.uba.fi.hoycomobackend.database.entity.Plato;
-import ar.uba.fi.hoycomobackend.database.entity.PlatoState;
-import ar.uba.fi.hoycomobackend.database.entity.TipoComida;
+import ar.uba.fi.hoycomobackend.database.entity.*;
+import ar.uba.fi.hoycomobackend.database.repository.CategoriaComidaRepository;
 import ar.uba.fi.hoycomobackend.database.repository.ComercioRepository;
 import ar.uba.fi.hoycomobackend.database.repository.PlatoRepository;
 import ar.uba.fi.hoycomobackend.database.repository.TipoComidaRepository;
@@ -48,10 +46,15 @@ public class BackofficeComercioControllerIntegrationTest {
     private PlatoRepository platoRepository;
     @Autowired
     private TipoComidaRepository tipoComidaRepository;
+    @Autowired
+    private CategoriaComidaRepository categoriaComidaRepository;
 
     @After
     public void tearDown() {
         comercioRepository.deleteAll();
+        platoRepository.deleteAll();
+        tipoComidaRepository.deleteAll();
+        categoriaComidaRepository.deleteAll();
     }
 
     @Test
@@ -77,8 +80,9 @@ public class BackofficeComercioControllerIntegrationTest {
     @Test
     public void getAllPlatosFromExistingComercio() throws Exception {
         Long comercioId = createDefaultComercioInDatabase();
-        createComercioWithPlato(comercioId);
-        createComercioWithPlato(comercioId);
+        Long categoriaComidaId = createDefaultCategoriaComidaInDatabase();
+        createComercioWithPlato(comercioId, categoriaComidaId);
+        createComercioWithPlato(comercioId, categoriaComidaId);
 
         mockMvc.perform(get("/api/backofficeComercio/" + comercioId + "/platos")
                 .contentType(MediaType.APPLICATION_JSON))
@@ -89,13 +93,15 @@ public class BackofficeComercioControllerIntegrationTest {
                 .andExpect(jsonPath("$[0].imagen", is("imagen")))
                 .andExpect(jsonPath("$[0].precio", is(1.0)))
                 .andExpect(jsonPath("$[0].state", is("ACTIVO")))
-                .andExpect(jsonPath("$[0].categoria", is(1)))
+                .andExpect(jsonPath("$[0].categoria", is(categoriaComidaId.intValue())))
+                .andExpect(jsonPath("$[0].descCategoria", is("descCategoria")))
                 .andExpect(jsonPath("$[0].orden", is(1)))
                 .andExpect(jsonPath("$[1].nombre", is("nombre")))
                 .andExpect(jsonPath("$[1].imagen", is("imagen")))
                 .andExpect(jsonPath("$[1].precio", is(1.0)))
                 .andExpect(jsonPath("$[1].state", is("ACTIVO")))
-                .andExpect(jsonPath("$[1].categoria", is(1)))
+                .andExpect(jsonPath("$[1].categoria", is(categoriaComidaId.intValue())))
+                .andExpect(jsonPath("$[1].descCategoria", is("descCategoria")))
                 .andExpect(jsonPath("$[1].orden", is(1)));
     }
 
@@ -215,6 +221,12 @@ public class BackofficeComercioControllerIntegrationTest {
         return createComercioWithPlato(comercioId, platoDto);
     }
 
+    private ResultActions createComercioWithPlato(Long comercioId, Long categoriaComidaId) throws Exception {
+        PlatoDto platoDto = createDefaultPlatoDto();
+        platoDto.setCategoria(categoriaComidaId);
+        return createComercioWithPlato(comercioId, platoDto);
+    }
+
     private ResultActions createComercioWithPlato(Long comercioId, PlatoDto platoDto) throws Exception {
         String platoDtoJson = objectMapper.writeValueAsString(platoDto);
 
@@ -225,7 +237,7 @@ public class BackofficeComercioControllerIntegrationTest {
 
     private Long createDefaultComercioInDatabase() {
         TipoComida tipoComida = new TipoComida();
-        tipoComida.setTipo("tipo");
+        tipoComida.setTipo("tipoComidaComercio");
         tipoComida = tipoComidaRepository.saveAndFlush(tipoComida);
         Comercio comercio = createDefaultComercio();
         comercio.setTipoComida(tipoComida);
@@ -233,5 +245,11 @@ public class BackofficeComercioControllerIntegrationTest {
         return comercio.getId();
     }
 
+    private Long createDefaultCategoriaComidaInDatabase() {
+        CategoriaComida categoriaComida = new CategoriaComida();
+        categoriaComida.setTipo("descCategoria");
+        categoriaComida = categoriaComidaRepository.saveAndFlush(categoriaComida);
 
+        return categoriaComida.getId();
+    }
 }

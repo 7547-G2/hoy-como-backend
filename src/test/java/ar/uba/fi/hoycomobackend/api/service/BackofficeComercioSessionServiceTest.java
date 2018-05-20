@@ -7,6 +7,7 @@ import ar.uba.fi.hoycomobackend.api.dto.ErrorMessage;
 import ar.uba.fi.hoycomobackend.api.dto.TokenDto;
 import ar.uba.fi.hoycomobackend.database.entity.Comercio;
 import ar.uba.fi.hoycomobackend.database.queries.ComercioQuery;
+import ar.uba.fi.hoycomobackend.database.repository.CategoriaComidaRepository;
 import ar.uba.fi.hoycomobackend.database.repository.PlatoRepository;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -33,7 +34,8 @@ public class BackofficeComercioSessionServiceTest {
     private ModelMapper modelMapper = Mockito.mock(ModelMapper.class);
     private TokenGenerator tokenGenerator = Mockito.mock(TokenGenerator.class);
     private ComercioPriceUpdater comercioPriceUpdater = Mockito.mock(ComercioPriceUpdater.class);
-    private BackofficeComercioService backofficeComercioSessionService = new BackofficeComercioService(comercioQuery, platoRepository, modelMapper, objectMapper, tokenGenerator, comercioPriceUpdater);
+    private CategoriaComidaRepository categoriaComidaRepository = Mockito.mock(CategoriaComidaRepository.class);
+    private BackofficeComercioService backofficeComercioSessionService = new BackofficeComercioService(comercioQuery, platoRepository, categoriaComidaRepository, modelMapper, objectMapper, tokenGenerator, comercioPriceUpdater);
 
     @Test
     public void getTokenFromSession_withValidSession_returnsToken() throws JsonProcessingException {

@@ -3,11 +3,11 @@ package ar.uba.fi.hoycomobackend.api.service;
 import ar.uba.fi.hoycomobackend.api.businesslogic.ComercioPriceUpdater;
 import ar.uba.fi.hoycomobackend.api.businesslogic.TokenGenerator;
 import ar.uba.fi.hoycomobackend.api.dto.*;
-import ar.uba.fi.hoycomobackend.database.entity.Comercio;
-import ar.uba.fi.hoycomobackend.database.entity.Plato;
-import ar.uba.fi.hoycomobackend.database.entity.PlatoState;
+import ar.uba.fi.hoycomobackend.database.entity.*;
 import ar.uba.fi.hoycomobackend.database.queries.ComercioQuery;
+import ar.uba.fi.hoycomobackend.database.repository.CategoriaComidaRepository;
 import ar.uba.fi.hoycomobackend.database.repository.PlatoRepository;
+import ar.uba.fi.hoycomobackend.database.repository.TipoComidaRepository;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.modelmapper.ModelMapper;
@@ -27,15 +27,17 @@ public class BackofficeComercioService {
 
     private ComercioQuery comercioQuery;
     private PlatoRepository platoRepository;
+    private CategoriaComidaRepository categoriaComidaRepository;
     private ModelMapper modelMapper;
     private ObjectMapper objectMapper;
     private TokenGenerator tokenGenerator;
     private ComercioPriceUpdater comercioPriceUpdater;
 
     @Autowired
-    public BackofficeComercioService(ComercioQuery comercioQuery, PlatoRepository platoRepository, ModelMapper modelMapper, ObjectMapper objectMapper, TokenGenerator tokenGenerator, ComercioPriceUpdater comercioPriceUpdater) {
+    public BackofficeComercioService(ComercioQuery comercioQuery, PlatoRepository platoRepository, CategoriaComidaRepository categoriaComidaRepository, ModelMapper modelMapper, ObjectMapper objectMapper, TokenGenerator tokenGenerator, ComercioPriceUpdater comercioPriceUpdater) {
         this.comercioQuery = comercioQuery;
         this.platoRepository = platoRepository;
+        this.categoriaComidaRepository = categoriaComidaRepository;
         this.modelMapper = modelMapper;
         this.objectMapper = objectMapper;
         this.tokenGenerator = tokenGenerator;
@@ -83,11 +85,28 @@ public class BackofficeComercioService {
             Type setType = new TypeToken<Set<PlatoGetDto>>() {
             }.getType();
             Set<PlatoGetDto> platoDtoSet = modelMapper.map(platoSet, setType);
+            platoDtoSet = fillCategoryDescriptionToPlatoDtoSet(platoDtoSet);
             String response = objectMapper.writeValueAsString(platoDtoSet);
 
             return ResponseEntity.ok(response);
         } else
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ErrorMessage("No se encontró ningún comercio con id: " + comercioId));
+    }
+
+    private Set<PlatoGetDto> fillCategoryDescriptionToPlatoDtoSet(Set<PlatoGetDto> platoDtoSet) {
+        platoDtoSet.forEach(platoGetDto -> {
+            if(platoGetDto.getCategoria() != null) {
+                Optional<CategoriaComida> categoriaComidaOptional = categoriaComidaRepository.findById(platoGetDto.getCategoria());
+                if (categoriaComidaOptional.isPresent())
+                    platoGetDto.setDescCategoria(categoriaComidaOptional.get().getTipo());
+                else
+                    platoGetDto.setDescCategoria("");
+            }
+            else
+                platoGetDto.setDescCategoria("");
+        });
+
+        return platoDtoSet;
     }
 
     public ResponseEntity addPlatoToComercio(Long comercioId, PlatoDto platoDto) throws JsonProcessingException {
