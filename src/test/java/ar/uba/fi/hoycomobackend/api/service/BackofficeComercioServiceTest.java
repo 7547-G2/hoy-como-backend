@@ -5,6 +5,7 @@ import ar.uba.fi.hoycomobackend.api.dto.PlatoUpdateDto;
 import ar.uba.fi.hoycomobackend.database.entity.Comercio;
 import ar.uba.fi.hoycomobackend.database.entity.Plato;
 import ar.uba.fi.hoycomobackend.database.repository.ComercioRepository;
+import ar.uba.fi.hoycomobackend.database.repository.PlatoRepository;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import org.junit.After;
 import org.junit.Before;
@@ -25,25 +26,30 @@ public class BackofficeComercioServiceTest {
 
 
     @Autowired
-    ComercioRepository comercioRepository;
+    private ComercioRepository comercioRepository;
     @Autowired
-    BackofficeComercioService backofficeComercioService;
+    private PlatoRepository platoRepository;
+    @Autowired
+    private BackofficeComercioService backofficeComercioService;
+    private Long comercioId;
 
     @Before
     public void setUp() {
         Comercio comercio = createDefaultComercio();
-        comercioRepository.saveAndFlush(comercio);
+        comercio = comercioRepository.saveAndFlush(comercio);
+        comercioId = comercio.getId();
     }
 
     @After
     public void tearDown() {
         comercioRepository.deleteAll();
+        platoRepository.deleteAll();
     }
 
     @Test
     public void testAddPlatoAcceptsCategoriaAndOrden() throws JsonProcessingException {
         PlatoDto platoDto = createDefaultPlatoDto();
-        backofficeComercioService.addPlatoToComercio(1L, platoDto);
+        backofficeComercioService.addPlatoToComercio(comercioId, platoDto);
         Comercio comercio = comercioRepository.findAll().get(0);
         Plato plato = comercio.getPlatos().iterator().next();
 
@@ -52,7 +58,7 @@ public class BackofficeComercioServiceTest {
     }
 
     @Test
-    public void testUpdatePlatoAcceptsCategoriaAndOrden() throws JsonProcessingException {
+    public void testUpdatePlatoOnlyChangingCategory() throws JsonProcessingException {
         PlatoDto platoDto = createDefaultPlatoDto();
         PlatoUpdateDto platoUpdateDto = createDefaultPlatoUpdateDto();
         platoUpdateDto.setCategoria(2L);
@@ -65,6 +71,22 @@ public class BackofficeComercioServiceTest {
         plato = comercioRepository.getComercioById(comercio.getId()).get().getPlatos().iterator().next();
 
         assertThat(plato.getCategoria()).isEqualTo(2L);
+        assertThat(plato.getOrden()).isEqualTo(1);
+    }
+
+    @Test
+    public void testUpdatePlatoThatOnlyChangesOrden() throws JsonProcessingException {
+        PlatoDto platoDto = createDefaultPlatoDto();
+        PlatoUpdateDto platoUpdateDto = createDefaultPlatoUpdateDto();
+        platoUpdateDto.setOrden(2);
+        Comercio comercio = comercioRepository.findAll().get(0);
+        backofficeComercioService.addPlatoToComercio(comercio.getId(), platoDto);
+        comercio = comercioRepository.findAll().get(0);
+        Plato plato = comercio.getPlatos().iterator().next();
+        backofficeComercioService.updatePlatoFromComercio(comercio.getId(), plato.getId(), platoUpdateDto);
+        plato = comercioRepository.getComercioById(comercio.getId()).get().getPlatos().iterator().next();
+
+        assertThat(plato.getCategoria()).isEqualTo(1L);
         assertThat(plato.getOrden()).isEqualTo(2);
     }
 }

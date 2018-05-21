@@ -23,7 +23,7 @@ public class Pedido {
     private String numeroTC;
     private String fechaTC;
     private String codigoTC;
-    private String estado = "pendiente";
+    private String estado = "Ingresado";
 
     public Long getId() {
         return id;
