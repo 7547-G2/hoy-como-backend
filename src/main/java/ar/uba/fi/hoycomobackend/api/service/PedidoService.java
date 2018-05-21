@@ -27,9 +27,10 @@ public class PedidoService {
     private OrderDetailRepository orderDetailRepository;
 
     @Autowired
-    public PedidoService(PedidoQuery pedidoQuery, PlatoRepository platoRepository) {
+    public PedidoService(PedidoQuery pedidoQuery, PlatoRepository platoRepository, OrderDetailRepository orderDetailRepository) {
         this.pedidoQuery = pedidoQuery;
         this.platoRepository = platoRepository;
+        this.orderDetailRepository = orderDetailRepository;
     }
 
     public ResponseEntity getPlatoFromPedido(Long pedidoId) {
@@ -78,7 +79,16 @@ public class PedidoService {
 
     public ResponseEntity getDetallePedido() {
         List<OrderDetail> orderDetail = orderDetailRepository.findAll();
+        orderDetail = removeInfiniteRecursion(orderDetail);
         return ResponseEntity.ok(orderDetail);
+    }
+
+    private List<OrderDetail> removeInfiniteRecursion(List<OrderDetail> orderDetail) {
+        orderDetail.forEach(order -> {
+            order.getStatusHistory().forEach(orderStatusHistory -> orderStatusHistory.setOrderDetail(null));
+            order.getOrderContent().forEach(orderContent -> orderContent.setOrderDetail(null));
+        });
+        return orderDetail;
     }
 
     public ResponseEntity getDetallePedidoById(Long detallePedidoId) {
