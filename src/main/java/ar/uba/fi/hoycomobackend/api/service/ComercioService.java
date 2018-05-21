@@ -26,11 +26,13 @@ public class ComercioService {
     private static final String PENDIENTE_MENU = "pendiente menu";
     private ComercioQuery comercioQuery;
     private PedidoQuery pedidoQuery;
+    private OrderDetailService orderDetailService;
 
     @Autowired
-    public ComercioService(ComercioQuery comercioQuery, PedidoQuery pedidoQuery) {
+    public ComercioService(ComercioQuery comercioQuery, PedidoQuery pedidoQuery, OrderDetailService orderDetailService) {
         this.comercioQuery = comercioQuery;
         this.pedidoQuery = pedidoQuery;
+        this.orderDetailService = orderDetailService;
     }
 
     public ResponseEntity updatePassword(PasswordUpdateDto passwordUpdateDto) {
@@ -95,6 +97,7 @@ public class ComercioService {
             Pedido pedido = pedidoOptional.get();
             pedido.setEstado(estado);
             pedido = pedidoQuery.savePedido(pedido);
+            orderDetailService.update(pedido);
 
             return ResponseEntity.ok(pedido);
         } else
