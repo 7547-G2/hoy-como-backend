@@ -80,7 +80,6 @@ public class BackofficeHoyComoService {
 
         if (comercioOptional.isPresent()) {
             Comercio comercio = comercioOptional.get();
-            comercioHoyComoAddDto.setId(comercio.getId());
             if (cannotChangeState(comercioHoyComoAddDto, comercio))
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("No se puede habilitar un comercio que no haya cargado al menos 5 platos");
             return updateComercioToDatabaseFromDto(comercioHoyComoAddDto, comercio);
