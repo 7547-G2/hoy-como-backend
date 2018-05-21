@@ -5,6 +5,7 @@ import ar.uba.fi.hoycomobackend.api.dto.MenuDto;
 import ar.uba.fi.hoycomobackend.api.dto.MenuWithLogoDto;
 import ar.uba.fi.hoycomobackend.database.entity.Comercio;
 import ar.uba.fi.hoycomobackend.database.entity.Plato;
+import ar.uba.fi.hoycomobackend.database.entity.PlatoState;
 import ar.uba.fi.hoycomobackend.database.repository.CategoriaComidaRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -33,6 +34,7 @@ public class MenuDisplayer {
             LOGGER.warn("No platos found for given comercio");
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ErrorMessage("El comercio seleccionado no cuenta con platos habilitados."));
         }
+        platoSet = platoSet.stream().filter(plato -> PlatoState.ACTIVO.equals(plato.getState())).collect(Collectors.toSet());
         Map<Long, List<Plato>> platoCategoryMap = getPlatoCategoryMap(platoSet);
 
         List<MenuDto> menuList = getMenuListFromPlatoCategoryMap(platoCategoryMap);
