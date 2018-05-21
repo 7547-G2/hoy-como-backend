@@ -19,7 +19,7 @@ public class MobileUser {
     @Enumerated(value = EnumType.STRING)
     @NotNull
     private MobileUserState state = MobileUserState.AUTHORIZED;
-    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.MERGE)
     @JoinTable(name = "mobileuser_comercio",
             joinColumns = {@JoinColumn(name = "mobileuser_facebookId")},
             inverseJoinColumns = {@JoinColumn(name = "comercio_id")})
