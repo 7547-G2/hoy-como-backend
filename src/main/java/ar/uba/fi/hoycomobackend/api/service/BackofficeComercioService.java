@@ -116,6 +116,11 @@ public class BackofficeComercioService {
         if (comercioOptional.isPresent()) {
             Comercio comercio = comercioOptional.get();
             Plato plato = modelMapper.map(platoDto, Plato.class);
+            Long currentCategory = plato.getCategoria();
+            Integer maxOrderPlato = comercio.getPlatos().stream().
+                    filter(plate -> currentCategory.equals(plate.getCategoria())).
+                    mapToInt(plate -> plate.getOrden()).max().orElse(0);
+            plato.setOrden(maxOrderPlato + 1);
             plato.setComercio(comercio);
 
             plato = platoRepository.saveAndFlush(plato);
@@ -137,10 +142,18 @@ public class BackofficeComercioService {
 
             if (platoOptional.isPresent()) {
                 Plato plato = platoOptional.get();
+                Long olderCategory = plato.getCategoria();
                 modelMapper.map(platoUpdateDto, plato);
                 plato.setComercio(comercio);
                 plato.setId(platoId);
                 platoUpdateDto.setId(platoId);
+                if (shouldChangeOrden(olderCategory, plato.getCategoria())) {
+                    Long currentCategory = plato.getCategoria();
+                    Integer maxOrderPlato = comercio.getPlatos().stream().
+                            filter(plate -> currentCategory.equals(plate.getCategoria()) && !platoId.equals(plate.getId())).
+                            mapToInt(plate -> plate.getOrden()).max().orElse(0);
+                    plato.setOrden(maxOrderPlato + 1);
+                }
                 String response = objectMapper.writeValueAsString(platoUpdateDto);
 
                 platoRepository.saveAndFlush(plato);
@@ -151,6 +164,10 @@ public class BackofficeComercioService {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ErrorMessage("No se encontró ningún plato con id: " + platoId));
         } else
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ErrorMessage("No se encontró ningún comercio con id: " + comercioId));
+    }
+
+    private boolean shouldChangeOrden(Long olderCategory, Long categoria) {
+        return !categoria.equals(olderCategory);
     }
 
     public ResponseEntity getComercioById(Long comercioId) {

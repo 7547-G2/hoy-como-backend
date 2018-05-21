@@ -27,8 +27,7 @@ import java.util.Optional;
 import static ar.uba.fi.hoycomobackend.entity.DataTestBuilder.*;
 import static org.assertj.core.api.Java6Assertions.assertThat;
 import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.Matchers.hasSize;
-import static org.hamcrest.Matchers.notNullValue;
+import static org.hamcrest.Matchers.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -96,14 +95,14 @@ public class BackofficeComercioControllerIntegrationTest {
                 .andExpect(jsonPath("$[0].state", is("ACTIVO")))
                 .andExpect(jsonPath("$[0].categoria", is(categoriaComidaId.intValue())))
                 .andExpect(jsonPath("$[0].descCategoria", is("descCategoria")))
-                .andExpect(jsonPath("$[0].orden", is(1)))
+                .andExpect(jsonPath("$[0].orden", isOneOf(1, 2)))
                 .andExpect(jsonPath("$[1].nombre", is("nombre")))
                 .andExpect(jsonPath("$[1].imagen", is("imagen")))
                 .andExpect(jsonPath("$[1].precio", is(1.0)))
                 .andExpect(jsonPath("$[1].state", is("ACTIVO")))
                 .andExpect(jsonPath("$[1].categoria", is(categoriaComidaId.intValue())))
                 .andExpect(jsonPath("$[1].descCategoria", is("descCategoria")))
-                .andExpect(jsonPath("$[1].orden", is(1)));
+                .andExpect(jsonPath("$[1].orden", isOneOf(1, 2)));
     }
 
 
