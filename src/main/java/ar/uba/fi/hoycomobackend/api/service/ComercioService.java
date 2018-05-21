@@ -80,6 +80,7 @@ public class ComercioService {
             pedidoOfComercioDto.setEstado(pedido.getEstado());
             pedidoOfComercioDto.setFecha(Date.from(Instant.now()).toString());
             pedidoOfComercioDto.setMonto(pedido.getTotal());
+            pedidoOfComercioDto.setId(pedido.getId());
             pedidoOfComercioDtoList.add(pedidoOfComercioDto);
         });
 

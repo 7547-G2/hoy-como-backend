@@ -59,7 +59,7 @@ public class PedidoService {
 
     public ResponseEntity getPlatoByIdForMobile(Long platoId) {
         Optional<Plato> platoOptional = platoRepository.findById(platoId);
-        if(platoOptional.isPresent()) {
+        if (platoOptional.isPresent()) {
             PlatoMobileUserDto platoMobileUserDto = new PlatoMobileUserDto();
             Plato plato = platoOptional.get();
             platoMobileUserDto.setId_plato(plato.getId());
