@@ -92,7 +92,7 @@ public class PedidoService {
     }
 
     public ResponseEntity getDetallePedidoById(Long detallePedidoId) {
-        Optional<OrderDetail> orderDetailOptional = orderDetailRepository.findById(detallePedidoId);
+        Optional<OrderDetail> orderDetailOptional = orderDetailRepository.findByPedidoId(detallePedidoId);
         if (orderDetailOptional.isPresent())
             return ResponseEntity.ok(orderDetailOptional.get());
         else
