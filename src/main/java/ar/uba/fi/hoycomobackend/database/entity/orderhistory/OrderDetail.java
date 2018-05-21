@@ -1,7 +1,6 @@
 package ar.uba.fi.hoycomobackend.database.entity.orderhistory;
 
 import javax.persistence.*;
-import java.util.List;
 import java.util.Set;
 
 @Entity

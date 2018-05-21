@@ -5,6 +5,7 @@ import ar.uba.fi.hoycomobackend.database.entity.orderhistory.OrderContent;
 import ar.uba.fi.hoycomobackend.database.entity.orderhistory.OrderDetail;
 import ar.uba.fi.hoycomobackend.database.entity.orderhistory.OrderStatusHistory;
 import ar.uba.fi.hoycomobackend.database.repository.OrderDetailRepository;
+import ar.uba.fi.hoycomobackend.database.repository.PlatoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -15,14 +16,16 @@ import java.util.*;
 public class OrderDetailService {
 
     private OrderDetailRepository orderDetailRepository;
+    private PlatoRepository platoRepository;
 
     @Autowired
-    public OrderDetailService(OrderDetailRepository orderDetailRepository) {
+    public OrderDetailService(OrderDetailRepository orderDetailRepository, PlatoRepository platoRepository) {
         this.orderDetailRepository = orderDetailRepository;
+        this.platoRepository = platoRepository;
     }
 
 
-    public void creation(Pedido pedido, String comercioName) {
+    public OrderDetail creation(Pedido pedido, String comercioName) {
         OrderDetail orderDetail = new OrderDetail();
         orderDetail.setOrderContent(new HashSet<>());
         orderDetail.setStatusHistory(new HashSet<>());
@@ -34,7 +37,7 @@ public class OrderDetailService {
         Double total = calculateTotal(orderDetail);
         orderDetail.setTotal(total);
 
-        orderDetailRepository.saveAndFlush(orderDetail);
+        return orderDetailRepository.saveAndFlush(orderDetail);
     }
 
     private Double calculateTotal(OrderDetail orderDetail) {
@@ -51,8 +54,14 @@ public class OrderDetailService {
         pedido.getOrden().forEach(orden -> {
             OrderContent orderContent = new OrderContent();
             orderContent.setCant(orden.getCantidad());
-            orderContent.setName(orderContent.getName());
-            orderContent.setSubtotal(orderContent.getSubtotal());
+            Long platoId = orden.getId_plato();
+            try {
+                String name = platoRepository.findById(platoId).get().getNombre();
+                orderContent.setName(name);
+            } catch (Exception e) {
+                orderContent.setName("nameNotFound");
+            }
+            orderContent.setSubtotal(orden.getSub_total()*orden.getCantidad());
             orderContent.setOrderDetail(orderDetail);
             orderContentList.add(orderContent);
         });
