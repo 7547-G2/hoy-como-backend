@@ -79,8 +79,6 @@ public class OrderDetailService {
         if (orderDetailOptional.isPresent()) {
             OrderDetail orderDetail = orderDetailOptional.get();
             orderDetail = addOrderStatusHistory(orderDetail, pedido);
-            orderDetail = addOrderContent(orderDetail, pedido);
-            orderDetail.setTotal(pedido.getTotal());
 
             orderDetailRepository.saveAndFlush(orderDetail);
         }
