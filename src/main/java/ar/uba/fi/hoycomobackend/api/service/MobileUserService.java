@@ -254,16 +254,15 @@ public class MobileUserService {
     private List<PedidoMobileUserDto> transformPedidoToPedidoMobileUserDto(List<Pedido> pedidoList) {
         List<PedidoMobileUserDto> pedidoMobileUserDtoList = new ArrayList<>();
         pedidoList.forEach(pedido -> {
-            pedido.getOrden().forEach(orden -> {
-                PedidoMobileUserDto pedidoMobileUserDto = new PedidoMobileUserDto();
-                pedidoMobileUserDto.setOrder_id(orden.getId());
-                Long comercioId = pedido.getStoreId();
-                pedidoMobileUserDto.setStore_id(comercioId);
-                String storeName = comercioQuery.getComercioById(comercioId).get().getNombre();
-                pedidoMobileUserDto.setStore_name(storeName);
-                pedidoMobileUserDto.setStatus("notYetImplemented");
-                pedidoMobileUserDtoList.add(pedidoMobileUserDto);
-            });
+            PedidoMobileUserDto pedidoMobileUserDto = new PedidoMobileUserDto();
+            pedidoMobileUserDto.setStore_id(pedido.getStoreId());
+            Long comercioId = pedido.getStoreId();
+            String storeName = comercioQuery.getComercioById(comercioId).get().getNombre();
+            pedidoMobileUserDto.setStore_name(storeName);
+            pedidoMobileUserDto.setStatus(pedido.getEstado());
+            pedidoMobileUserDto.setOrder_id(pedido.getId());
+
+            pedidoMobileUserDtoList.add(pedidoMobileUserDto);
         });
 
         return pedidoMobileUserDtoList;
