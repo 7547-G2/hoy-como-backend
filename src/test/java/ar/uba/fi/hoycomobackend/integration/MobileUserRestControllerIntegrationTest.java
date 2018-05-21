@@ -314,6 +314,11 @@ public class MobileUserRestControllerIntegrationTest {
         assertThat(orden.getId_plato()).isEqualTo(1);
         assertThat(orden.getObs()).isEqualTo("obs");
         assertThat(orden.getSub_total()).isEqualTo(1.0);
+
+        mockMvc.perform(get("/api/mobileUser/detallePedido")
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$", hasSize(2)));
     }
 
     @Test

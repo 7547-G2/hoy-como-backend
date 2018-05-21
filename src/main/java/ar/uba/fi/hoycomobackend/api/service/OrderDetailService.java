@@ -31,8 +31,19 @@ public class OrderDetailService {
         orderDetail.setStoreName(comercioName);
         orderDetail = addOrderStatusHistory(orderDetail, pedido);
         orderDetail = addOrderContent(orderDetail, pedido);
+        Double total = calculateTotal(orderDetail);
+        orderDetail.setTotal(total);
 
         orderDetailRepository.saveAndFlush(orderDetail);
+    }
+
+    private Double calculateTotal(OrderDetail orderDetail) {
+        Double total = orderDetail.getOrderContent().stream().
+                filter(orderContent -> orderContent.getSubtotal() != null).mapToDouble(orderContent -> orderContent.getSubtotal()).sum();
+        if (total != null)
+            return total;
+        else
+            return 0.0;
     }
 
     private OrderDetail addOrderContent(OrderDetail orderDetail, Pedido pedido) {
@@ -42,6 +53,7 @@ public class OrderDetailService {
             orderContent.setCant(orden.getCantidad());
             orderContent.setName(orderContent.getName());
             orderContent.setSubtotal(orderContent.getSubtotal());
+            orderContent.setOrderDetail(orderDetail);
             orderContentList.add(orderContent);
         });
         orderDetail.setOrderContent(orderContentList);
@@ -54,6 +66,7 @@ public class OrderDetailService {
         OrderStatusHistory orderStatusHistory = new OrderStatusHistory();
         orderStatusHistory.setDate(Date.from(Instant.now()).toString());
         orderStatusHistory.setStatus(pedido.getEstado());
+        orderStatusHistory.setOrderDetail(orderDetail);
         orderStatusHistoryList.add(orderStatusHistory);
 
         orderDetail.setStatusHistory(orderStatusHistoryList);
@@ -68,6 +81,8 @@ public class OrderDetailService {
             OrderDetail orderDetail = orderDetailOptional.get();
             orderDetail = addOrderStatusHistory(orderDetail, pedido);
             orderDetail = addOrderContent(orderDetail, pedido);
+            Double total = calculateTotal(orderDetail);
+            orderDetail.setTotal(total);
 
             orderDetailRepository.saveAndFlush(orderDetail);
         }
