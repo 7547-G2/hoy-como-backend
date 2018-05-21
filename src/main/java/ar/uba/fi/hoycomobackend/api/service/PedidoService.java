@@ -91,10 +91,18 @@ public class PedidoService {
         return orderDetail;
     }
 
+    private OrderDetail removeInfiniteRecursion(OrderDetail orderDetail) {
+        orderDetail.getStatusHistory().forEach(orderStatusHistory -> orderStatusHistory.setOrderDetail(null));
+        orderDetail.getOrderContent().forEach(orderContent -> orderContent.setOrderDetail(null));
+        return orderDetail;
+    }
+
     public ResponseEntity getDetallePedidoById(Long detallePedidoId) {
         Optional<OrderDetail> orderDetailOptional = orderDetailRepository.findByPedidoId(detallePedidoId);
-        if (orderDetailOptional.isPresent())
-            return ResponseEntity.ok(orderDetailOptional.get());
+        if (orderDetailOptional.isPresent()) {
+            OrderDetail orderDetail = removeInfiniteRecursion(orderDetailOptional.get());
+            return ResponseEntity.ok(orderDetail);
+        }
         else
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorMessage("No se encontró"));
     }
