@@ -60,4 +60,16 @@ public class OrderDetailService {
 
         return orderDetail;
     }
+
+    public void update(Pedido pedido) {
+        Optional<OrderDetail> orderDetailOptional = orderDetailRepository.findByPedidoId(pedido.getId());
+
+        if (orderDetailOptional.isPresent()) {
+            OrderDetail orderDetail = orderDetailOptional.get();
+            orderDetail = addOrderStatusHistory(orderDetail, pedido);
+            orderDetail = addOrderContent(orderDetail, pedido);
+
+            orderDetailRepository.saveAndFlush(orderDetail);
+        }
+    }
 }
