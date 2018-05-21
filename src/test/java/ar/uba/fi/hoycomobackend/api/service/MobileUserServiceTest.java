@@ -30,7 +30,8 @@ public class MobileUserServiceTest {
     private ObjectMapper objectMapper = Mockito.mock(ObjectMapper.class);
     private MenuDisplayer menuDisplayer = Mockito.mock(MenuDisplayer.class);
     private PedidoQuery pedidoQuery = Mockito.mock(PedidoQuery.class);
-    private MobileUserService mobileUserService = new MobileUserService(mobileUserRepository, comercioQuery, modelMapper, objectMapper, menuDisplayer, pedidoQuery);
+    private OrderDetailService orderDetailService = Mockito.mock(OrderDetailService.class);
+    private MobileUserService mobileUserService = new MobileUserService(mobileUserRepository, comercioQuery, modelMapper, objectMapper, menuDisplayer, pedidoQuery, orderDetailService);
 
     @Test
     public void getMobileUserById_returnsMobileUserDto() {

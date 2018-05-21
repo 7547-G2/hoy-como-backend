@@ -33,15 +33,17 @@ public class MobileUserService {
     private ObjectMapper objectMapper;
     private MenuDisplayer menuDisplayer;
     private PedidoQuery pedidoQuery;
+    private OrderDetailService orderDetailService;
 
     @Autowired
-    public MobileUserService(MobileUserRepository mobileUserRepository, ComercioQuery comercioQuery, ModelMapper modelMapper, ObjectMapper objectMapper, MenuDisplayer menuDisplayer, PedidoQuery pedidoQuery) {
+    public MobileUserService(MobileUserRepository mobileUserRepository, ComercioQuery comercioQuery, ModelMapper modelMapper, ObjectMapper objectMapper, MenuDisplayer menuDisplayer, PedidoQuery pedidoQuery, OrderDetailService orderDetailService) {
         this.mobileUserRepository = mobileUserRepository;
         this.comercioQuery = comercioQuery;
         this.modelMapper = modelMapper;
         this.objectMapper = objectMapper;
         this.menuDisplayer = menuDisplayer;
         this.pedidoQuery = pedidoQuery;
+        this.orderDetailService = orderDetailService;
     }
 
     public ResponseEntity getMobileUserList() {
@@ -228,7 +230,8 @@ public class MobileUserService {
                     orden.setId(null);
                     orden.setPedido(pedido);
                 });
-                pedidoQuery.savePedido(pedido);
+                Pedido savedPedido = pedidoQuery.savePedido(pedido);
+                orderDetailService.creation(savedPedido, comercioOptional.get().getNombre());
                 return ResponseEntity.ok().build();
             } catch (Throwable e) {
                 return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ErrorMessage("Problema al intentar salvar el pedido. Razón: " + e.getMessage()));
