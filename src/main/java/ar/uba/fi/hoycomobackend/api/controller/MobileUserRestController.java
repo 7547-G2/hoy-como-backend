@@ -86,6 +86,11 @@ public class MobileUserRestController {
         return mobileUserService.postPedido(postPedidoDto);
     }
 
+    @PostMapping(value = "/mobileUser/pedido/{pedidoId}/cancel")
+    public ResponseEntity postPedido(@PathVariable("pedidoId") Long pedidoId) {
+        return mobileUserService.cancelPedido(pedidoId);
+    }
+
     @GetMapping(value = "/mobileUser/{facebookId}/pedido")
     public ResponseEntity getPedidosByUserId(@PathVariable("facebookId") Long facebookId) {
         return mobileUserService.getPedidosOfUser(facebookId);
