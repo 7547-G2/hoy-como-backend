@@ -16,6 +16,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.time.Instant;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -230,6 +231,7 @@ public class MobileUserService {
                     orden.setId(null);
                     orden.setPedido(pedido);
                 });
+                pedido.setFecha(Date.from(Instant.now()).toString());
                 Pedido savedPedido = pedidoQuery.savePedido(pedido);
                 orderDetailService.creation(savedPedido, comercioOptional.get().getNombre());
                 return ResponseEntity.ok().build();
