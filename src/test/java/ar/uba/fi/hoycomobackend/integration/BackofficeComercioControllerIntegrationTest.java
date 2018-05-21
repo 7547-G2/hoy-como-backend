@@ -1,13 +1,11 @@
 package ar.uba.fi.hoycomobackend.integration;
 
 import ar.uba.fi.hoycomobackend.App;
+import ar.uba.fi.hoycomobackend.api.dto.OpcionDto;
 import ar.uba.fi.hoycomobackend.api.dto.PlatoDto;
 import ar.uba.fi.hoycomobackend.api.dto.PlatoUpdateDto;
 import ar.uba.fi.hoycomobackend.database.entity.*;
-import ar.uba.fi.hoycomobackend.database.repository.CategoriaComidaRepository;
-import ar.uba.fi.hoycomobackend.database.repository.ComercioRepository;
-import ar.uba.fi.hoycomobackend.database.repository.PlatoRepository;
-import ar.uba.fi.hoycomobackend.database.repository.TipoComidaRepository;
+import ar.uba.fi.hoycomobackend.database.repository.*;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.After;
 import org.junit.Test;
@@ -48,6 +46,8 @@ public class BackofficeComercioControllerIntegrationTest {
     private TipoComidaRepository tipoComidaRepository;
     @Autowired
     private CategoriaComidaRepository categoriaComidaRepository;
+    @Autowired
+    private OpcionRepository opcionRepository;
 
     @After
     public void tearDown() {
@@ -55,6 +55,7 @@ public class BackofficeComercioControllerIntegrationTest {
         platoRepository.deleteAll();
         comercioRepository.deleteAll();
         tipoComidaRepository.deleteAll();
+        opcionRepository.deleteAll();
     }
 
     @Test
@@ -252,6 +253,33 @@ public class BackofficeComercioControllerIntegrationTest {
                 .andExpect(content()
                         .contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.tipo", is(commerceType)));
+    }
+
+    @Test
+    public void createOpcionAppearsAsIs() throws Exception {
+        OpcionDto opcionDto = createDefaultOpcionDto();
+        String opcionDtoJson = objectMapper.writeValueAsString(opcionDto);
+
+        mockMvc.perform(post("/api/backofficeComercio/comercio/1/opcion")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(opcionDtoJson));
+
+        Long opcionId = opcionRepository.findAll().get(0).getId();
+        opcionDto.setState("anotherState");
+        opcionDtoJson = objectMapper.writeValueAsString(opcionDto);
+
+        mockMvc.perform(put("/api/backofficeComercio/comercio/opcion/" + opcionId)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(opcionDtoJson));
+
+        mockMvc.perform(get("/api/backofficeComercio/opcion/" + opcionId)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(content()
+                        .contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.nombre", is("nombre")))
+                .andExpect(jsonPath("$.precio", is(12.34)))
+                .andExpect(jsonPath("$.state", is("anotherState")));
     }
 
     private PlatoDto createTestPlatoDto() {

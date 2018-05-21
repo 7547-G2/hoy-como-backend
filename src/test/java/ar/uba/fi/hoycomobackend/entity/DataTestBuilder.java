@@ -200,6 +200,15 @@ public class DataTestBuilder {
         return platoDto;
     }
 
+    public static OpcionDto createDefaultOpcionDto() {
+        OpcionDto opcionDto = new OpcionDto();
+        opcionDto.setNombre("nombre");
+        opcionDto.setPrecio(12.34);
+        opcionDto.setState("state");
+
+        return opcionDto;
+    }
+
     public static PlatoUpdateDto createDefaultPlatoUpdateDto() {
         PlatoUpdateDto platoUpdateDto = new PlatoUpdateDto();
         platoUpdateDto.setImagen("imagen");
