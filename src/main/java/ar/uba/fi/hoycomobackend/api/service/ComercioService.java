@@ -80,7 +80,7 @@ public class ComercioService {
         pedidoList.forEach(pedido -> {
             PedidoOfComercioDto pedidoOfComercioDto = new PedidoOfComercioDto();
             pedidoOfComercioDto.setEstado(pedido.getEstado());
-            pedidoOfComercioDto.setFecha(Date.from(Instant.now()).toString());
+            pedidoOfComercioDto.setFecha(pedido.getFecha());
             pedidoOfComercioDto.setMonto(pedido.getTotal());
             pedidoOfComercioDto.setId(pedido.getId());
             pedidoOfComercioDtoList.add(pedidoOfComercioDto);
