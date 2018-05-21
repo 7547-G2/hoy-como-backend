@@ -95,4 +95,14 @@ public class MobileUserRestController {
     public ResponseEntity getPlato(@PathVariable("platoId") Long platoId) {
         return pedidoService.getPlatoByIdForMobile(platoId);
     }
+
+    @GetMapping(value = "/mobileUser/detallePedido")
+    public ResponseEntity getPlato() {
+        return pedidoService.getDetallePedido();
+    }
+
+    @GetMapping(value = "/mobileUser/detallePedido/{detallePedidoId}")
+    public ResponseEntity getPlatoById(@PathVariable("detallePedidoId") Long detallePedidoId) {
+        return pedidoService.getDetallePedidoById(detallePedidoId);
+    }
 }

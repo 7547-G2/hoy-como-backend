@@ -5,7 +5,9 @@ import ar.uba.fi.hoycomobackend.api.dto.PlatoMobileUserDto;
 import ar.uba.fi.hoycomobackend.api.dto.PlatoPedidoComercioDto;
 import ar.uba.fi.hoycomobackend.database.entity.Pedido;
 import ar.uba.fi.hoycomobackend.database.entity.Plato;
+import ar.uba.fi.hoycomobackend.database.entity.orderhistory.OrderDetail;
 import ar.uba.fi.hoycomobackend.database.queries.PedidoQuery;
+import ar.uba.fi.hoycomobackend.database.repository.OrderDetailRepository;
 import ar.uba.fi.hoycomobackend.database.repository.PlatoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -22,6 +24,7 @@ public class PedidoService {
 
     private PedidoQuery pedidoQuery;
     private PlatoRepository platoRepository;
+    private OrderDetailRepository orderDetailRepository;
 
     @Autowired
     public PedidoService(PedidoQuery pedidoQuery, PlatoRepository platoRepository) {
@@ -71,5 +74,18 @@ public class PedidoService {
             return ResponseEntity.ok(platoMobileUserDto);
         } else
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorMessage("No se pudo encontrar el plato solicitado"));
+    }
+
+    public ResponseEntity getDetallePedido() {
+        List<OrderDetail> orderDetail = orderDetailRepository.findAll();
+        return ResponseEntity.ok(orderDetail);
+    }
+
+    public ResponseEntity getDetallePedidoById(Long detallePedidoId) {
+        Optional<OrderDetail> orderDetailOptional = orderDetailRepository.findById(detallePedidoId);
+        if (orderDetailOptional.isPresent())
+            return ResponseEntity.ok(orderDetailOptional.get());
+        else
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorMessage("No se encontró"));
     }
 }
