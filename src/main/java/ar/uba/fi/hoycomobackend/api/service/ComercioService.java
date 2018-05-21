@@ -88,6 +88,7 @@ public class ComercioService {
     }
 
     public ResponseEntity changeStateOfPedido(Long pedidoId, String estado) {
+        //TODO meter cambio aca al pedido al historial
         Optional<Pedido> pedidoOptional = pedidoQuery.getPedidoById(pedidoId);
 
         if (pedidoOptional.isPresent()) {
