@@ -33,20 +33,10 @@ public class OrderDetailService {
         orderDetail.setPedidoId(pedido.getId());
         orderDetail.setStoreName(comercioName);
         orderDetail = addOrderStatusHistory(orderDetail, pedido);
-        orderDetail = addOrderContent(orderDetail, pedido);
-        Double total = calculateTotal(orderDetail);
-        orderDetail.setTotal(total);
+        orderDetail = addOrderContent(orderDetail, pedido);        ;
+        orderDetail.setTotal(pedido.getTotal());
 
         return orderDetailRepository.saveAndFlush(orderDetail);
-    }
-
-    private Double calculateTotal(OrderDetail orderDetail) {
-        Double total = orderDetail.getOrderContent().stream().
-                filter(orderContent -> orderContent.getSubtotal() != null).mapToDouble(orderContent -> orderContent.getSubtotal()).sum();
-        if (total != null)
-            return total;
-        else
-            return 0.0;
     }
 
     private OrderDetail addOrderContent(OrderDetail orderDetail, Pedido pedido) {
@@ -61,7 +51,7 @@ public class OrderDetailService {
             } catch (Exception e) {
                 orderContent.setName("nameNotFound");
             }
-            orderContent.setSubtotal(orden.getSub_total()*orden.getCantidad());
+            orderContent.setSubtotal(orden.getSub_total());
             orderContent.setOrderDetail(orderDetail);
             orderContentList.add(orderContent);
         });
@@ -90,8 +80,7 @@ public class OrderDetailService {
             OrderDetail orderDetail = orderDetailOptional.get();
             orderDetail = addOrderStatusHistory(orderDetail, pedido);
             orderDetail = addOrderContent(orderDetail, pedido);
-            Double total = calculateTotal(orderDetail);
-            orderDetail.setTotal(total);
+            orderDetail.setTotal(pedido.getTotal());
 
             orderDetailRepository.saveAndFlush(orderDetail);
         }

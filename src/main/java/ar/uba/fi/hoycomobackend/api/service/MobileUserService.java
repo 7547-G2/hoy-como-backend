@@ -267,4 +267,17 @@ public class MobileUserService {
 
         return pedidoMobileUserDtoList;
     }
+
+    public ResponseEntity cancelPedido(Long pedidoId) {
+        try {
+            Pedido pedido = pedidoQuery.getPedidoById(pedidoId).get();
+            pedido.setEstado("Cancelado");
+            pedido = pedidoQuery.savePedido(pedido);
+            orderDetailService.update(pedido);
+
+            return ResponseEntity.ok(pedido);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorMessage("No se encontró pedido"));
+        }
+    }
 }
