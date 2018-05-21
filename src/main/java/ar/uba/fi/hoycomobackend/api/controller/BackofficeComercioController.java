@@ -1,9 +1,6 @@
 package ar.uba.fi.hoycomobackend.api.controller;
 
-import ar.uba.fi.hoycomobackend.api.dto.BackofficeComercioSessionDto;
-import ar.uba.fi.hoycomobackend.api.dto.PasswordUpdateDto;
-import ar.uba.fi.hoycomobackend.api.dto.PlatoDto;
-import ar.uba.fi.hoycomobackend.api.dto.PlatoUpdateDto;
+import ar.uba.fi.hoycomobackend.api.dto.*;
 import ar.uba.fi.hoycomobackend.api.service.BackofficeComercioService;
 import ar.uba.fi.hoycomobackend.api.service.ComercioService;
 import ar.uba.fi.hoycomobackend.api.service.ComidasService;
@@ -104,5 +101,25 @@ public class BackofficeComercioController {
     @GetMapping(value = "/backofficeComercio/pedidos/{pedidoId}/platos", produces = {"application/json"})
     public ResponseEntity getPlatosFromItsId(@PathVariable("pedidoId") Long pedidoId) {
         return pedidoService.getPlatoFromPedido(pedidoId);
+    }
+
+    @PostMapping(value = "/backofficeComercio/comercio/{comercioId}/opcion")
+    public ResponseEntity createOpcion(@PathVariable("comercioId") Long comercioId, @RequestBody OpcionDto opcionDto) {
+        return comidasService.createOpcion(comercioId, opcionDto);
+    }
+
+    @PutMapping(value = "/backofficeComercio/comercio/opcion/{opcionId}")
+    public ResponseEntity updateOpcion(@PathVariable("opcionId") Long opcionId, @RequestBody OpcionDto opcionDto) {
+        return comidasService.updateOpcion(opcionId, opcionDto);
+    }
+
+    @GetMapping(value = "/backofficeComercio/opcion/{opcionId}")
+    public ResponseEntity getOpcionById(@PathVariable("opcionId") Long opcionId) {
+        return comidasService.getOpcionById(opcionId);
+    }
+
+    @GetMapping(value = "/backofficeComercio/opcion")
+    public ResponseEntity getAllOpciones() {
+        return comidasService.getAllOpciones();
     }
 }
