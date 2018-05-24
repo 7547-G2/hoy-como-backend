@@ -55,10 +55,12 @@ public class BackofficeComercioService {
             Comercio comercio = comercioOptional.get();
             if (comercio.getEmail().equals(givenEmail) && comercio.getPassword().equals(givenPassword)) {
                 Long matchingValidComercioId = comercio.getId();
-                TokenDto tokenDto = createToken(matchingValidComercioId);
+                String name = comercio.getNombre();
+                TokenDto tokenDto = createToken(matchingValidComercioId, name);
                 String tokenString = tokenDto.getToken();
                 comercio.setToken(tokenString);
                 comercioQuery.saveAndFlush(comercio);
+
                 String tokenDtoJson = objectMapper.writeValueAsString(tokenDto);
 
                 return ResponseEntity.ok(tokenDtoJson);
@@ -68,11 +70,12 @@ public class BackofficeComercioService {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ErrorMessage("No se encontró ningún comercio con email: " + givenEmail));
     }
 
-    private TokenDto createToken(Long matchingValidComercioId) {
+    private TokenDto createToken(Long matchingValidComercioId, String name) {
         TokenDto tokenDto = new TokenDto();
         String token = tokenGenerator.createToken();
         tokenDto.setToken(token);
         tokenDto.setComercioId(matchingValidComercioId);
+        tokenDto.setName(name);
 
         return tokenDto;
     }
