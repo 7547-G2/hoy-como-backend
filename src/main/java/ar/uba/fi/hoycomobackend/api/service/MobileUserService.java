@@ -229,7 +229,6 @@ public class MobileUserService {
                 pedido.setFacebookId(postPedidoDto.getFacebook_id());
                 pedido.getOrden().forEach(orden -> {
                     orden.setId(null);
-                    orden.setPedido(pedido);
                 });
                 pedido.setFecha(Date.from(Instant.now()).toString());
                 Pedido savedPedido = pedidoQuery.savePedido(pedido);

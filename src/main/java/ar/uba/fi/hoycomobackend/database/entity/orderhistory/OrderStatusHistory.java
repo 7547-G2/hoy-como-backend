@@ -11,9 +11,6 @@ public class OrderStatusHistory {
     private Long id;
     private String status;
     private String date;
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "order_detail_id_history")
-    private OrderDetail orderDetail;
 
     public String getStatus() {
         return status;
@@ -29,14 +26,6 @@ public class OrderStatusHistory {
 
     public void setDate(String date) {
         this.date = date;
-    }
-
-    public OrderDetail getOrderDetail() {
-        return orderDetail;
-    }
-
-    public void setOrderDetail(OrderDetail orderDetail) {
-        this.orderDetail = orderDetail;
     }
 
     public Long getId() {

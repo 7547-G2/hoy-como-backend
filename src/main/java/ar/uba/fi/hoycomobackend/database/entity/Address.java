@@ -13,10 +13,6 @@ public class Address {
     private String postalCode;
     private String floor;
     private String department;
-    @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL, mappedBy = "address")
-    private Comercio comercio;
-    @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL, mappedBy = "address")
-    private MobileUser mobileUser;
 
     public Long getId() {
         return id;
@@ -56,21 +52,5 @@ public class Address {
 
     public void setDepartment(String department) {
         this.department = department;
-    }
-
-    public Comercio getComercio() {
-        return comercio;
-    }
-
-    public void setComercio(Comercio comercio) {
-        this.comercio = comercio;
-    }
-
-    public MobileUser getMobileUser() {
-        return mobileUser;
-    }
-
-    public void setMobileUser(MobileUser mobileUser) {
-        this.mobileUser = mobileUser;
     }
 }
