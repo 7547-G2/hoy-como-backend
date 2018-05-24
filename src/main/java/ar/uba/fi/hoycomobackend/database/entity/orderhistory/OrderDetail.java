@@ -13,9 +13,9 @@ public class OrderDetail {
     private Long pedidoId;
     private Long comercioId;
     private String storeName;
-    @OneToMany(fetch = FetchType.EAGER, mappedBy = "orderDetail", cascade = CascadeType.ALL)
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private Set<OrderStatusHistory> statusHistory;
-    @OneToMany(fetch = FetchType.EAGER, mappedBy = "orderDetail", cascade = CascadeType.ALL)
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private Set<OrderContent> orderContent;
     private Double total;
 

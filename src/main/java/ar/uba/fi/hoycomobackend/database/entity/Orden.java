@@ -13,9 +13,6 @@ public class Orden {
     private Integer cantidad;
     private Double sub_total;
     private String obs;
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "pedido_id")
-    private Pedido pedido;
 
     public Long getId() {
         return id;
@@ -55,13 +52,5 @@ public class Orden {
 
     public void setObs(String obs) {
         this.obs = obs;
-    }
-
-    public Pedido getPedido() {
-        return pedido;
-    }
-
-    public void setPedido(Pedido pedido) {
-        this.pedido = pedido;
     }
 }

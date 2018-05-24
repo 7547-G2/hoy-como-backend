@@ -10,7 +10,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
-import java.util.*;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.Optional;
+import java.util.Set;
 
 @Service
 public class OrderDetailService {
@@ -33,7 +36,8 @@ public class OrderDetailService {
         orderDetail.setPedidoId(pedido.getId());
         orderDetail.setStoreName(comercioName);
         orderDetail = addOrderStatusHistory(orderDetail, pedido);
-        orderDetail = addOrderContent(orderDetail, pedido);        ;
+        orderDetail = addOrderContent(orderDetail, pedido);
+        ;
         orderDetail.setTotal(pedido.getTotal());
 
         return orderDetailRepository.saveAndFlush(orderDetail);
@@ -52,7 +56,6 @@ public class OrderDetailService {
                 orderContent.setName("nameNotFound");
             }
             orderContent.setSubtotal(orden.getSub_total());
-            orderContent.setOrderDetail(orderDetail);
             orderContentList.add(orderContent);
         });
         orderDetail.setOrderContent(orderContentList);
@@ -65,7 +68,6 @@ public class OrderDetailService {
         OrderStatusHistory orderStatusHistory = new OrderStatusHistory();
         orderStatusHistory.setDate(Date.from(Instant.now()).toString());
         orderStatusHistory.setStatus(pedido.getEstado());
-        orderStatusHistory.setOrderDetail(orderDetail);
         orderStatusHistoryList.add(orderStatusHistory);
 
         orderDetail.setStatusHistory(orderStatusHistoryList);

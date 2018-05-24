@@ -12,7 +12,7 @@ public class Pedido {
     private Long id;
     private Long facebookId;
     private Long storeId;
-    @OneToMany(fetch = FetchType.EAGER, mappedBy = "pedido", cascade = CascadeType.ALL)
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private List<Orden> orden;
     private Double total;
     private String address;

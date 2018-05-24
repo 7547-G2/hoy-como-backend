@@ -12,9 +12,6 @@ public class OrderContent {
     private String name;
     private Integer cant;
     private Double subtotal;
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "order_detail_id")
-    private OrderDetail orderDetail;
 
     public String getName() {
         return name;
@@ -38,14 +35,6 @@ public class OrderContent {
 
     public void setSubtotal(Double subtotal) {
         this.subtotal = subtotal;
-    }
-
-    public OrderDetail getOrderDetail() {
-        return orderDetail;
-    }
-
-    public void setOrderDetail(OrderDetail orderDetail) {
-        this.orderDetail = orderDetail;
     }
 
     public Long getId() {
