@@ -75,7 +75,7 @@ public class BackofficeHoyComoRestControllerIntegrationTest {
                 .andExpect(status().isPreconditionFailed())
                 .andReturn();
         String content = mvcResult.getResponse().getContentAsString();
-        assertThat(content).contains("Ya existe la llave (email)=");
+        assertThat(content).contains("(email)=(email)");
     }
 
     @Test
@@ -218,6 +218,28 @@ public class BackofficeHoyComoRestControllerIntegrationTest {
                 .andExpect(jsonPath("$[0].addressDto.department", is("department")))
                 .andExpect(jsonPath("$[0].latitud", is(12.34)))
                 .andExpect(jsonPath("$[0].longitud", is(12.34)));
+    }
+
+    @Test
+    public void createComercioThenUpdateDoesntThrowMultipleRepresentationsOfTheSameEntities() throws Exception {
+        TipoComida tipoComida = new TipoComida();
+        tipoComida.setTipo("tipo");
+        tipoComida = tipoComidaRepository.saveAndFlush(tipoComida);
+        ComercioHoyComoAddDto comercioHoyComoAddDto = createDefaultComercioHoyComoAddDto();
+        comercioHoyComoAddDto.setTipoComidaId(tipoComida.getId());
+        String comercioHoyComoDtoJson = objectMapper.writeValueAsString(comercioHoyComoAddDto);
+
+        mockMvc.perform(post("/api/comercios/")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(comercioHoyComoDtoJson))
+                .andExpect(status().isOk());
+
+        Long comercioId = comercioRepository.findAll().get(0).getId();
+
+        mockMvc.perform(put("/api/comercios/" + comercioId)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(comercioHoyComoDtoJson))
+                .andExpect(status().isOk());
     }
 
     private ResultActions createComercio() throws Exception {

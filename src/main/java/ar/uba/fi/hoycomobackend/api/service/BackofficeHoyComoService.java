@@ -116,7 +116,9 @@ public class BackofficeHoyComoService {
     }
 
     private Comercio getUpdatedComercio(ComercioHoyComoAddDto comercioHoyComoAddDto, Comercio comercio) {
+        TipoComida previousTipoComida = comercio.getTipoComida();
         modelMapper.map(comercioHoyComoAddDto, comercio);
+        comercio.setTipoComida(previousTipoComida);
         AddressDto addressDto = comercioHoyComoAddDto.getAddressDto();
         if (addressDto != null) {
             Address address = modelMapper.map(addressDto, Address.class);
@@ -128,7 +130,7 @@ public class BackofficeHoyComoService {
 
     private Comercio updateComercioWithTipoComercio(ComercioHoyComoAddDto comercioHoyComoAddDto, Comercio comercio) {
         Long tipoComidaId = comercioHoyComoAddDto.getTipoComidaId();
-        if (tipoComidaId != null) {
+        if (tipoComidaId != null && (comercio.getTipoComida() == null || !tipoComidaId.equals(comercio.getTipoComida().getId()))) {
             Optional<TipoComida> tipoComidaOptional = tipoComidaRepository.findById(tipoComidaId);
             tipoComidaOptional.ifPresent(tipoComida -> comercio.setTipoComida(tipoComida));
         }
@@ -143,6 +145,8 @@ public class BackofficeHoyComoService {
         AddressDto addressDto = comercioHoyComoAddDto.getAddressDto();
         Address address = modelMapper.map(addressDto, Address.class);
         Comercio comercio = modelMapper.map(comercioHoyComoAddDto, Comercio.class);
+        TipoComida tipoComida = tipoComidaRepository.findById(tipoComidaId).get();
+        comercio.setTipoComida(tipoComida);
         comercio.setAddress(address);
         comercio = updateComercioWithTipoComercio(comercioHoyComoAddDto, comercio);
         comercio = updateComercioWithRandomPassword(comercio);
