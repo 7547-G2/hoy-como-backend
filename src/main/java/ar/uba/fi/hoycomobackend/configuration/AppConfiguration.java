@@ -1,6 +1,7 @@
 package ar.uba.fi.hoycomobackend.configuration;
 
 import ar.uba.fi.hoycomobackend.api.service.DevelopmentMailingService;
+import ar.uba.fi.hoycomobackend.api.service.FirebaseApplication;
 import ar.uba.fi.hoycomobackend.api.service.JavaMailingService;
 import ar.uba.fi.hoycomobackend.api.service.MailingService;
 import org.modelmapper.ModelMapper;
@@ -10,6 +11,8 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 import org.springframework.mail.javamail.JavaMailSender;
+
+import java.io.IOException;
 
 @Configuration
 public class AppConfiguration {
@@ -36,6 +39,11 @@ public class AppConfiguration {
     public MailingService productionMailingService(JavaMailSender javaMailSender) {
         MailingService javaMailingService = new JavaMailingService(javaMailSender);
         return javaMailingService;
+    }
+
+    @Bean
+    public FirebaseApplication getFirebaseApplication() throws IOException {
+        return new FirebaseApplication();
     }
 
 }
