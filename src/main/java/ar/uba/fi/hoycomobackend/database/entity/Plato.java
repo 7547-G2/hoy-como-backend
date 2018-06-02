@@ -4,6 +4,8 @@ import org.hibernate.annotations.DynamicInsert;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @DynamicInsert
@@ -26,6 +28,8 @@ public class Plato {
     private Comercio comercio;
     private Long categoria;
     private Integer orden;
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    private Set<Opcion> opciones = new HashSet<>();
 
     public Long getId() {
         return id;
@@ -89,5 +93,13 @@ public class Plato {
 
     public void setOrden(Integer orden) {
         this.orden = orden;
+    }
+
+    public Set<Opcion> getOpciones() {
+        return opciones;
+    }
+
+    public void setOpciones(Set<Opcion> opciones) {
+        this.opciones = opciones;
     }
 }
