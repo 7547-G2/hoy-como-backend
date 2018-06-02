@@ -198,4 +198,10 @@ public class ComidasService {
 
         return ResponseEntity.ok(opcionList);
     }
+
+    public ResponseEntity getAllOpcionesFromComercioById(Long comercioId) {
+        List<Opcion> opcionList = opcionRepository.findAllByComercioIdIs(comercioId);
+
+        return ResponseEntity.ok(opcionList);
+    }
 }
