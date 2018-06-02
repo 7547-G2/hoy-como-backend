@@ -83,9 +83,24 @@ public class BackofficeComercioController {
         return comidasService.getCategoriaComidaFromMenuByComercioId(comercioId);
     }
 
-    @RequestMapping(value = "/backofficeComercio/{comercioId}/categoriasComida", method = {RequestMethod.POST, RequestMethod.PUT})
+    @PostMapping(value = "/backofficeComercio/{comercioId}/categoriasComida")
     public ResponseEntity setCategoriaComidaFromGivenComercioMenu(@PathVariable("comercioId") Long comercioId, @RequestBody String tipoComida) {
         return comidasService.setCategoriaComidaFromMenuByComercioId(comercioId, tipoComida);
+    }
+
+    @PutMapping(value = "/backofficeComercio/{comercioId}/categoriasComida/{categoriaComidaId}")
+    public ResponseEntity updateCategoriaComidaFromGivenComercioMenu(@PathVariable("categoriaComidaId") Long categoriaComidaId, @RequestBody UpdateCategoriaComidaDto updateCategoriaComidaDto) {
+        return comidasService.updateCategoriaComidaById(categoriaComidaId, updateCategoriaComidaDto);
+    }
+
+    @RequestMapping(value = "/backofficeComercio/{comercioId}/categoriasComida/{categoriaComidaId}/estado",  method = {RequestMethod.POST, RequestMethod.PUT})
+    public ResponseEntity deactivateCategoriaComidaById(@PathVariable("categoriaComidaId") Long categoriaComidaId) {
+        return comidasService.deactivateCategoriaComidaById(categoriaComidaId);
+    }
+
+    @RequestMapping(value = "/backofficeComercio/{comercioId}/categoriasComida/swap",  method = {RequestMethod.POST, RequestMethod.PUT})
+    public ResponseEntity deactivateCategoriaComidaById(@RequestBody SwapOrdersDto swapOrdersDto) {
+        return comidasService.swapCategoriaComidaById(swapOrdersDto);
     }
 
     @GetMapping(value = "/backofficeComercio/{comercioId}/pedidos", produces = {"application/json"})
