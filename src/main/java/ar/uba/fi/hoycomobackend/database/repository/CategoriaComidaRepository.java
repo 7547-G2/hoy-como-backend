@@ -10,6 +10,5 @@ import java.util.Optional;
 @Repository
 public interface CategoriaComidaRepository extends JpaRepository<CategoriaComida, Long> {
 
-    Optional<CategoriaComida> getByComercioId(Long comercioId);
     List<CategoriaComida> getAllByComercioIdIs(Long comercioId);
 }

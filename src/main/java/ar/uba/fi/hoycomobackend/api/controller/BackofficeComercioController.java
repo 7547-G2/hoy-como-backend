@@ -2,7 +2,6 @@ package ar.uba.fi.hoycomobackend.api.controller;
 
 import ar.uba.fi.hoycomobackend.api.dto.*;
 import ar.uba.fi.hoycomobackend.api.service.*;
-import ar.uba.fi.hoycomobackend.api.service.pushnotification.FirebaseApplication;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -92,8 +91,8 @@ public class BackofficeComercioController {
     }
 
     @RequestMapping(value = "/backofficeComercio/{comercioId}/categoriasComida/{categoriaComidaId}/estado",  method = {RequestMethod.POST, RequestMethod.PUT})
-    public ResponseEntity deactivateCategoriaComidaById(@PathVariable("categoriaComidaId") Long categoriaComidaId) {
-        return comidasService.deactivateCategoriaComidaById(categoriaComidaId);
+    public ResponseEntity changeActiveStateOfCategoriaComidaById(@PathVariable("categoriaComidaId") Long categoriaComidaId) {
+        return comidasService.changeActiveStateOfCategoriaComidaById(categoriaComidaId);
     }
 
     @RequestMapping(value = "/backofficeComercio/{comercioId}/categoriasComida/swap",  method = {RequestMethod.POST, RequestMethod.PUT})

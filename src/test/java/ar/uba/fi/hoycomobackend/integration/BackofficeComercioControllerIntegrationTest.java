@@ -252,7 +252,9 @@ public class BackofficeComercioControllerIntegrationTest {
                 .andExpect(status().isOk())
                 .andExpect(content()
                         .contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$.tipo", is(commerceType)));
+                .andExpect(jsonPath("$[0].tipo", is(commerceType)))
+                .andExpect(jsonPath("$[0].orderPriority", is(1)))
+                .andExpect(jsonPath("$[0].active", is(true)));
     }
 
     @Test
