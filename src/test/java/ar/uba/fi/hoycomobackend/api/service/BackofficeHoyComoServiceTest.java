@@ -5,6 +5,7 @@ import ar.uba.fi.hoycomobackend.api.dto.TipoComidaDto;
 import ar.uba.fi.hoycomobackend.database.entity.Comercio;
 import ar.uba.fi.hoycomobackend.database.entity.TipoComida;
 import ar.uba.fi.hoycomobackend.database.queries.ComercioQuery;
+import ar.uba.fi.hoycomobackend.database.queries.UsuarioQuery;
 import ar.uba.fi.hoycomobackend.database.repository.TipoComidaRepository;
 import org.junit.Before;
 import org.junit.Test;
@@ -23,10 +24,11 @@ public class BackofficeHoyComoServiceTest {
 
     private static String COMERCIO_NOMBRE = "nombre";
     private ComercioQuery comercioQuery = Mockito.mock(ComercioQuery.class);
+    private UsuarioQuery usuarioQuery = Mockito.mock(UsuarioQuery.class);
     private ModelMapper modelMapper = Mockito.mock(ModelMapper.class);
     private MailingService mailingService = Mockito.mock(MailingService.class);
     private TipoComidaRepository tipoComidaRepository = Mockito.mock(TipoComidaRepository.class);
-    private BackofficeHoyComoService backofficeHoyComoService = new BackofficeHoyComoService(comercioQuery, modelMapper, mailingService, tipoComidaRepository);
+    private BackofficeHoyComoService backofficeHoyComoService = new BackofficeHoyComoService(comercioQuery, usuarioQuery, modelMapper, mailingService, tipoComidaRepository);
 
     @Before
     public void setUp() {

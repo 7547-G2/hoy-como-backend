@@ -5,6 +5,7 @@ import ar.uba.fi.hoycomobackend.api.dto.ComercioHoyComoAddDto;
 import ar.uba.fi.hoycomobackend.api.dto.ComercioHoyComoDto;
 import ar.uba.fi.hoycomobackend.database.entity.*;
 import ar.uba.fi.hoycomobackend.database.queries.ComercioQuery;
+import ar.uba.fi.hoycomobackend.database.queries.UsuarioQuery;
 import ar.uba.fi.hoycomobackend.database.repository.TipoComidaRepository;
 import org.apache.commons.lang.RandomStringUtils;
 import org.modelmapper.ModelMapper;
@@ -29,13 +30,15 @@ public class BackofficeHoyComoService {
     private static Logger LOGGER = LoggerFactory.getLogger(BackofficeHoyComoService.class);
 
     private ComercioQuery comercioQuery;
+    private UsuarioQuery usuarioQuery;
     private ModelMapper modelMapper;
     private MailingService mailingService;
     private TipoComidaRepository tipoComidaRepository;
 
     @Autowired
-    public BackofficeHoyComoService(ComercioQuery comercioQuery, ModelMapper modelMapper, MailingService mailingService, TipoComidaRepository tipoComidaRepository) {
+    public BackofficeHoyComoService(ComercioQuery comercioQuery, UsuarioQuery usuarioQuery, ModelMapper modelMapper, MailingService mailingService, TipoComidaRepository tipoComidaRepository) {
         this.comercioQuery = comercioQuery;
+        this.usuarioQuery = usuarioQuery;
         this.modelMapper = modelMapper;
         this.mailingService = mailingService;
         this.tipoComidaRepository = tipoComidaRepository;
@@ -185,4 +188,23 @@ public class BackofficeHoyComoService {
     }
 
 
+    public ResponseEntity getUsuarios(String search) {
+        List<MobileUser> mobileUserList = usuarioQuery.findBySearchQuery(search);
+
+        return ResponseEntity.ok(mobileUserList);
+    }
+
+    public ResponseEntity changeStateOfUserById(Long mobileUserId) {
+        Optional<MobileUser> mobileUserOptional = usuarioQuery.findById(mobileUserId);
+        if (mobileUserOptional.isPresent()) {
+            MobileUser mobileUser = mobileUserOptional.get();
+            MobileUserState mobileUserState = mobileUser.getState();
+            if(MobileUserState.AUTHORIZED.equals(mobileUserState))
+                mobileUser.setState(MobileUserState.UNAUTHORIZED);
+            else mobileUser.setState(MobileUserState.AUTHORIZED);
+
+            return ResponseEntity.ok("Estado cambiado al usuario a: " + mobileUser.getState().toString());
+        }
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new Error("No fue encontrado el usuario con ese ID"));
+    }
 }
