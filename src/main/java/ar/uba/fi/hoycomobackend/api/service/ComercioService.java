@@ -137,6 +137,6 @@ public class ComercioService {
                 .build();
 
         String response = pushNotificationMessage.sendMessage(message);
-        LOGGER.info("Message puhs uri: " + response);
+        LOGGER.info("Message push uri: " + response);
     }
 }

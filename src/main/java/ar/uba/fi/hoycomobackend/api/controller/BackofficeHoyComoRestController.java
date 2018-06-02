@@ -34,4 +34,16 @@ public class BackofficeHoyComoRestController {
     public ResponseEntity updateComercio(@PathVariable("comercioId") Long comercioId, @RequestBody ComercioHoyComoAddDto comercioHoyComoAddDto) {
         return backofficeHoyComoService.updateComercio(comercioId, comercioHoyComoAddDto);
     }
+
+    @GetMapping(value = {"/comercios/mobileUsers"}, produces = {"application/json"})
+    public ResponseEntity getMobileUsers(@RequestParam(value = "search", required = false) String search) {
+        // Similar ?search=facebookId:0, state:0
+        //state 0 activado, 1 desactivado
+        return backofficeHoyComoService.getUsuarios(search);
+    }
+
+    @PutMapping(value = {"/comercios/mobileUser/{mobileUserId}/state"})
+    public ResponseEntity modifyStateOfUser(@PathVariable("mobileUserId") Long mobileUserId) {
+        return backofficeHoyComoService.changeStateOfUserById(mobileUserId);
+    }
 }
