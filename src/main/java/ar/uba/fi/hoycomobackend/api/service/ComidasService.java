@@ -83,11 +83,8 @@ public class ComidasService {
 
     public ResponseEntity getCategoriaComidaFromMenuByComercioId(Long comercioId) {
         try {
-            Optional<CategoriaComida> categoriaComidaOptional = categoriaComidaRepository.getByComercioId(comercioId);
-            if (categoriaComidaOptional.isPresent())
-                return ResponseEntity.ok(categoriaComidaOptional.get());
-            else
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorMessage("No se encontró comercio"));
+            List<CategoriaComida> categoriaComidaList = categoriaComidaRepository.getAllByComercioIdIs(comercioId);
+            return ResponseEntity.ok(categoriaComidaList);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorMessage(e.getMessage()));
         }
@@ -127,14 +124,15 @@ public class ComidasService {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ErrorMessage("Id de categoría de comida no encontrado"));
     }
 
-    public ResponseEntity deactivateCategoriaComidaById(Long categoriaComidaId) {
+    public ResponseEntity changeActiveStateOfCategoriaComidaById(Long categoriaComidaId) {
         Optional<CategoriaComida> categoriaComidaOptional = categoriaComidaRepository.findById(categoriaComidaId);
         if (categoriaComidaOptional.isPresent()) {
             CategoriaComida categoriaComida = categoriaComidaOptional.get();
-            categoriaComida.setActive(false);
+            boolean currentActiveStatus = categoriaComida.getActive();
+            categoriaComida.setActive(!currentActiveStatus);
             try {
                 categoriaComidaRepository.saveAndFlush(categoriaComida);
-                return ResponseEntity.ok("Categoría comida desactivada exitosamente");
+                return ResponseEntity.ok(new JsonMessage("Categoría comida estado esActivo: " + !currentActiveStatus));
             } catch (Exception e) {
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorMessage(e.getMessage()));
             }

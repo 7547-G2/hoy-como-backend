@@ -1,9 +1,9 @@
 package ar.uba.fi.hoycomobackend.api.dto;
 
-public class Message {
+public class JsonMessage {
     private String message;
 
-    public Message(String message) {
+    public JsonMessage(String message) {
         this.message = message;
     }
 
