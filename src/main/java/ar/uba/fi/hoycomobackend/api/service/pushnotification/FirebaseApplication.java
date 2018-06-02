@@ -30,20 +30,11 @@ public class FirebaseApplication implements PushNotificationMessage {
         }
     }
 
-    public void sendMessage(Message message) {
-        String topic = "/topics/allDevices";
-
-        Message message2 = Message.builder()
-                .putData("score", "850")
-                .putData("time", "2:45")
-                .setTopic(topic)
-                .build();
-
+    public String sendMessage(Message message) {
         try {
-            FirebaseMessaging.getInstance().send(message2);
+            return FirebaseMessaging.getInstance().send(message);
         } catch (FirebaseMessagingException e) {
-            e.printStackTrace();
+            return e.getErrorCode();
         }
-
     }
 }

@@ -42,6 +42,7 @@ public class MenuDisplayer {
         MenuWithLogoDto menuWithLogoDto = new MenuWithLogoDto();
         menuWithLogoDto.setImagen_comercio(comercio.getImagenLogo());
         menuWithLogoDto.setMenu(menuList);
+        menuWithLogoDto.setDescuentoGlobal(comercio.getDescuento());
 
         return ResponseEntity.ok(menuWithLogoDto);
     }
