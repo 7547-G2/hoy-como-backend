@@ -12,6 +12,8 @@ public class CategoriaComida {
     private Long id;
     private String tipo;
     private Long comercioId;
+    private Boolean isActive;
+    private Integer orderPriority;
 
     public Long getId() {
         return id;
@@ -35,5 +37,21 @@ public class CategoriaComida {
 
     public void setComercioId(Long comercioId) {
         this.comercioId = comercioId;
+    }
+
+    public Boolean getActive() {
+        return isActive;
+    }
+
+    public void setActive(Boolean active) {
+        isActive = active;
+    }
+
+    public Integer getOrderPriority() {
+        return orderPriority;
+    }
+
+    public void setOrderPriority(Integer orderPriority) {
+        this.orderPriority = orderPriority;
     }
 }
