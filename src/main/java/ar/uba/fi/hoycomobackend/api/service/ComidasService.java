@@ -1,14 +1,13 @@
 package ar.uba.fi.hoycomobackend.api.service;
 
-import ar.uba.fi.hoycomobackend.api.dto.ErrorMessage;
-import ar.uba.fi.hoycomobackend.api.dto.OpcionDto;
-import ar.uba.fi.hoycomobackend.api.dto.TipoComidaDto;
+import ar.uba.fi.hoycomobackend.api.dto.*;
 import ar.uba.fi.hoycomobackend.database.entity.CategoriaComida;
 import ar.uba.fi.hoycomobackend.database.entity.Opcion;
 import ar.uba.fi.hoycomobackend.database.entity.TipoComida;
 import ar.uba.fi.hoycomobackend.database.queries.TipoComidaQuery;
 import ar.uba.fi.hoycomobackend.database.repository.CategoriaComidaRepository;
 import ar.uba.fi.hoycomobackend.database.repository.OpcionRepository;
+import com.netflix.ribbon.proxy.annotation.Http;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -98,9 +97,64 @@ public class ComidasService {
         CategoriaComida categoriaComida = new CategoriaComida();
         categoriaComida.setTipo(tipoComida);
         categoriaComida.setComercioId(comercioId);
+        categoriaComida.setActive(true);
         try {
+            Integer totalCategoriesOfComercio = categoriaComidaRepository.getAllByComercioIdIs(comercioId).size();
+            categoriaComida.setOrderPriority(totalCategoriesOfComercio + 1);
             categoriaComida = categoriaComidaRepository.saveAndFlush(categoriaComida);
             return ResponseEntity.ok(categoriaComida);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorMessage(e.getMessage()));
+        }
+    }
+
+    public ResponseEntity updateCategoriaComidaById(Long categoriaComidaId, UpdateCategoriaComidaDto updateCategoriaComidaDto) {
+        Optional<CategoriaComida> categoriaComidaOptional = categoriaComidaRepository.findById(categoriaComidaId);
+        if (categoriaComidaOptional.isPresent()) {
+            CategoriaComida categoriaComida = categoriaComidaOptional.get();
+            if(updateCategoriaComidaDto.getEstaActivo() != null)
+                categoriaComida.setActive(updateCategoriaComidaDto.getEstaActivo());
+            if(updateCategoriaComidaDto.getNombreCategoria() != null)
+                categoriaComida.setTipo(updateCategoriaComidaDto.getNombreCategoria());
+
+            try {
+                categoriaComidaRepository.saveAndFlush(categoriaComida);
+                return ResponseEntity.ok("Categoría comida actualizado exitosamente");
+            } catch (Exception e) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorMessage(e.getMessage()));
+            }
+        } else
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ErrorMessage("Id de categoría de comida no encontrado"));
+    }
+
+    public ResponseEntity deactivateCategoriaComidaById(Long categoriaComidaId) {
+        Optional<CategoriaComida> categoriaComidaOptional = categoriaComidaRepository.findById(categoriaComidaId);
+        if (categoriaComidaOptional.isPresent()) {
+            CategoriaComida categoriaComida = categoriaComidaOptional.get();
+            categoriaComida.setActive(false);
+            try {
+                categoriaComidaRepository.saveAndFlush(categoriaComida);
+                return ResponseEntity.ok("Categoría comida desactivada exitosamente");
+            } catch (Exception e) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorMessage(e.getMessage()));
+            }
+        } else
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ErrorMessage("Id de categoría de comida no encontrado"));
+    }
+
+    public ResponseEntity swapCategoriaComidaById(SwapOrdersDto swapOrdersDto) {
+        try {
+            Long firstCategoriaComidaId = swapOrdersDto.getFirstCategoriaComidaId();
+            Long secondCategoriaComidaId = swapOrdersDto.getSecondCategoriaComidaId();
+            CategoriaComida firstCategoriaComida = categoriaComidaRepository.findById(firstCategoriaComidaId).get();
+            CategoriaComida secondCategoriaComida = categoriaComidaRepository.findById(secondCategoriaComidaId).get();
+
+            firstCategoriaComida.setOrderPriority(secondCategoriaComida.getOrderPriority());
+            secondCategoriaComida.setOrderPriority(firstCategoriaComida.getOrderPriority());
+
+            categoriaComidaRepository.saveAndFlush(firstCategoriaComida);
+            categoriaComidaRepository.saveAndFlush(secondCategoriaComida);
+            return ResponseEntity.ok("Orden de Categoría comida cambiada exitosamente");
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorMessage(e.getMessage()));
         }
