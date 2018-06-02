@@ -289,6 +289,15 @@ public class BackofficeComercioControllerIntegrationTest {
                 .andExpect(jsonPath("$.nombre", is("nombre")))
                 .andExpect(jsonPath("$.precio", is(12.34)))
                 .andExpect(jsonPath("$.state", is("anotherState")));
+
+        mockMvc.perform(get("/api/backofficeComercio/1/opciones")
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(content()
+                        .contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$[0].nombre", is("nombre")))
+                .andExpect(jsonPath("$[0].precio", is(12.34)))
+                .andExpect(jsonPath("$[0].state", is("anotherState")));
     }
 
     private PlatoDto createTestPlatoDto() {

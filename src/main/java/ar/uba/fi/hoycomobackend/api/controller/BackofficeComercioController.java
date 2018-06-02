@@ -134,4 +134,9 @@ public class BackofficeComercioController {
     public ResponseEntity getAllOpciones() {
         return comidasService.getAllOpciones();
     }
+
+    @GetMapping(value = "/backofficeComercio/{comercioId}/opciones")
+    public ResponseEntity getAllOpcionesFromComercio(@PathVariable("comercioId") Long comercioId) {
+        return comidasService.getAllOpcionesFromComercioById(comercioId);
+    }
 }
