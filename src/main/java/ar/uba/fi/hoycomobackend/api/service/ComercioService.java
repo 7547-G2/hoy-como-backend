@@ -4,11 +4,13 @@ import ar.uba.fi.hoycomobackend.api.dto.ErrorMessage;
 import ar.uba.fi.hoycomobackend.api.dto.MessageWithId;
 import ar.uba.fi.hoycomobackend.api.dto.PasswordUpdateDto;
 import ar.uba.fi.hoycomobackend.api.dto.PedidoOfComercioDto;
+import ar.uba.fi.hoycomobackend.api.service.pushnotification.PushNotificationMessage;
 import ar.uba.fi.hoycomobackend.database.entity.Comercio;
 import ar.uba.fi.hoycomobackend.database.entity.Pedido;
 import ar.uba.fi.hoycomobackend.database.entity.TipoComida;
 import ar.uba.fi.hoycomobackend.database.queries.ComercioQuery;
 import ar.uba.fi.hoycomobackend.database.queries.PedidoQuery;
+import com.google.firebase.messaging.Message;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -25,12 +27,14 @@ public class ComercioService {
     private ComercioQuery comercioQuery;
     private PedidoQuery pedidoQuery;
     private OrderDetailService orderDetailService;
+    private PushNotificationMessage pushNotificationMessage;
 
     @Autowired
-    public ComercioService(ComercioQuery comercioQuery, PedidoQuery pedidoQuery, OrderDetailService orderDetailService) {
+    public ComercioService(ComercioQuery comercioQuery, PedidoQuery pedidoQuery, OrderDetailService orderDetailService, PushNotificationMessage pushNotificationMessage) {
         this.comercioQuery = comercioQuery;
         this.pedidoQuery = pedidoQuery;
         this.orderDetailService = orderDetailService;
+        this.pushNotificationMessage = pushNotificationMessage;
     }
 
     public ResponseEntity updatePassword(PasswordUpdateDto passwordUpdateDto) {
@@ -94,10 +98,24 @@ public class ComercioService {
             Pedido pedido = pedidoOptional.get();
             pedido.setEstado(estado);
             pedido = pedidoQuery.savePedido(pedido);
+            Comercio comercio = comercioQuery.getComercioById(pedido.getStoreId()).get();
             orderDetailService.update(pedido);
+            sendMessageToAndroidDevice(estado, pedidoId, comercio.getNombre());
 
             return ResponseEntity.ok(pedido);
         } else
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorMessage("No se encontró el pedido solicitado"));
+    }
+
+    private void sendMessageToAndroidDevice(String estado, Long pedidoId, String storeName) {
+
+        Message message = Message.builder()
+                .putData("title", "Hoy Como")
+                .putData("detail", storeName + ": su pedido fue " + estado)
+                .putData("order-id", pedidoId.toString())
+                .setTopic("/topics/allDevices")
+                .build();
+
+        pushNotificationMessage.sendMessage(message);
     }
 }

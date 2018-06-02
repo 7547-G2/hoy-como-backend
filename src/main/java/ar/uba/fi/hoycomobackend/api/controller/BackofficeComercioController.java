@@ -2,11 +2,8 @@ package ar.uba.fi.hoycomobackend.api.controller;
 
 import ar.uba.fi.hoycomobackend.api.dto.*;
 import ar.uba.fi.hoycomobackend.api.service.*;
+import ar.uba.fi.hoycomobackend.api.service.pushnotification.FirebaseApplication;
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.google.firebase.FirebaseApp;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.messaging.Message;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -20,15 +17,13 @@ public class BackofficeComercioController {
     private ComercioService comercioService;
     private ComidasService comidasService;
     private PedidoService pedidoService;
-    private FirebaseApplication firebaseApplication;
 
     @Autowired
-    public BackofficeComercioController(BackofficeComercioService backofficeComercioSessionService, ComercioService comercioService, ComidasService comidasService, PedidoService pedidoService, FirebaseApplication firebaseApplication) {
+    public BackofficeComercioController(BackofficeComercioService backofficeComercioSessionService, ComercioService comercioService, ComidasService comidasService, PedidoService pedidoService) {
         this.backofficeComercioService = backofficeComercioSessionService;
         this.comercioService = comercioService;
         this.comidasService = comidasService;
         this.pedidoService = pedidoService;
-        this.firebaseApplication = firebaseApplication;
     }
 
     @PostMapping(value = "/backofficeComercio/session", produces = {"application/json"})
@@ -140,9 +135,4 @@ public class BackofficeComercioController {
     public ResponseEntity getAllOpciones() {
         return comidasService.getAllOpciones();
     }
-
-    @GetMapping( value = "/test")
-    public void firebaseTest() {
-        firebaseApplication.sendMessage();
-        }
 }
