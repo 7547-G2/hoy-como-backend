@@ -26,11 +26,11 @@ public class Comercio {
     @JoinColumn(name = "tipo_comida_id")
     private TipoComida tipoComida;
     private String token;
-    private Integer leadTime;
+    private Integer leadTime = 0;
     private Float precioMinimo;
     private Float precioMaximo;
     @Column(columnDefinition = "INTEGER default 0")
-    private Integer totalPedidos;
+    private Integer totalPedidos = 0;
     @Column(columnDefinition = "float(2) default 1.00")
     private Float rating;
     @NotNull
@@ -48,6 +48,9 @@ public class Comercio {
     private Double longitud;
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "comercio", cascade = CascadeType.ALL)
     private Set<Plato> platos;
+    private Integer descuento = 0;
+    @Column(columnDefinition = "text default ''")
+    private String imagenComercio;
 
     public Long getId() {
         return id;
@@ -199,5 +202,21 @@ public class Comercio {
 
     public void setLongitud(Double longitud) {
         this.longitud = longitud;
+    }
+
+    public Integer getDescuento() {
+        return descuento;
+    }
+
+    public void setDescuento(Integer descuento) {
+        this.descuento = descuento;
+    }
+
+    public String getImagenComercio() {
+        return imagenComercio;
+    }
+
+    public void setImagenComercio(String imagenComercio) {
+        this.imagenComercio = imagenComercio;
     }
 }

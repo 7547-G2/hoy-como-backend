@@ -12,6 +12,8 @@ public class ComercioHoyComoAddDto {
     private Long tipoComidaId;
     private Double latitud;
     private Double longitud;
+    private Integer descuento;
+    private String imagenComercio;
 
     public Long getId() {
         return id;
@@ -99,5 +101,21 @@ public class ComercioHoyComoAddDto {
 
     public void setLongitud(Double longitud) {
         this.longitud = longitud;
+    }
+
+    public Integer getDescuento() {
+        return descuento;
+    }
+
+    public void setDescuento(Integer descuento) {
+        this.descuento = descuento;
+    }
+
+    public String getImagenComercio() {
+        return imagenComercio;
+    }
+
+    public void setImagenComercio(String imagenComercio) {
+        this.imagenComercio = imagenComercio;
     }
 }

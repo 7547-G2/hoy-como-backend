@@ -4,6 +4,7 @@ import com.google.firebase.messaging.Message;
 
 public class DevelopmentPushNotification implements PushNotificationMessage {
     @Override
-    public void sendMessage(Message message) {
+    public String sendMessage(Message message) {
+        return "";
     }
 }

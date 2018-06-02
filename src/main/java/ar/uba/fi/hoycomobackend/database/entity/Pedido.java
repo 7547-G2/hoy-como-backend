@@ -25,6 +25,8 @@ public class Pedido {
     private String codigoTC;
     private String estado = "Ingresado";
     private String fecha;
+    private Long startTime;
+    private Long endTime;
 
     public Long getId() {
         return id;
@@ -144,5 +146,21 @@ public class Pedido {
 
     public void setFecha(String fecha) {
         this.fecha = fecha;
+    }
+
+    public Long getStartTime() {
+        return startTime;
+    }
+
+    public void setStartTime(Long startTime) {
+        this.startTime = startTime;
+    }
+
+    public Long getEndTime() {
+        return endTime;
+    }
+
+    public void setEndTime(Long endTime) {
+        this.endTime = endTime;
     }
 }
