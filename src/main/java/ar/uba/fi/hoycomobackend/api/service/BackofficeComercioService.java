@@ -3,25 +3,20 @@ package ar.uba.fi.hoycomobackend.api.service;
 import ar.uba.fi.hoycomobackend.api.businesslogic.ComercioPriceUpdater;
 import ar.uba.fi.hoycomobackend.api.businesslogic.TokenGenerator;
 import ar.uba.fi.hoycomobackend.api.dto.*;
-import ar.uba.fi.hoycomobackend.database.entity.CategoriaComida;
-import ar.uba.fi.hoycomobackend.database.entity.Comercio;
-import ar.uba.fi.hoycomobackend.database.entity.Plato;
-import ar.uba.fi.hoycomobackend.database.entity.PlatoState;
+import ar.uba.fi.hoycomobackend.database.entity.*;
 import ar.uba.fi.hoycomobackend.database.queries.ComercioQuery;
 import ar.uba.fi.hoycomobackend.database.repository.CategoriaComidaRepository;
+import ar.uba.fi.hoycomobackend.database.repository.OpcionRepository;
 import ar.uba.fi.hoycomobackend.database.repository.PlatoRepository;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.modelmapper.ModelMapper;
-import org.modelmapper.TypeToken;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import java.lang.reflect.Type;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -34,9 +29,10 @@ public class BackofficeComercioService {
     private ObjectMapper objectMapper;
     private TokenGenerator tokenGenerator;
     private ComercioPriceUpdater comercioPriceUpdater;
+    private OpcionRepository opcionRepository;
 
     @Autowired
-    public BackofficeComercioService(ComercioQuery comercioQuery, PlatoRepository platoRepository, CategoriaComidaRepository categoriaComidaRepository, ModelMapper modelMapper, ObjectMapper objectMapper, TokenGenerator tokenGenerator, ComercioPriceUpdater comercioPriceUpdater) {
+    public BackofficeComercioService(ComercioQuery comercioQuery, PlatoRepository platoRepository, CategoriaComidaRepository categoriaComidaRepository, ModelMapper modelMapper, ObjectMapper objectMapper, TokenGenerator tokenGenerator, ComercioPriceUpdater comercioPriceUpdater, OpcionRepository opcionRepository) {
         this.comercioQuery = comercioQuery;
         this.platoRepository = platoRepository;
         this.categoriaComidaRepository = categoriaComidaRepository;
@@ -44,6 +40,7 @@ public class BackofficeComercioService {
         this.objectMapper = objectMapper;
         this.tokenGenerator = tokenGenerator;
         this.comercioPriceUpdater = comercioPriceUpdater;
+        this.opcionRepository = opcionRepository;
     }
 
     public ResponseEntity getTokenFromSession(BackofficeComercioSessionDto backofficeComercioSessionDto) throws JsonProcessingException {
@@ -87,15 +84,33 @@ public class BackofficeComercioService {
             Comercio comercio = comercioOptional.get();
             Set<Plato> platoSet = comercio.getPlatos();
             platoSet = platoSet.stream().filter(plato -> !PlatoState.BORRADO.equals(plato.getState())).collect(Collectors.toSet());
-            Type setType = new TypeToken<Set<PlatoGetDto>>() {
-            }.getType();
-            Set<PlatoGetDto> platoDtoSet = modelMapper.map(platoSet, setType);
+            Set<PlatoGetDto> platoDtoSet = mapPlatoSetToPlatoDtoSet(platoSet);
             platoDtoSet = fillCategoryDescriptionToPlatoDtoSet(platoDtoSet);
             String response = objectMapper.writeValueAsString(platoDtoSet);
 
             return ResponseEntity.ok(response);
         } else
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ErrorMessage("No se encontró ningún comercio con id: " + comercioId));
+    }
+
+    private Set<PlatoGetDto> mapPlatoSetToPlatoDtoSet(Set<Plato> platoSet) {
+        Set<PlatoGetDto> platoDtoSet = new HashSet<>();
+        for (Plato plato :
+                platoSet) {
+            PlatoGetDto platoGetDto = new PlatoGetDto();
+            platoGetDto.setCategoria(plato.getCategoria());
+            platoGetDto.setId(plato.getId());
+            platoGetDto.setImagen(plato.getImagen());
+            platoGetDto.setNombre(plato.getNombre());
+            platoGetDto.setOrden(plato.getOrden());
+            platoGetDto.setPrecio(plato.getPrecio());
+            platoGetDto.setState(plato.getState());
+            List<Long> opcionalIds  = plato.getOpciones().stream().map(opcion -> opcion.getId()).collect(Collectors.toList());
+            platoGetDto.setOpcionalIds(opcionalIds);
+            platoDtoSet.add(platoGetDto);
+        }
+
+        return platoDtoSet;
     }
 
     private Set<PlatoGetDto> fillCategoryDescriptionToPlatoDtoSet(Set<PlatoGetDto> platoDtoSet) {
@@ -157,6 +172,7 @@ public class BackofficeComercioService {
                             mapToInt(plate -> plate.getOrden()).max().orElse(0);
                     plato.setOrden(maxOrderPlato + 1);
                 }
+                plato = modifyAssociatedOpcionales(plato, platoUpdateDto);
                 String response = objectMapper.writeValueAsString(platoUpdateDto);
 
                 platoRepository.saveAndFlush(plato);
@@ -167,6 +183,20 @@ public class BackofficeComercioService {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ErrorMessage("No se encontró ningún plato con id: " + platoId));
         } else
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ErrorMessage("No se encontró ningún comercio con id: " + comercioId));
+    }
+
+    private Plato modifyAssociatedOpcionales(Plato plato, PlatoUpdateDto platoUpdateDto) {
+        if (platoUpdateDto.getOpcionalIds() != null) {
+            List<Long> opcionalIds = platoUpdateDto.getOpcionalIds();
+            Set<Opcion> opcionList = new HashSet<>();
+            for (Long opcionalId :
+                    opcionalIds) {
+                Opcion opcion = opcionRepository.getOne(opcionalId);
+                opcionList.add(opcion);
+            }
+            plato.setOpciones(opcionList);
+        }
+            return plato;
     }
 
     private boolean shouldChangeOrden(Long olderCategory, Long categoria) {

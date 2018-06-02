@@ -2,6 +2,8 @@ package ar.uba.fi.hoycomobackend.api.dto;
 
 import ar.uba.fi.hoycomobackend.database.entity.PlatoState;
 
+import java.util.List;
+
 public class PlatoUpdateDto {
     private Long id;
     private String nombre;
@@ -10,6 +12,7 @@ public class PlatoUpdateDto {
     private Float precio;
     private Long categoria;
     private Integer orden;
+    private List<Long> opcionalIds;
 
     public String getNombre() {
         return nombre;
@@ -65,5 +68,13 @@ public class PlatoUpdateDto {
 
     public void setOrden(Integer orden) {
         this.orden = orden;
+    }
+
+    public List<Long> getOpcionalIds() {
+        return opcionalIds;
+    }
+
+    public void setOpcionalIds(List<Long> opcionalIds) {
+        this.opcionalIds = opcionalIds;
     }
 }
