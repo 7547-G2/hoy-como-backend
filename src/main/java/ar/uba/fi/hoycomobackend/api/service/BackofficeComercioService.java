@@ -57,6 +57,8 @@ public class BackofficeComercioService {
                 Long matchingValidComercioId = comercio.getId();
                 String name = comercio.getNombre();
                 TokenDto tokenDto = createToken(matchingValidComercioId, name);
+                tokenDto.setEstadoComercio(comercio.getEstado());
+                tokenDto.setMotivoDeshabilitacion(comercio.getMotivoDeshabilitacion());
                 String tokenString = tokenDto.getToken();
                 comercio.setToken(tokenString);
                 comercioQuery.saveAndFlush(comercio);

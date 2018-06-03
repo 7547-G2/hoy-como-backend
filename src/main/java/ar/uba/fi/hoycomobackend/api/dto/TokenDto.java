@@ -5,6 +5,8 @@ public class TokenDto {
     private Long comercioId;
     private String token;
     private String name;
+    private String estadoComercio;
+    private String motivoDeshabilitacion;
 
     public String getToken() {
         return token;
@@ -28,5 +30,21 @@ public class TokenDto {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getEstadoComercio() {
+        return estadoComercio;
+    }
+
+    public void setEstadoComercio(String estadoComercio) {
+        this.estadoComercio = estadoComercio;
+    }
+
+    public String getMotivoDeshabilitacion() {
+        return motivoDeshabilitacion;
+    }
+
+    public void setMotivoDeshabilitacion(String motivoDeshabilitacion) {
+        this.motivoDeshabilitacion = motivoDeshabilitacion;
     }
 }

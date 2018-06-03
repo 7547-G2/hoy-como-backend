@@ -1,5 +1,6 @@
 package ar.uba.fi.hoycomobackend.api.controller;
 
+import ar.uba.fi.hoycomobackend.api.dto.ChangeStateDto;
 import ar.uba.fi.hoycomobackend.api.dto.ComercioHoyComoAddDto;
 import ar.uba.fi.hoycomobackend.api.dto.ComercioHoyComoDto;
 import ar.uba.fi.hoycomobackend.api.service.BackofficeHoyComoService;
@@ -42,9 +43,9 @@ public class BackofficeHoyComoRestController {
         return backofficeHoyComoService.getUsuarios(search);
     }
 
-    @PutMapping(value = {"/comercios/mobileUser/{mobileUserId}/state"})
-    public ResponseEntity modifyStateOfUser(@PathVariable("mobileUserId") Long mobileUserId) {
-        return backofficeHoyComoService.changeStateOfUserById(mobileUserId);
+    @PutMapping(value = {"/comercios/mobileUser/{mobileUserId}"})
+    public ResponseEntity modifyStateOfUser(@PathVariable("mobileUserId") Long mobileUserId, @RequestBody ChangeStateDto changeStateDto) {
+        return backofficeHoyComoService.changeStateOfUserById(mobileUserId, changeStateDto);
     }
 
     @PostMapping(value = "/comercios/tipoComida")

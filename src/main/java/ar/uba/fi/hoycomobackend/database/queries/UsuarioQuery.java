@@ -42,4 +42,8 @@ public class UsuarioQuery {
     public Optional<MobileUser> findById(Long mobileUserId) {
         return mobileUserRepository.findById(mobileUserId);
     }
+
+    public void save(MobileUser mobileUser) {
+        mobileUserRepository.saveAndFlush(mobileUser);
+    }
 }

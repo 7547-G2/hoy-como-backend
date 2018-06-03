@@ -1,6 +1,7 @@
 package ar.uba.fi.hoycomobackend.api.service;
 
 import ar.uba.fi.hoycomobackend.api.dto.AddressDto;
+import ar.uba.fi.hoycomobackend.api.dto.ChangeStateDto;
 import ar.uba.fi.hoycomobackend.api.dto.ComercioHoyComoAddDto;
 import ar.uba.fi.hoycomobackend.api.dto.ComercioHoyComoDto;
 import ar.uba.fi.hoycomobackend.database.entity.*;
@@ -194,14 +195,14 @@ public class BackofficeHoyComoService {
         return ResponseEntity.ok(mobileUserList);
     }
 
-    public ResponseEntity changeStateOfUserById(Long mobileUserId) {
+    public ResponseEntity changeStateOfUserById(Long mobileUserId, ChangeStateDto changeStateDto) {
         Optional<MobileUser> mobileUserOptional = usuarioQuery.findById(mobileUserId);
         if (mobileUserOptional.isPresent()) {
             MobileUser mobileUser = mobileUserOptional.get();
-            String mobileUserState = mobileUser.getState();
-            if ("habilitado".equals(mobileUserState))
-                mobileUser.setState("deshabilitado");
-            else mobileUser.setState("habilitado");
+            mobileUser.setState(changeStateDto.getState());
+            mobileUser.setMotivoDeshabilitacion(changeStateDto.getMotivoDeshabilitacion());
+
+            usuarioQuery.save(mobileUser);
 
             return ResponseEntity.ok("Estado cambiado al usuario a: " + mobileUser.getState());
         }
