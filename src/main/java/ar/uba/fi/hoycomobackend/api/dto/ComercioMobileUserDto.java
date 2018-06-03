@@ -13,6 +13,7 @@ public class ComercioMobileUserDto {
     private String precioMaximo;
     private Integer descuento;
     private AddressDto addressDto;
+    private String imagenComercio;
 
     public Long getId() {
         return id;
@@ -129,5 +130,13 @@ public class ComercioMobileUserDto {
 
     public void setDescuento(Integer descuento) {
         this.descuento = descuento;
+    }
+
+    public String getImagenComercio() {
+        return imagenComercio;
+    }
+
+    public void setImagenComercio(String imagenComercio) {
+        this.imagenComercio = imagenComercio;
     }
 }
