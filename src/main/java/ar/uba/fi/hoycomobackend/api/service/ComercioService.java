@@ -118,18 +118,30 @@ public class ComercioService {
 
             pedido = pedidoQuery.savePedido(pedido);
             orderDetailService.update(pedido);
-            sendMessageToAndroidDevice(estado, pedidoId, comercio.getNombre());
+            String pushMessage = getPushMessageAccordingToEstado(estado);
+            sendMessageToAndroidDevice(pushMessage, pedidoId, comercio.getNombre());
 
             return ResponseEntity.ok(pedido);
         } else
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorMessage("No se encontró el pedido solicitado"));
     }
 
-    private void sendMessageToAndroidDevice(String estado, Long pedidoId, String storeName) {
+    private String getPushMessageAccordingToEstado(String estado) {
+        switch (estado) {
+            case "EnPreparacion": return "Su pedido se encuentra en preparación.";
+            case "Despachado": return "Su pedido ya fue despachado.";
+            case "Entregado": return "Su pedido fue entregado, que lo disfrute.";
+            case "Cancelado": return "Su pedido ha sido cancelado.";
+            default: return "Su pedido se encuentra en el siguiente estado: " + estado;
+        }
+
+    }
+
+    private void sendMessageToAndroidDevice(String pushMessage, Long pedidoId, String storeName) {
         LOGGER.info("Starting to send message to android device");
         Message message = Message.builder()
                 .putData("title", "Hoy Como")
-                .putData("detail", storeName + ": su pedido fue " + estado)
+                .putData("detail", storeName + ": " + pushMessage)
                 .putData("order-id", pedidoId.toString())
                 .setTopic("/topics/allDevices")
                 .build();
