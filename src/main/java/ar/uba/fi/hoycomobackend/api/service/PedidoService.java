@@ -7,6 +7,7 @@ import ar.uba.fi.hoycomobackend.database.entity.Pedido;
 import ar.uba.fi.hoycomobackend.database.entity.Plato;
 import ar.uba.fi.hoycomobackend.database.entity.orderhistory.OrderDetail;
 import ar.uba.fi.hoycomobackend.database.queries.PedidoQuery;
+import ar.uba.fi.hoycomobackend.database.repository.OpcionRepository;
 import ar.uba.fi.hoycomobackend.database.repository.OrderDetailRepository;
 import ar.uba.fi.hoycomobackend.database.repository.PlatoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,12 +25,14 @@ public class PedidoService {
     private PedidoQuery pedidoQuery;
     private PlatoRepository platoRepository;
     private OrderDetailRepository orderDetailRepository;
+    private OpcionRepository opcionRepository;
 
     @Autowired
-    public PedidoService(PedidoQuery pedidoQuery, PlatoRepository platoRepository, OrderDetailRepository orderDetailRepository) {
+    public PedidoService(PedidoQuery pedidoQuery, PlatoRepository platoRepository, OrderDetailRepository orderDetailRepository, OpcionRepository opcionRepository) {
         this.pedidoQuery = pedidoQuery;
         this.platoRepository = platoRepository;
         this.orderDetailRepository = orderDetailRepository;
+        this.opcionRepository = opcionRepository;
     }
 
     public ResponseEntity getPlatoFromPedido(Long pedidoId) {
@@ -43,7 +46,8 @@ public class PedidoService {
                 platoPedidoComercioDto.setCantidad(orden.getCantidad());
                 platoPedidoComercioDto.setNombre(getNombreFromPlatoId(orden.getId_plato()));
                 platoPedidoComercioDto.setObservacion(orden.getObs());
-                platoPedidoComercioDto.setOpciones("Opciones no implementado aun");
+                platoPedidoComercioDto.setOpciones("");
+                orden.getOpcionales().forEach(opcionalId -> platoPedidoComercioDto.setOpciones(platoPedidoComercioDto.getOpciones() + " " + opcionRepository.getOne(opcionalId).getNombre()));
                 platoPedidoComercioDtoList.add(platoPedidoComercioDto);
             });
 

@@ -1,6 +1,7 @@
 package ar.uba.fi.hoycomobackend.database.entity;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Entity
 @Table(name = "orden")
@@ -13,6 +14,8 @@ public class Orden {
     private Integer cantidad;
     private Double sub_total;
     private String obs;
+    @ElementCollection
+    private List<Long> opcionales;
 
     public Long getId() {
         return id;
@@ -52,5 +55,13 @@ public class Orden {
 
     public void setObs(String obs) {
         this.obs = obs;
+    }
+
+    public List<Long> getOpcionales() {
+        return opcionales;
+    }
+
+    public void setOpcionales(List<Long> opcionales) {
+        this.opcionales = opcionales;
     }
 }

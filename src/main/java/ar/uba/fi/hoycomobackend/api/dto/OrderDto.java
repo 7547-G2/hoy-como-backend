@@ -1,10 +1,13 @@
 package ar.uba.fi.hoycomobackend.api.dto;
 
+import java.util.List;
+
 public class OrderDto {
     private Long id_plato;
     private Integer cantidad;
     private Double sub_total;
     private String obs;
+    private List<Long> opcionales;
 
     public Long getId_plato() {
         return id_plato;
@@ -36,5 +39,13 @@ public class OrderDto {
 
     public void setObs(String obs) {
         this.obs = obs;
+    }
+
+    public List<Long> getOpcionales() {
+        return opcionales;
+    }
+
+    public void setOpcionales(List<Long> opcionales) {
+        this.opcionales = opcionales;
     }
 }
