@@ -11,6 +11,7 @@ public class ComercioMobileUserDto {
     private String leadTime;
     private String precioMinimo;
     private String precioMaximo;
+    private Integer descuento;
     private AddressDto addressDto;
 
     public Long getId() {
@@ -120,5 +121,13 @@ public class ComercioMobileUserDto {
         }
 
         return this;
+    }
+
+    public Integer getDescuento() {
+        return descuento;
+    }
+
+    public void setDescuento(Integer descuento) {
+        this.descuento = descuento;
     }
 }

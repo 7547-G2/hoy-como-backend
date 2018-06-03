@@ -18,6 +18,8 @@ public class Pedido {
     private String address;
     private String floor;
     private String dep;
+    private Double latitud;
+    private Double longitud;
     private String medioPago;
     private String nombreTC;
     private String numeroTC;
@@ -27,6 +29,22 @@ public class Pedido {
     private String fecha;
     private Long startTime;
     private Long endTime;
+
+    public Double getLatitud() {
+        return latitud;
+    }
+
+    public void setLatitud(Double latitud) {
+        this.latitud = latitud;
+    }
+
+    public Double getLongitud() {
+        return longitud;
+    }
+
+    public void setLongitud(Double longitud) {
+        this.longitud = longitud;
+    }
 
     public Long getId() {
         return id;

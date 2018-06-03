@@ -39,6 +39,7 @@ public class Comercio {
     private String imagenLogo;
     @Column(columnDefinition = "varchar(128) default 'deshabilitado'")
     private String estado;
+    private String motivoDeshabilitacion = "";
     @ManyToMany(fetch = FetchType.EAGER, mappedBy = "favoriteComercios")
     private Set<MobileUser> mobileUserList;
     @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
@@ -218,5 +219,13 @@ public class Comercio {
 
     public void setImagenComercio(String imagenComercio) {
         this.imagenComercio = imagenComercio;
+    }
+
+    public String getMotivoDeshabilitacion() {
+        return motivoDeshabilitacion;
+    }
+
+    public void setMotivoDeshabilitacion(String motivoDeshabilitacion) {
+        this.motivoDeshabilitacion = motivoDeshabilitacion;
     }
 }

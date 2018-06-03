@@ -8,6 +8,7 @@ public class ComercioHoyComoAddDto {
     private String password;
     private String imagenLogo;
     private String estado;
+    private String motivoDeshabilitacion;
     private AddressDto addressDto;
     private Long tipoComidaId;
     private Double latitud;
@@ -117,5 +118,13 @@ public class ComercioHoyComoAddDto {
 
     public void setImagenComercio(String imagenComercio) {
         this.imagenComercio = imagenComercio;
+    }
+
+    public String getMotivoDeshabilitacion() {
+        return motivoDeshabilitacion;
+    }
+
+    public void setMotivoDeshabilitacion(String motivoDeshabilitacion) {
+        this.motivoDeshabilitacion = motivoDeshabilitacion;
     }
 }
