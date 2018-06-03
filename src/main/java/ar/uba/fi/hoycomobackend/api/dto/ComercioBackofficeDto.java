@@ -12,6 +12,8 @@ public class ComercioBackofficeDto {
     private AddressDto addressDto;
     private Double latitud;
     private Double longitud;
+    private Integer descuento;
+    private String imagenComercio;
 
     public Double getLatitud() {
         return latitud;
@@ -91,5 +93,21 @@ public class ComercioBackofficeDto {
 
     public void setTipoComidaId(Long tipoComidaId) {
         this.tipoComidaId = tipoComidaId;
+    }
+
+    public Integer getDescuento() {
+        return descuento;
+    }
+
+    public void setDescuento(Integer descuento) {
+        this.descuento = descuento;
+    }
+
+    public String getImagenComercio() {
+        return imagenComercio;
+    }
+
+    public void setImagenComercio(String imagenComercio) {
+        this.imagenComercio = imagenComercio;
     }
 }

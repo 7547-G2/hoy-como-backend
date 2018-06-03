@@ -154,38 +154,46 @@ public class BackofficeComercioService {
     }
 
     public ResponseEntity updatePlatoFromComercio(Long comercioId, Long platoId, PlatoUpdateDto platoUpdateDto) throws JsonProcessingException {
-        Optional<Comercio> comercioOptional = comercioQuery.getComercioById(comercioId);
+        try {
+            Optional<Comercio> comercioOptional = comercioQuery.getComercioById(comercioId);
 
-        if (comercioOptional.isPresent()) {
-            Comercio comercio = comercioOptional.get();
-            Set<Plato> platoSet = comercio.getPlatos();
-            Optional<Plato> platoOptional = platoSet.stream().filter(plato -> plato.getId().equals(platoId)).findFirst();
+            if (comercioOptional.isPresent()) {
+                Comercio comercio = comercioOptional.get();
+                Set<Plato> platoSet = comercio.getPlatos();
+                Optional<Plato> platoOptional = platoSet.stream().filter(plato -> plato.getId().equals(platoId)).findFirst();
 
-            if (platoOptional.isPresent()) {
-                Plato plato = platoOptional.get();
-                Long olderCategory = plato.getCategoria();
-                modelMapper.map(platoUpdateDto, plato);
-                plato.setComercio(comercio);
-                plato.setId(platoId);
-                platoUpdateDto.setId(platoId);
-                if (shouldChangeOrden(olderCategory, plato.getCategoria())) {
-                    Long currentCategory = plato.getCategoria();
-                    Integer maxOrderPlato = comercio.getPlatos().stream().
-                            filter(plate -> currentCategory.equals(plate.getCategoria()) && !platoId.equals(plate.getId())).
-                            mapToInt(plate -> plate.getOrden()).max().orElse(0);
-                    plato.setOrden(maxOrderPlato + 1);
-                }
-                plato = modifyAssociatedOpcionales(plato, platoUpdateDto);
-                String response = objectMapper.writeValueAsString(platoUpdateDto);
+                if (platoOptional.isPresent()) {
+                    Plato plato = platoOptional.get();
+                    Long olderCategory = plato.getCategoria();
+                    modelMapper.map(platoUpdateDto, plato);
+                    plato.setComercio(comercio);
+                    plato.setId(platoId);
+                    platoUpdateDto.setId(platoId);
+                    if (shouldChangeOrden(olderCategory, plato.getCategoria())) {
+                        Long currentCategory = plato.getCategoria();
+                        Integer maxOrderPlato = comercio.getPlatos().stream().
+                                filter(plate -> currentCategory.equals(plate.getCategoria()) && !platoId.equals(plate.getId())).
+                                mapToInt(plate -> plate.getOrden()).max().orElse(0);
+                        plato.setOrden(maxOrderPlato + 1);
+                    }
+                    try {
+                        plato = modifyAssociatedOpcionales(plato, platoUpdateDto);
+                    } catch (Exception e) {
+                        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ErrorMessage("Problema al intentar modificar los opcionales asociados. Error: " + e.getMessage()));
+                    }
+                    String response = objectMapper.writeValueAsString(platoUpdateDto);
 
-                platoRepository.saveAndFlush(plato);
-                comercioPriceUpdater.updatePriceOfComercio(comercioId);
+                    platoRepository.saveAndFlush(plato);
+                    comercioPriceUpdater.updatePriceOfComercio(comercioId);
 
-                return ResponseEntity.ok(response);
+                    return ResponseEntity.ok(response);
+                } else
+                    return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ErrorMessage("No se encontró ningún plato con id: " + platoId));
             } else
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ErrorMessage("No se encontró ningún plato con id: " + platoId));
-        } else
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ErrorMessage("No se encontró ningún comercio con id: " + comercioId));
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ErrorMessage("No se encontró ningún comercio con id: " + comercioId));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ErrorMessage("Hubo un problema al intentar realizar el update del plato. Error: " + e.getMessage()));
+        }
     }
 
     private Plato modifyAssociatedOpcionales(Plato plato, PlatoUpdateDto platoUpdateDto) {

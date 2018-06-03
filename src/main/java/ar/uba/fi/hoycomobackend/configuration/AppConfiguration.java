@@ -31,7 +31,7 @@ public class AppConfiguration {
     }
 
     @Bean
-    @Profile({"dev", "localprod"})
+    @Profile({"dev", "localprod", "demo"})
     public MailingService devMailingService() {
         return new DevelopmentMailingService();
     }
@@ -44,7 +44,7 @@ public class AppConfiguration {
     }
 
     @Bean
-    @Profile({"dev", "localprod"})
+    @Profile({"dev", "localprod", "demo"})
     public PushNotificationMessage getDevPushNotificationService() {
         return new DevelopmentPushNotification();
     }

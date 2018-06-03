@@ -228,6 +228,8 @@ public class MobileUserService {
         if (comercioOptional.isPresent() && mobileUserOptional.isPresent()) {
             try {
                 Pedido pedido = modelMapper.map(postPedidoDto, Pedido.class);
+                pedido.setLongitud(postPedidoDto.getLng());
+                pedido.setLatitud(postPedidoDto.getLat());
                 pedido.setStoreId(postPedidoDto.getStore_id());
                 pedido.setFacebookId(postPedidoDto.getFacebook_id());
                 pedido.getOrden().forEach(orden -> {

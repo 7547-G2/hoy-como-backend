@@ -72,7 +72,6 @@ public class ComercioService {
             Comercio comercio = comercioOptional.get();
             TipoComida tipoComida = new TipoComida();
             tipoComida.setTipo(tipoComidaString);
-            //TODO REVISAR ESTO tipoComida.setComercio(comercio);
             comercio.setTipoComida(tipoComida);
             comercioQuery.saveAndFlush(comercio);
 
