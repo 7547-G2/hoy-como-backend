@@ -14,7 +14,7 @@ public class Orden {
     private Integer cantidad;
     private Double sub_total;
     private String obs;
-    @ElementCollection
+    @ElementCollection(fetch = FetchType.EAGER)
     private List<Long> opcionales;
 
     public Long getId() {
