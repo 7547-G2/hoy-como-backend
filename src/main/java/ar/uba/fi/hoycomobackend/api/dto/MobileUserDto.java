@@ -1,7 +1,5 @@
 package ar.uba.fi.hoycomobackend.api.dto;
 
-import ar.uba.fi.hoycomobackend.database.entity.MobileUserState;
-
 public class MobileUserDto {
     private long facebookId;
     private String username;

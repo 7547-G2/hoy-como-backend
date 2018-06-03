@@ -9,7 +9,8 @@ import ar.uba.fi.hoycomobackend.database.repository.PlatoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.time.Instant;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Optional;
@@ -66,7 +67,10 @@ public class OrderDetailService {
     private OrderDetail addOrderStatusHistory(OrderDetail orderDetail, Pedido pedido) {
         Set<OrderStatusHistory> orderStatusHistoryList = orderDetail.getStatusHistory();
         OrderStatusHistory orderStatusHistory = new OrderStatusHistory();
-        orderStatusHistory.setDate(Date.from(Instant.now()).toString());
+        DateFormat dateFormat = new SimpleDateFormat("yyyyMMddHHmmss");
+        Date date = new Date();
+        System.out.println();
+        orderStatusHistory.setDate(dateFormat.format(date));
         orderStatusHistory.setStatus(pedido.getEstado());
         orderStatusHistoryList.add(orderStatusHistory);
 
