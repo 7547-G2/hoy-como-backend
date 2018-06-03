@@ -35,14 +35,16 @@ public class BackofficeHoyComoService {
     private ModelMapper modelMapper;
     private MailingService mailingService;
     private TipoComidaRepository tipoComidaRepository;
+    private ComidasService comidasService;
 
     @Autowired
-    public BackofficeHoyComoService(ComercioQuery comercioQuery, UsuarioQuery usuarioQuery, ModelMapper modelMapper, MailingService mailingService, TipoComidaRepository tipoComidaRepository) {
+    public BackofficeHoyComoService(ComercioQuery comercioQuery, UsuarioQuery usuarioQuery, ModelMapper modelMapper, MailingService mailingService, TipoComidaRepository tipoComidaRepository, ComidasService comidasService) {
         this.comercioQuery = comercioQuery;
         this.usuarioQuery = usuarioQuery;
         this.modelMapper = modelMapper;
         this.mailingService = mailingService;
         this.tipoComidaRepository = tipoComidaRepository;
+        this.comidasService = comidasService;
     }
 
     public List<ComercioHoyComoDto> getComercioByNombre(String nombre) {
@@ -156,6 +158,8 @@ public class BackofficeHoyComoService {
         comercio = updateComercioWithRandomPassword(comercio);
         try {
             comercio = comercioQuery.saveAndFlush(comercio);
+            comidasService.setCategoriaComidaFromMenuByComercioId(comercio.getId(), "Promociones");
+            comidasService.setCategoriaComidaFromMenuByComercioId(comercio.getId(), "Varios");
             mailingService.sendMailToNewComercio(comercio);
             return ResponseEntity.ok("Comercio creado correctamente");
         } catch (DataIntegrityViolationException e) {

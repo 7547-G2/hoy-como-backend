@@ -28,7 +28,8 @@ public class BackofficeHoyComoServiceTest {
     private ModelMapper modelMapper = Mockito.mock(ModelMapper.class);
     private MailingService mailingService = Mockito.mock(MailingService.class);
     private TipoComidaRepository tipoComidaRepository = Mockito.mock(TipoComidaRepository.class);
-    private BackofficeHoyComoService backofficeHoyComoService = new BackofficeHoyComoService(comercioQuery, usuarioQuery, modelMapper, mailingService, tipoComidaRepository);
+    private ComidasService comidasService = Mockito.mock(ComidasService.class);
+    private BackofficeHoyComoService backofficeHoyComoService = new BackofficeHoyComoService(comercioQuery, usuarioQuery, modelMapper, mailingService, tipoComidaRepository, comidasService);
 
     @Before
     public void setUp() {
