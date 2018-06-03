@@ -32,7 +32,7 @@ public class MenuDisplayerTest {
         ResponseEntity response = menuDisplayer.getMenuFromComercio(comercio);
         MenuWithLogoDto menuWithLogoDto = (MenuWithLogoDto) response.getBody();
 
-        assertThat(menuWithLogoDto.getImagen_comercio()).isEqualTo("imagenLogo");
+        assertThat(menuWithLogoDto.getImagen_comercio()).isEqualTo("imagenComercio");
         List<MenuDto> menu = menuWithLogoDto.getMenu();
         assertThat(menu).hasSize(2);
         assertThat(menu.get(0).getNombre_categ()).isEqualTo("tipo");
@@ -41,6 +41,7 @@ public class MenuDisplayerTest {
     private Comercio createTestComercio() {
         Comercio comercio = new Comercio();
         comercio.setImagenLogo("imagenLogo");
+        comercio.setImagenComercio("imagenComercio");
         Set<Plato> platoSet = createTestPlatoSet();
         comercio.setPlatos(platoSet);
 

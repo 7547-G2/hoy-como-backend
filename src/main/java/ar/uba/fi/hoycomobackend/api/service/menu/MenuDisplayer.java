@@ -40,7 +40,7 @@ public class MenuDisplayer {
         List<MenuDto> menuList = getMenuListFromPlatoCategoryMap(platoCategoryMap);
         menuList.forEach(MenuDto::removeNulls);
         MenuWithLogoDto menuWithLogoDto = new MenuWithLogoDto();
-        menuWithLogoDto.setImagen_comercio(comercio.getImagenLogo());
+        menuWithLogoDto.setImagen_comercio(comercio.getImagenComercio());
         menuWithLogoDto.setMenu(menuList);
         menuWithLogoDto.setDescuentoGlobal(comercio.getDescuento());
 

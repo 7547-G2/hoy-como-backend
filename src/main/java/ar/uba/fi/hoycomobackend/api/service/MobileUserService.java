@@ -177,6 +177,7 @@ public class MobileUserService {
         List<ComercioMobileUserDto> comercioMobileUserDtoList = getComercioDtos(comercioList);
         comercioMobileUserDtoList = comercioMobileUserDtoList.stream().filter(comercio -> "habilitado".equals(comercio.getEstado())).collect(Collectors.toList());
         comercioMobileUserDtoList.forEach(ComercioMobileUserDto::removeNulls);
+        comercioMobileUserDtoList.forEach(ComercioMobileUserDto::transformPrices);
 
         return ResponseEntity.ok(comercioMobileUserDtoList);
     }

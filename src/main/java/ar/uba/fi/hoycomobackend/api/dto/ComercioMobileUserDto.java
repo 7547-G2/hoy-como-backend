@@ -13,7 +13,6 @@ public class ComercioMobileUserDto {
     private String precioMaximo;
     private Integer descuento;
     private AddressDto addressDto;
-    private String imagenComercio;
 
     public Long getId() {
         return id;
@@ -132,11 +131,9 @@ public class ComercioMobileUserDto {
         this.descuento = descuento;
     }
 
-    public String getImagenComercio() {
-        return imagenComercio;
-    }
-
-    public void setImagenComercio(String imagenComercio) {
-        this.imagenComercio = imagenComercio;
+    public ComercioMobileUserDto transformPrices() {
+        precioMinimo = precioMinimo.split("\\.")[0];
+        precioMaximo = precioMaximo.split("\\.")[0];
+        return this;
     }
 }
