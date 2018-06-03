@@ -7,7 +7,7 @@ public class MobileUserDto {
     private String username;
     private String firstName;
     private String lastName;
-    private MobileUserState mobileUserState;
+    private String mobileUserState;
     private AddressDto addressDto;
 
     public long getFacebookId() {
@@ -50,11 +50,11 @@ public class MobileUserDto {
         this.addressDto = address;
     }
 
-    public MobileUserState getMobileUserState() {
+    public String getMobileUserState() {
         return mobileUserState;
     }
 
-    public void setMobileUserState(MobileUserState mobileUserState) {
+    public void setMobileUserState(String mobileUserState) {
         this.mobileUserState = mobileUserState;
     }
 
@@ -66,7 +66,7 @@ public class MobileUserDto {
         if (lastName == null)
             lastName = "";
         if (mobileUserState == null)
-            mobileUserState = MobileUserState.NOT_FOUND;
+            mobileUserState = "habilitado";
         if (addressDto == null) {
             addressDto = new AddressDto();
             addressDto = addressDto.removeNulls();

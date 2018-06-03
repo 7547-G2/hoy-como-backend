@@ -45,7 +45,7 @@ public class MobileUserRestControllerIntegrationTest {
     private static String FIRST_NAME = "firstName";
     private static String LAST_NAME = "lastName";
     private static String USER_NAME = "userName";
-    private static MobileUserState STATE = MobileUserState.AUTHORIZED;
+    private static String STATE = "habilitado";
 
     @Autowired
     private MockMvc mockMvc;
@@ -108,7 +108,7 @@ public class MobileUserRestControllerIntegrationTest {
                 .andExpect(jsonPath("$[0].username", is(USER_NAME)))
                 .andExpect(jsonPath("$[0].firstName", is(FIRST_NAME)))
                 .andExpect(jsonPath("$[0].lastName", is(LAST_NAME)))
-                .andExpect(jsonPath("$[0].mobileUserState", is(STATE.name())))
+                .andExpect(jsonPath("$[0].mobileUserState", is(STATE)))
                 .andExpect(jsonPath("$[0].addressDto.street", is(STREET)))
                 .andExpect(jsonPath("$[0].addressDto.postalCode", is(POSTAL_CODE)))
                 .andExpect(jsonPath("$[0].addressDto.floor", is(FLOOR)))
@@ -128,7 +128,7 @@ public class MobileUserRestControllerIntegrationTest {
                 .andExpect(jsonPath("$.username", is(USER_NAME)))
                 .andExpect(jsonPath("$.firstName", is(FIRST_NAME)))
                 .andExpect(jsonPath("$.lastName", is(LAST_NAME)))
-                .andExpect(jsonPath("$.mobileUserState", is(STATE.name())))
+                .andExpect(jsonPath("$.mobileUserState", is(STATE)))
                 .andExpect(jsonPath("$.addressDto.street", is(STREET)))
                 .andExpect(jsonPath("$.addressDto.postalCode", is(POSTAL_CODE)))
                 .andExpect(jsonPath("$.addressDto.floor", is(FLOOR)))
@@ -153,7 +153,7 @@ public class MobileUserRestControllerIntegrationTest {
                 .andExpect(jsonPath("$.username", is(USER_NAME)))
                 .andExpect(jsonPath("$.firstName", is(FIRST_NAME)))
                 .andExpect(jsonPath("$.lastName", is(LAST_NAME)))
-                .andExpect(jsonPath("$.mobileUserState", is(mobileUserStateToChangeTo.name())))
+                .andExpect(jsonPath("$.mobileUserState", is("deshabilitado")))
                 .andExpect(jsonPath("$.addressDto.street", is(STREET)))
                 .andExpect(jsonPath("$.addressDto.postalCode", is(POSTAL_CODE)))
                 .andExpect(jsonPath("$.addressDto.floor", is(FLOOR)))

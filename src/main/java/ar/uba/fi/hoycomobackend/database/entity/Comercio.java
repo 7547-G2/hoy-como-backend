@@ -25,10 +25,10 @@ public class Comercio {
     @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.MERGE)
     @JoinColumn(name = "tipo_comida_id")
     private TipoComida tipoComida;
-    private String token;
+    private String token = "";
     private Integer leadTime = 0;
-    private Float precioMinimo;
-    private Float precioMaximo;
+    private Float precioMinimo = 0.0f;
+    private Float precioMaximo = 0.0f;
     @Column(columnDefinition = "INTEGER default 0")
     private Integer totalPedidos = 0;
     @Column(columnDefinition = "float(2) default 1.00")

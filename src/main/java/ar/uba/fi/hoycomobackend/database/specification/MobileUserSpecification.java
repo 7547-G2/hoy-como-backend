@@ -1,11 +1,12 @@
 package ar.uba.fi.hoycomobackend.database.specification;
 
-import ar.uba.fi.hoycomobackend.database.entity.Comercio;
 import ar.uba.fi.hoycomobackend.database.entity.MobileUser;
-import ar.uba.fi.hoycomobackend.database.entity.MobileUserState;
 import org.springframework.data.jpa.domain.Specification;
 
-import javax.persistence.criteria.*;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
 
 public class MobileUserSpecification implements Specification<MobileUser> {
 
@@ -22,9 +23,7 @@ public class MobileUserSpecification implements Specification<MobileUser> {
         } else if (searchCriteria.getOperation().equalsIgnoreCase("<")) {
             return builder.lessThanOrEqualTo(root.get(searchCriteria.getKey()), searchCriteria.getValue().toString());
         } else if (searchCriteria.getOperation().equalsIgnoreCase(":")) {
-            if (searchCriteria.getKey().equalsIgnoreCase("state")) {
-                return builder.equal((root.get(searchCriteria.getKey())), MobileUserState.getByStateCode(Integer.parseInt((String) searchCriteria.getValue())));
-            } else if (root.get(searchCriteria.getKey()).getJavaType() == String.class) {
+           if (root.get(searchCriteria.getKey()).getJavaType() == String.class) {
                 return builder.like(builder.lower((root.get(searchCriteria.getKey()))), "%" + searchCriteria.getValue().toString().toLowerCase() + "%");
             } else {
                 return builder.equal(root.get(searchCriteria.getKey()), searchCriteria.getValue());

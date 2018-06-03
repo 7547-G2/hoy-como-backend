@@ -144,15 +144,24 @@ public class ComidasService {
         try {
             Long firstCategoriaComidaId = swapOrdersDto.getFirstCategoriaComidaId();
             Long secondCategoriaComidaId = swapOrdersDto.getSecondCategoriaComidaId();
-            CategoriaComida firstCategoriaComida = categoriaComidaRepository.findById(firstCategoriaComidaId).get();
-            CategoriaComida secondCategoriaComida = categoriaComidaRepository.findById(secondCategoriaComidaId).get();
+            try {
+                CategoriaComida firstCategoriaComida = categoriaComidaRepository.findById(firstCategoriaComidaId).get();
+                try {
+                    CategoriaComida secondCategoriaComida = categoriaComidaRepository.findById(secondCategoriaComidaId).get();
+                    firstCategoriaComida.setOrderPriority(secondCategoriaComida.getOrderPriority());
+                    secondCategoriaComida.setOrderPriority(firstCategoriaComida.getOrderPriority());
 
-            firstCategoriaComida.setOrderPriority(secondCategoriaComida.getOrderPriority());
-            secondCategoriaComida.setOrderPriority(firstCategoriaComida.getOrderPriority());
-
-            categoriaComidaRepository.saveAndFlush(firstCategoriaComida);
-            categoriaComidaRepository.saveAndFlush(secondCategoriaComida);
-            return ResponseEntity.ok("Orden de Categoría comida cambiada exitosamente");
+                    categoriaComidaRepository.saveAndFlush(firstCategoriaComida);
+                    categoriaComidaRepository.saveAndFlush(secondCategoriaComida);
+                    return ResponseEntity.ok("Orden de Categoría comida cambiada exitosamente");
+                }
+                catch (Exception e) {
+                    return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorMessage("No se pudo encontrar categoria con id: " + secondCategoriaComidaId + " Error: " + e.getMessage()));
+                }
+            }
+            catch (Exception e) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorMessage("No se pudo encontrar categoria con id: " + firstCategoriaComidaId + " Error: " + e.getMessage()));
+            }
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorMessage(e.getMessage()));
         }

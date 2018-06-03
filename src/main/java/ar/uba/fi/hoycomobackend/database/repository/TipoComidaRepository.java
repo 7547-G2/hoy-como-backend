@@ -6,6 +6,7 @@ import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
 
+// Para los comercios
 @Repository
 public interface TipoComidaRepository extends JpaRepository<TipoComida, Long> {
     Optional<TipoComida> findByComercio_Id(Long comercioId);

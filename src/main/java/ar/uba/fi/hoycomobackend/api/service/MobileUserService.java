@@ -57,6 +57,7 @@ public class MobileUserService {
             MobileUserDto mobileUserDto = modelMapper.map(mobileUser, MobileUserDto.class);
             mobileUserDto.setAddressDto(addressDto);
             mobileUserDto.removeNulls();
+            mobileUserDto.setMobileUserState(mobileUser.getState());
             mobileUserDtoList.add(mobileUserDto);
         }
 
@@ -100,8 +101,9 @@ public class MobileUserService {
         MobileUserStateDto mobileUserStateDto;
         if (mobileUserOptional.isPresent()) {
             MobileUser mobileUser = mobileUserOptional.get();
-            MobileUserState mobileUserState = mobileUser.getState();
-            mobileUserStateDto = new MobileUserStateDto(mobileUserState);
+            String mobileUserState = mobileUser.getState();
+            MobileUserState mobileUserStateEnum = "habilitado".equalsIgnoreCase(mobileUserState) ? MobileUserState.AUTHORIZED : MobileUserState.UNAUTHORIZED;
+            mobileUserStateDto = new MobileUserStateDto(mobileUserStateEnum);
         } else
             mobileUserStateDto = new MobileUserStateDto(MobileUserState.NOT_FOUND);
 
@@ -198,12 +200,13 @@ public class MobileUserService {
 
         if (mobileUserOptional.isPresent()) {
             MobileUser mobileUser = mobileUserOptional.get();
-            MobileUserState mobileUserState = MobileUserState.getByStateCode(stateCode);
+
+            String mobileUserState = (0 == stateCode) ? "habilitado" : "deshabilitado";
             mobileUser.setState(mobileUserState);
 
             mobileUserRepository.saveAndFlush(mobileUser);
 
-            return ResponseEntity.ok("Mobile user with id: " + mobileUserFacebookId + " changed state successfully to: " + mobileUserState.name());
+            return ResponseEntity.ok("Mobile user with id: " + mobileUserFacebookId + " changed state successfully to: " + mobileUserState);
         } else
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorMessage("No existe el usuario con id: " + mobileUserFacebookId));
     }
