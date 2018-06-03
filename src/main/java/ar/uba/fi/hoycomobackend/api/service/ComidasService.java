@@ -147,8 +147,10 @@ public class ComidasService {
                 CategoriaComida firstCategoriaComida = categoriaComidaRepository.findById(firstCategoriaComidaId).get();
                 try {
                     CategoriaComida secondCategoriaComida = categoriaComidaRepository.findById(secondCategoriaComidaId).get();
-                    firstCategoriaComida.setOrderPriority(secondCategoriaComida.getOrderPriority());
-                    secondCategoriaComida.setOrderPriority(firstCategoriaComida.getOrderPriority());
+                    Integer firstCategoriaOldPriority = firstCategoriaComida.getOrderPriority();
+                    Integer secondCategoriaOldPriority = secondCategoriaComida.getOrderPriority();
+                    firstCategoriaComida.setOrderPriority(secondCategoriaOldPriority);
+                    secondCategoriaComida.setOrderPriority(firstCategoriaOldPriority);
 
                     categoriaComidaRepository.saveAndFlush(firstCategoriaComida);
                     categoriaComidaRepository.saveAndFlush(secondCategoriaComida);
