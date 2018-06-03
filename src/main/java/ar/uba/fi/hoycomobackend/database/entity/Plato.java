@@ -28,7 +28,7 @@ public class Plato {
     private Comercio comercio;
     private Long categoria;
     private Integer orden;
-    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.REFRESH)
+    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private Set<Opcion> opciones = new HashSet<>();
 
     public Long getId() {

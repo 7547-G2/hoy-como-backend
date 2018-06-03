@@ -17,6 +17,7 @@ public class MobileUser {
     private String lastName;
     @NotNull
     private String state = "habilitado";
+    private String motivoDeshabilitacion = "";
     @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.MERGE)
     @JoinTable(name = "mobileuser_comercio",
             joinColumns = {@JoinColumn(name = "mobileuser_facebookId")},
@@ -81,5 +82,13 @@ public class MobileUser {
 
     public void setState(String state) {
         this.state = state;
+    }
+
+    public String getMotivoDeshabilitacion() {
+        return motivoDeshabilitacion;
+    }
+
+    public void setMotivoDeshabilitacion(String motivoDeshabilitacion) {
+        this.motivoDeshabilitacion = motivoDeshabilitacion;
     }
 }
