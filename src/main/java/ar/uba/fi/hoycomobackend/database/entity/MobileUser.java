@@ -15,10 +15,8 @@ public class MobileUser {
     private String username;
     private String firstName;
     private String lastName;
-    @Column(length = 32, columnDefinition = "varchar(32) default 'AUTHORIZED'")
-    @Enumerated(value = EnumType.STRING)
     @NotNull
-    private MobileUserState state = MobileUserState.AUTHORIZED;
+    private String state = "habilitado";
     @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.MERGE)
     @JoinTable(name = "mobileuser_comercio",
             joinColumns = {@JoinColumn(name = "mobileuser_facebookId")},
@@ -77,11 +75,11 @@ public class MobileUser {
         this.address = address;
     }
 
-    public MobileUserState getState() {
+    public String getState() {
         return state;
     }
 
-    public void setState(MobileUserState state) {
+    public void setState(String state) {
         this.state = state;
     }
 }

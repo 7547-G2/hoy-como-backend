@@ -10,7 +10,7 @@ import java.util.List;
 
 public class DataTestBuilder {
 
-    private static MobileUserState DEFAULT_MOBILE_USER_STATE = MobileUserState.AUTHORIZED;
+    private static String DEFAULT_MOBILE_USER_STATE = "habilitado";
 
     public static Comercio createComercio(String email, String nombre) {
         Comercio comercio = new Comercio();

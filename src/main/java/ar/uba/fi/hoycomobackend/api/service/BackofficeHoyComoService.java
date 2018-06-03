@@ -198,13 +198,21 @@ public class BackofficeHoyComoService {
         Optional<MobileUser> mobileUserOptional = usuarioQuery.findById(mobileUserId);
         if (mobileUserOptional.isPresent()) {
             MobileUser mobileUser = mobileUserOptional.get();
-            MobileUserState mobileUserState = mobileUser.getState();
-            if(MobileUserState.AUTHORIZED.equals(mobileUserState))
-                mobileUser.setState(MobileUserState.UNAUTHORIZED);
-            else mobileUser.setState(MobileUserState.AUTHORIZED);
+            String mobileUserState = mobileUser.getState();
+            if("habilitado".equals(mobileUserState))
+                mobileUser.setState("deshabilitado");
+            else mobileUser.setState("habilitado");
 
-            return ResponseEntity.ok("Estado cambiado al usuario a: " + mobileUser.getState().toString());
+            return ResponseEntity.ok("Estado cambiado al usuario a: " + mobileUser.getState());
         }
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new Error("No fue encontrado el usuario con ese ID"));
+    }
+
+    public ResponseEntity createTipoComida(String tipoComida) {
+        TipoComida tipoComidaEntity = new TipoComida();
+        tipoComidaEntity.setTipo(tipoComida);
+        tipoComidaEntity = tipoComidaRepository.saveAndFlush(tipoComidaEntity);
+
+        return ResponseEntity.ok(tipoComidaEntity);
     }
 }
