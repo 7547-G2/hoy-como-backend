@@ -7,6 +7,7 @@ public class TokenDto {
     private String name;
     private String estadoComercio;
     private String motivoDeshabilitacion;
+    private String logoComercio;
 
     public String getToken() {
         return token;
@@ -46,5 +47,13 @@ public class TokenDto {
 
     public void setMotivoDeshabilitacion(String motivoDeshabilitacion) {
         this.motivoDeshabilitacion = motivoDeshabilitacion;
+    }
+
+    public String getLogoComercio() {
+        return logoComercio;
+    }
+
+    public void setLogoComercio(String logoComercio) {
+        this.logoComercio = logoComercio;
     }
 }
