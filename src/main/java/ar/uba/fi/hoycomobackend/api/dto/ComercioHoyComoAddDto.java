@@ -15,6 +15,33 @@ public class ComercioHoyComoAddDto {
     private Double longitud;
     private Integer descuento;
     private String imagenComercio;
+    private String nombreEncargado;
+    private String dniEncargado;
+    private String telefonoEncargado;
+
+    public String getNombreEncargado() {
+        return nombreEncargado;
+    }
+
+    public void setNombreEncargado(String nombreEncargado) {
+        this.nombreEncargado = nombreEncargado;
+    }
+
+    public String getDniEncargado() {
+        return dniEncargado;
+    }
+
+    public void setDniEncargado(String dniEncargado) {
+        this.dniEncargado = dniEncargado;
+    }
+
+    public String getTelefonoEncargado() {
+        return telefonoEncargado;
+    }
+
+    public void setTelefonoEncargado(String telefonoEncargado) {
+        this.telefonoEncargado = telefonoEncargado;
+    }
 
     public Long getId() {
         return id;
