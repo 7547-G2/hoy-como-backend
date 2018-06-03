@@ -183,10 +183,18 @@ public class BackofficeComercioService {
                     }
                     String response = objectMapper.writeValueAsString(platoUpdateDto);
 
-                    platoRepository.saveAndFlush(plato);
-                    comercioPriceUpdater.updatePriceOfComercio(comercioId);
+                    try {
+                        platoRepository.saveAndFlush(plato);
 
-                    return ResponseEntity.ok(response);
+                        try {
+                            comercioPriceUpdater.updatePriceOfComercio(comercioId);
+                            return ResponseEntity.ok(response);
+                        } catch (Exception e) {
+                            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ErrorMessage("Error al intentar updatear los valores de los precios del comercio" + e.getMessage()));
+                        }
+                    } catch (Exception e) {
+                        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ErrorMessage("Error al intentar guardar el plato a la base de datos" + e.getMessage()));
+                    }
                 } else
                     return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ErrorMessage("No se encontró ningún plato con id: " + platoId));
             } else
