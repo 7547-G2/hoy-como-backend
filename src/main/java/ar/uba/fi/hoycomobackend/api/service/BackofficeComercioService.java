@@ -16,7 +16,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import java.util.*;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
@@ -105,7 +108,7 @@ public class BackofficeComercioService {
             platoGetDto.setOrden(plato.getOrden());
             platoGetDto.setPrecio(plato.getPrecio());
             platoGetDto.setState(plato.getState());
-            List<Long> opcionalIds  = plato.getOpciones().stream().map(opcion -> opcion.getId()).collect(Collectors.toList());
+            List<Long> opcionalIds = plato.getOpciones().stream().map(opcion -> opcion.getId()).collect(Collectors.toList());
             platoGetDto.setOpcionalIds(opcionalIds);
             platoDtoSet.add(platoGetDto);
         }
@@ -196,7 +199,7 @@ public class BackofficeComercioService {
             }
             plato.setOpciones(opcionList);
         }
-            return plato;
+        return plato;
     }
 
     private boolean shouldChangeOrden(Long olderCategory, Long categoria) {

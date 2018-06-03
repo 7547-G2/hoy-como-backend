@@ -23,7 +23,7 @@ public class MobileUserSpecification implements Specification<MobileUser> {
         } else if (searchCriteria.getOperation().equalsIgnoreCase("<")) {
             return builder.lessThanOrEqualTo(root.get(searchCriteria.getKey()), searchCriteria.getValue().toString());
         } else if (searchCriteria.getOperation().equalsIgnoreCase(":")) {
-           if (root.get(searchCriteria.getKey()).getJavaType() == String.class) {
+            if (root.get(searchCriteria.getKey()).getJavaType() == String.class) {
                 return builder.like(builder.lower((root.get(searchCriteria.getKey()))), "%" + searchCriteria.getValue().toString().toLowerCase() + "%");
             } else {
                 return builder.equal(root.get(searchCriteria.getKey()), searchCriteria.getValue());

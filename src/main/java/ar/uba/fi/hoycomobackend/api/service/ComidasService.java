@@ -7,7 +7,6 @@ import ar.uba.fi.hoycomobackend.database.entity.TipoComida;
 import ar.uba.fi.hoycomobackend.database.queries.TipoComidaQuery;
 import ar.uba.fi.hoycomobackend.database.repository.CategoriaComidaRepository;
 import ar.uba.fi.hoycomobackend.database.repository.OpcionRepository;
-import com.netflix.ribbon.proxy.annotation.Http;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -109,9 +108,9 @@ public class ComidasService {
         Optional<CategoriaComida> categoriaComidaOptional = categoriaComidaRepository.findById(categoriaComidaId);
         if (categoriaComidaOptional.isPresent()) {
             CategoriaComida categoriaComida = categoriaComidaOptional.get();
-            if(updateCategoriaComidaDto.getEstaActivo() != null)
+            if (updateCategoriaComidaDto.getEstaActivo() != null)
                 categoriaComida.setActive(updateCategoriaComidaDto.getEstaActivo());
-            if(updateCategoriaComidaDto.getNombreCategoria() != null)
+            if (updateCategoriaComidaDto.getNombreCategoria() != null)
                 categoriaComida.setTipo(updateCategoriaComidaDto.getNombreCategoria());
 
             try {
@@ -154,12 +153,10 @@ public class ComidasService {
                     categoriaComidaRepository.saveAndFlush(firstCategoriaComida);
                     categoriaComidaRepository.saveAndFlush(secondCategoriaComida);
                     return ResponseEntity.ok("Orden de Categoría comida cambiada exitosamente");
-                }
-                catch (Exception e) {
+                } catch (Exception e) {
                     return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorMessage("No se pudo encontrar categoria con id: " + secondCategoriaComidaId + " Error: " + e.getMessage()));
                 }
-            }
-            catch (Exception e) {
+            } catch (Exception e) {
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorMessage("No se pudo encontrar categoria con id: " + firstCategoriaComidaId + " Error: " + e.getMessage()));
             }
         } catch (Exception e) {

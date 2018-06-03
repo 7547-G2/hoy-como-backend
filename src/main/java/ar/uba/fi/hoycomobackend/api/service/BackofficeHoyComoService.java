@@ -199,7 +199,7 @@ public class BackofficeHoyComoService {
         if (mobileUserOptional.isPresent()) {
             MobileUser mobileUser = mobileUserOptional.get();
             String mobileUserState = mobileUser.getState();
-            if("habilitado".equals(mobileUserState))
+            if ("habilitado".equals(mobileUserState))
                 mobileUser.setState("deshabilitado");
             else mobileUser.setState("habilitado");
 

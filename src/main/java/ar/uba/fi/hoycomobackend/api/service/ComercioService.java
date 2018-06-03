@@ -12,7 +12,6 @@ import ar.uba.fi.hoycomobackend.database.entity.TipoComida;
 import ar.uba.fi.hoycomobackend.database.queries.ComercioQuery;
 import ar.uba.fi.hoycomobackend.database.queries.PedidoQuery;
 import com.google.firebase.messaging.Message;
-import org.joda.time.DateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,8 +27,8 @@ import java.util.Optional;
 @Service
 public class ComercioService {
 
-    Logger LOGGER = LoggerFactory.getLogger(ComercioService.class);
     private static final String PENDIENTE_MENU = "pendiente menu";
+    Logger LOGGER = LoggerFactory.getLogger(ComercioService.class);
     private ComercioQuery comercioQuery;
     private PedidoQuery pedidoQuery;
     private OrderDetailService orderDetailService;
@@ -104,15 +103,15 @@ public class ComercioService {
             Pedido pedido = pedidoOptional.get();
             Comercio comercio = comercioQuery.getComercioById(pedido.getStoreId()).get();
             pedido.setEstado(estado);
-            if(PedidoEstado.EN_PREPARACION.equals(estado))
+            if (PedidoEstado.EN_PREPARACION.equals(estado))
                 pedido.setStartTime(new Date().getTime());
-            if(PedidoEstado.DESPACHADO.equals(estado)) {
+            if (PedidoEstado.DESPACHADO.equals(estado)) {
                 pedido.setEndTime(new Date().getTime());
                 Long totalTimeTakenMillis = pedido.getEndTime() - pedido.getStartTime();
-                Integer totalTimeTakenMinutes = (int) Math.ceil(totalTimeTakenMillis.doubleValue()/60000.0);
+                Integer totalTimeTakenMinutes = (int) Math.ceil(totalTimeTakenMillis.doubleValue() / 60000.0);
                 Integer olderTotalTimes = comercio.getTotalPedidos();
                 Integer olderTotalTimeTakenMinutes = comercio.getLeadTime();
-                Integer totalMinutes = (int) Math.ceil((totalTimeTakenMinutes + olderTotalTimes*olderTotalTimeTakenMinutes)/(olderTotalTimes.floatValue() + 1.0));
+                Integer totalMinutes = (int) Math.ceil((totalTimeTakenMinutes + olderTotalTimes * olderTotalTimeTakenMinutes) / (olderTotalTimes.floatValue() + 1.0));
                 comercio.setLeadTime(totalMinutes);
                 comercio.setTotalPedidos(olderTotalTimes + 1);
                 comercioQuery.saveAndFlush(comercio);

@@ -21,7 +21,6 @@ import org.springframework.test.web.servlet.ResultActions;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.LinkedList;
 import java.util.Optional;
 
 import static ar.uba.fi.hoycomobackend.entity.DataTestBuilder.*;
