@@ -4,10 +4,14 @@ import ar.uba.fi.hoycomobackend.api.dto.ChangeStateDto;
 import ar.uba.fi.hoycomobackend.api.dto.ComercioHoyComoAddDto;
 import ar.uba.fi.hoycomobackend.api.dto.ComercioHoyComoDto;
 import ar.uba.fi.hoycomobackend.api.service.BackofficeHoyComoService;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.RestTemplate;
 
+import java.io.IOException;
 import java.util.List;
 
 @RestController
@@ -51,5 +55,20 @@ public class BackofficeHoyComoRestController {
     @PostMapping(value = "/comercios/tipoComida")
     public ResponseEntity createTipoComidaForComercio(@RequestBody String tipoComida) {
         return backofficeHoyComoService.createTipoComida(tipoComida);
+    }
+
+    @PostMapping(value = "/test")
+    public ResponseEntity abc() throws IOException {
+        RestTemplate restTemplate = new RestTemplate();
+        String fooResourceUrl
+                = "https://maps.googleapis.com/maps/api/distancematrix/json?origins=-34.617499,-58.368442&destinations=-34.609370,-58.374888&key=AIzaSyC1_Pl3mGUTHBCGPY-HdHV2hg-OZfb3pWg";
+        ResponseEntity<String> response
+                = restTemplate.getForEntity(fooResourceUrl, String.class);
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        JsonNode root = objectMapper.readTree(response.getBody());
+        String value = root.path("rows").get(0).path("elements").get(0).path("duration").get("text").asText();
+        Integer totalTime = Integer.parseInt(value.split(" ")[0]);
+        return ResponseEntity.ok(totalTime);
     }
 }

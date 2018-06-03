@@ -18,6 +18,7 @@ public class Pedido {
     private String address;
     private String floor;
     private String dep;
+    private Integer timeAccordingToDistance;
     private Double latitud;
     private Double longitud;
     private String medioPago;
@@ -180,5 +181,13 @@ public class Pedido {
 
     public void setEndTime(Long endTime) {
         this.endTime = endTime;
+    }
+
+    public Integer getTimeAccordingToDistance() {
+        return timeAccordingToDistance;
+    }
+
+    public void setTimeAccordingToDistance(Integer timeAccordingToDistance) {
+        this.timeAccordingToDistance = timeAccordingToDistance;
     }
 }

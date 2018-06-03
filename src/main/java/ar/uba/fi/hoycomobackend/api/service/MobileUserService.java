@@ -1,6 +1,7 @@
 package ar.uba.fi.hoycomobackend.api.service;
 
 import ar.uba.fi.hoycomobackend.api.dto.*;
+import ar.uba.fi.hoycomobackend.api.service.distancetime.TimeTakenCalculator;
 import ar.uba.fi.hoycomobackend.api.service.menu.MenuDisplayer;
 import ar.uba.fi.hoycomobackend.database.entity.*;
 import ar.uba.fi.hoycomobackend.database.queries.ComercioQuery;
@@ -35,9 +36,10 @@ public class MobileUserService {
     private MenuDisplayer menuDisplayer;
     private PedidoQuery pedidoQuery;
     private OrderDetailService orderDetailService;
+    private TimeTakenCalculator timeTakenCalculator;
 
     @Autowired
-    public MobileUserService(MobileUserRepository mobileUserRepository, ComercioQuery comercioQuery, ModelMapper modelMapper, ObjectMapper objectMapper, MenuDisplayer menuDisplayer, PedidoQuery pedidoQuery, OrderDetailService orderDetailService) {
+    public MobileUserService(MobileUserRepository mobileUserRepository, ComercioQuery comercioQuery, ModelMapper modelMapper, ObjectMapper objectMapper, MenuDisplayer menuDisplayer, PedidoQuery pedidoQuery, OrderDetailService orderDetailService, TimeTakenCalculator timeTakenCalculator) {
         this.mobileUserRepository = mobileUserRepository;
         this.comercioQuery = comercioQuery;
         this.modelMapper = modelMapper;
@@ -45,6 +47,7 @@ public class MobileUserService {
         this.menuDisplayer = menuDisplayer;
         this.pedidoQuery = pedidoQuery;
         this.orderDetailService = orderDetailService;
+        this.timeTakenCalculator = timeTakenCalculator;
     }
 
     public ResponseEntity getMobileUserList() {
@@ -228,6 +231,7 @@ public class MobileUserService {
 
         if (comercioOptional.isPresent() && mobileUserOptional.isPresent()) {
             try {
+                Comercio comercio = comercioOptional.get();
                 Pedido pedido = modelMapper.map(postPedidoDto, Pedido.class);
                 pedido.setLongitud(postPedidoDto.getLng());
                 pedido.setLatitud(postPedidoDto.getLat());
@@ -237,6 +241,8 @@ public class MobileUserService {
                     orden.setId(null);
                 });
                 pedido.setFecha(Date.from(Instant.now()).toString());
+                Integer timeTakenPedido = timeTakenCalculator.timeTakenFromOriginToDestination(postPedidoDto.getLat(), postPedidoDto.getLng(), comercio.getLatitud(), comercio.getLatitud());
+                pedido.setTimeAccordingToDistance(timeTakenPedido);
                 Pedido savedPedido = pedidoQuery.savePedido(pedido);
                 orderDetailService.creation(savedPedido, comercioOptional.get().getNombre());
                 return ResponseEntity.ok().build();

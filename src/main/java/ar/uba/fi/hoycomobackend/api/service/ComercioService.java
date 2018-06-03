@@ -109,7 +109,7 @@ public class ComercioService {
                 Long totalTimeTakenMillis = pedido.getEndTime() - pedido.getStartTime();
                 Integer totalTimeTakenMinutes = (int) Math.ceil(totalTimeTakenMillis.doubleValue() / 60000.0);
                 Integer olderTotalTimes = comercio.getTotalPedidos();
-                Integer olderTotalTimeTakenMinutes = comercio.getLeadTime();
+                Integer olderTotalTimeTakenMinutes = comercio.getLeadTime() + pedido.getTimeAccordingToDistance();
                 Integer totalMinutes = (int) Math.ceil((totalTimeTakenMinutes + olderTotalTimes * olderTotalTimeTakenMinutes) / (olderTotalTimes.floatValue() + 1.0));
                 comercio.setLeadTime(totalMinutes);
                 comercio.setTotalPedidos(olderTotalTimes + 1);
