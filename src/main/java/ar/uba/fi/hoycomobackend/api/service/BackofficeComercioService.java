@@ -166,8 +166,6 @@ public class BackofficeComercioService {
                     Plato plato = platoOptional.get();
                     Long olderCategory = plato.getCategoria();
                     modelMapper.map(platoUpdateDto, plato);
-                    plato.setComercio(comercio);
-                    plato.setId(platoId);
                     platoUpdateDto.setId(platoId);
                     if (shouldChangeOrden(olderCategory, plato.getCategoria())) {
                         Long currentCategory = plato.getCategoria();

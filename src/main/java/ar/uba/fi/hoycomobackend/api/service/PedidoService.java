@@ -70,8 +70,7 @@ public class PedidoService {
             platoMobileUserDto.setImagen(plato.getImagen());
             platoMobileUserDto.setNombre(plato.getNombre());
             platoMobileUserDto.setPrecio(plato.getPrecio());
-            //TODO meter aca logica para agregar o el objeto o los ids
-            platoMobileUserDto.setOpcionales(new LinkedList<>());
+            platoMobileUserDto.setOpcionales(plato.getOpciones());
 
             return ResponseEntity.ok(platoMobileUserDto);
         } else

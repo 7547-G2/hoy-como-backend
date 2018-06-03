@@ -1,13 +1,15 @@
 package ar.uba.fi.hoycomobackend.api.dto;
 
-import java.util.List;
+import ar.uba.fi.hoycomobackend.database.entity.Opcion;
+
+import java.util.Set;
 
 public class PlatoMobileUserDto {
     private Long id_plato;
     private String nombre;
     private String imagen;
     private Float precio;
-    private List<Object> opcionales;
+    private Set<Opcion> opcionales;
 
     public Long getId_plato() {
         return id_plato;
@@ -41,11 +43,11 @@ public class PlatoMobileUserDto {
         this.precio = precio;
     }
 
-    public List<Object> getOpcionales() {
+    public Set<Opcion> getOpcionales() {
         return opcionales;
     }
 
-    public void setOpcionales(List<Object> opcionales) {
+    public void setOpcionales(Set<Opcion> opcionales) {
         this.opcionales = opcionales;
     }
 }
