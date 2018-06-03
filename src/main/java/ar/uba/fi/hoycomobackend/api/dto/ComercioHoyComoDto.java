@@ -10,6 +10,7 @@ public class ComercioHoyComoDto {
     private String password;
     private String imagenLogo;
     private String estado;
+    private String motivoDeshabilitacion;
     private AddressDto addressDto;
     private Double latitud;
     private Double longitud;
@@ -100,5 +101,13 @@ public class ComercioHoyComoDto {
 
     public void setLongitud(Double longitud) {
         this.longitud = longitud;
+    }
+
+    public String getMotivoDeshabilitacion() {
+        return motivoDeshabilitacion;
+    }
+
+    public void setMotivoDeshabilitacion(String motivoDeshabilitacion) {
+        this.motivoDeshabilitacion = motivoDeshabilitacion;
     }
 }
