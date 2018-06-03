@@ -47,7 +47,14 @@ public class PedidoService {
                 platoPedidoComercioDto.setNombre(getNombreFromPlatoId(orden.getId_plato()));
                 platoPedidoComercioDto.setObservacion(orden.getObs());
                 platoPedidoComercioDto.setOpciones("");
-                orden.getOpcionales().forEach(opcionalId -> platoPedidoComercioDto.setOpciones(platoPedidoComercioDto.getOpciones() + " " + opcionRepository.getOne(opcionalId).getNombre()));
+                orden.getOpcionales().forEach(opcionalId ->{
+                    try{
+                        String opciones = platoPedidoComercioDto.getOpciones() + " " + opcionRepository.findById(opcionalId).get().getNombre();
+                        platoPedidoComercioDto.setOpciones(opciones);
+                    } catch (Exception e) {
+                        platoPedidoComercioDto.setOpciones("Heroku System inestability");
+                    }
+                } );
                 platoPedidoComercioDtoList.add(platoPedidoComercioDto);
             });
 
