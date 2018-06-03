@@ -102,7 +102,7 @@ public class MobileUserService {
         if (mobileUserOptional.isPresent()) {
             MobileUser mobileUser = mobileUserOptional.get();
             String mobileUserState = mobileUser.getState();
-            MobileUserState mobileUserStateEnum = "habilitado".equalsIgnoreCase(mobileUserState) ? MobileUserState.AUTHORIZED : MobileUserState.UNAUTHORIZED;
+            MobileUserState mobileUserStateEnum = "deshabilitado".equalsIgnoreCase(mobileUserState) ? MobileUserState.UNAUTHORIZED : MobileUserState.AUTHORIZED;
             mobileUserStateDto = new MobileUserStateDto(mobileUserStateEnum);
         } else
             mobileUserStateDto = new MobileUserStateDto(MobileUserState.NOT_FOUND);
