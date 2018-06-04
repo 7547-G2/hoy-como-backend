@@ -30,6 +30,7 @@ public class Pedido {
     private String fecha;
     private Long startTime;
     private Long endTime;
+    private String lastModified;
 
     public Double getLatitud() {
         return latitud;
@@ -189,5 +190,13 @@ public class Pedido {
 
     public void setTimeAccordingToDistance(Integer timeAccordingToDistance) {
         this.timeAccordingToDistance = timeAccordingToDistance;
+    }
+
+    public String getLastModified() {
+        return lastModified;
+    }
+
+    public void setLastModified(String lastModified) {
+        this.lastModified = lastModified;
     }
 }

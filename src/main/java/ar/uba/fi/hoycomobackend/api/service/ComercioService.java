@@ -19,6 +19,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
@@ -115,7 +117,9 @@ public class ComercioService {
                 comercio.setTotalPedidos(olderTotalTimes + 1);
                 comercioQuery.saveAndFlush(comercio);
             }
-
+            DateFormat dateFormat = new SimpleDateFormat("yyyyMMddHHmmss");
+            Date date = new Date();
+            pedido.setLastModified(dateFormat.format(date));
             pedido = pedidoQuery.savePedido(pedido);
             orderDetailService.update(pedido);
             String pushMessage = getPushMessageAccordingToEstado(estado);

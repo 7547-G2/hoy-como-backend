@@ -5,6 +5,7 @@ public class PedidoMobileUserDto {
     private Long store_id;
     private String store_name;
     private String status;
+    private String fecha;
 
     public Long getOrder_id() {
         return order_id;
@@ -36,5 +37,13 @@ public class PedidoMobileUserDto {
 
     public void setStatus(String status) {
         this.status = status;
+    }
+
+    public String getFecha() {
+        return fecha;
+    }
+
+    public void setFecha(String fecha) {
+        this.fecha = fecha;
     }
 }

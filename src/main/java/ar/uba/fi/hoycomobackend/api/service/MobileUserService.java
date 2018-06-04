@@ -266,6 +266,7 @@ public class MobileUserService {
         try {
             List<Pedido> pedidoList = pedidoQuery.getpedidosOfUser(facebookId);
             List<PedidoMobileUserDto> pedidoMobileUserDtoList = transformPedidoToPedidoMobileUserDto(pedidoList);
+
             return ResponseEntity.ok(pedidoMobileUserDtoList);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ErrorMessage("Problema al interno intentando obtener pedidos. Razón: " + e));
@@ -282,6 +283,7 @@ public class MobileUserService {
             pedidoMobileUserDto.setStore_name(storeName);
             pedidoMobileUserDto.setStatus(pedido.getEstado());
             pedidoMobileUserDto.setOrder_id(pedido.getId());
+            pedidoMobileUserDto.setFecha(pedido.getLastModified());
 
             pedidoMobileUserDtoList.add(pedidoMobileUserDto);
         });
