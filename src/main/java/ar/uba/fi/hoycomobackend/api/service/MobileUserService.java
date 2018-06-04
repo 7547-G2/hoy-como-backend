@@ -19,7 +19,6 @@ import org.springframework.stereotype.Service;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.time.Instant;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -108,7 +107,7 @@ public class MobileUserService {
             MobileUser mobileUser = mobileUserOptional.get();
             String mobileUserState = mobileUser.getState();
 
-            if("deshabilitado".equalsIgnoreCase(mobileUserState)) {
+            if ("deshabilitado".equalsIgnoreCase(mobileUserState)) {
                 mobileUserStateDto = new MobileUserStateDto(MobileUserState.UNAUTHORIZED);
                 mobileUserStateDto.setDescription(mobileUser.getMotivoDeshabilitacion());
             } else {

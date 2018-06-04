@@ -128,11 +128,16 @@ public class ComercioService {
 
     private String getPushMessageAccordingToEstado(String estado) {
         switch (estado) {
-            case "EnPreparacion": return "Su pedido se encuentra en preparación.";
-            case "Despachado": return "Su pedido ya fue despachado.";
-            case "Entregado": return "Su pedido fue entregado, que lo disfrute.";
-            case "Cancelado": return "Su pedido ha sido cancelado.";
-            default: return "Su pedido se encuentra en el siguiente estado: " + estado;
+            case "EnPreparacion":
+                return "Su pedido se encuentra en preparación.";
+            case "Despachado":
+                return "Su pedido ya fue despachado.";
+            case "Entregado":
+                return "Su pedido fue entregado, que lo disfrute.";
+            case "Cancelado":
+                return "Su pedido ha sido cancelado.";
+            default:
+                return "Su pedido se encuentra en el siguiente estado: " + estado;
         }
 
     }

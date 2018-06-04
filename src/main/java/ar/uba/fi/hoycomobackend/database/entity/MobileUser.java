@@ -26,6 +26,7 @@ public class MobileUser {
     @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinColumn(name = "address_id")
     private Address address;
+    private String link;
 
     public List<Comercio> getFavoriteComercios() {
         return favoriteComercios;
@@ -90,5 +91,13 @@ public class MobileUser {
 
     public void setMotivoDeshabilitacion(String motivoDeshabilitacion) {
         this.motivoDeshabilitacion = motivoDeshabilitacion;
+    }
+
+    public String getLink() {
+        return link;
+    }
+
+    public void setLink(String link) {
+        this.link = link;
     }
 }
