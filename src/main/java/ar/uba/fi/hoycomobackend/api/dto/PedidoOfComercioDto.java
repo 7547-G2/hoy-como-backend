@@ -5,6 +5,7 @@ public class PedidoOfComercioDto {
     private Double monto;
     private String fecha;
     private String estado;
+    private String address;
 
     public Long getId() {
         return id;
@@ -36,5 +37,13 @@ public class PedidoOfComercioDto {
 
     public void setEstado(String estado) {
         this.estado = estado;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
     }
 }

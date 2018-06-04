@@ -91,6 +91,7 @@ public class ComercioService {
             pedidoOfComercioDto.setFecha(pedido.getFecha());
             pedidoOfComercioDto.setMonto(pedido.getTotal());
             pedidoOfComercioDto.setId(pedido.getId());
+            pedidoOfComercioDto.setAddress(pedido.getAddress() + "," + pedido.getFloor() + "," + pedido.getDep());
             pedidoOfComercioDtoList.add(pedidoOfComercioDto);
         });
 
