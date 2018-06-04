@@ -110,6 +110,8 @@ public class ComercioService {
                         pedido.setStartTime(new Date().getTime());
                     if ("Despachado".equalsIgnoreCase(estado)) {
                         pedido.setEndTime(new Date().getTime());
+                    }
+                    if ("Entregado".equalsIgnoreCase(estado)) {
                         Long totalTimeTakenMillis = pedido.getEndTime() - pedido.getStartTime();
                         Integer totalTimeTakenMinutes = (int) Math.ceil(totalTimeTakenMillis.doubleValue() / 60000.0);
                         Integer olderTotalTimes = comercio.getTotalPedidos();
