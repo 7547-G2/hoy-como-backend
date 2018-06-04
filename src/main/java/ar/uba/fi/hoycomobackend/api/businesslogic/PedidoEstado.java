@@ -2,7 +2,7 @@ package ar.uba.fi.hoycomobackend.api.businesslogic;
 
 public enum PedidoEstado {
     INGRESADO("Ingresado"),
-    EN_PREPARACION("En preparación"),
+    EN_PREPARACION("EnPreparacion"),
     DESPACHADO("Despachado"),
     ENTREGADO("Entregado"),
     CANCELADO("Cancelado");
