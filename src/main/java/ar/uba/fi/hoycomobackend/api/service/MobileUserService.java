@@ -232,6 +232,7 @@ public class MobileUserService {
     }
 
     public ResponseEntity postPedido(PostPedidoDto postPedidoDto) {
+        LOGGER.info("PostPedido data {}, latitude: {}, longitude: {}", postPedidoDto, postPedidoDto.getLat(), postPedidoDto.getLng());
         Optional<Comercio> comercioOptional = comercioQuery.getComercioById(postPedidoDto.getStore_id());
         Optional<MobileUser> mobileUserOptional = mobileUserRepository.findById(postPedidoDto.getFacebook_id());
 
