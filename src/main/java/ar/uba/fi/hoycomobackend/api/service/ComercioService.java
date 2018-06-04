@@ -98,36 +98,49 @@ public class ComercioService {
     }
 
     public ResponseEntity changeStateOfPedido(Long pedidoId, String estado) {
-        Optional<Pedido> pedidoOptional = pedidoQuery.getPedidoById(pedidoId);
+        try {
+            Optional<Pedido> pedidoOptional = pedidoQuery.getPedidoById(pedidoId);
 
-        if (pedidoOptional.isPresent()) {
-            Pedido pedido = pedidoOptional.get();
-            Comercio comercio = comercioQuery.getComercioById(pedido.getStoreId()).get();
-            pedido.setEstado(estado);
-            if ("EnPreparacion".equalsIgnoreCase(estado))
-                pedido.setStartTime(new Date().getTime());
-            if ("Despachado".equalsIgnoreCase(estado)) {
-                pedido.setEndTime(new Date().getTime());
-                Long totalTimeTakenMillis = pedido.getEndTime() - pedido.getStartTime();
-                Integer totalTimeTakenMinutes = (int) Math.ceil(totalTimeTakenMillis.doubleValue() / 60000.0);
-                Integer olderTotalTimes = comercio.getTotalPedidos();
-                Integer olderTotalTimeTakenMinutes = comercio.getLeadTime() + pedido.getTimeAccordingToDistance();
-                Integer totalMinutes = (int) Math.ceil((totalTimeTakenMinutes + olderTotalTimes * olderTotalTimeTakenMinutes) / (olderTotalTimes.floatValue() + 1.0));
-                comercio.setLeadTime(totalMinutes);
-                comercio.setTotalPedidos(olderTotalTimes + 1);
-                comercioQuery.saveAndFlush(comercio);
-            }
-            DateFormat dateFormat = new SimpleDateFormat("yyyyMMddHHmmss");
-            Date date = new Date();
-            pedido.setLastModified(dateFormat.format(date));
-            pedido = pedidoQuery.savePedido(pedido);
-            orderDetailService.update(pedido);
-            String pushMessage = getPushMessageAccordingToEstado(estado);
-            sendMessageToAndroidDevice(pushMessage, pedidoId, comercio.getNombre());
+            if (pedidoOptional.isPresent()) {
+                Pedido pedido = pedidoOptional.get();
+                Comercio comercio = comercioQuery.getComercioById(pedido.getStoreId()).get();
+                pedido.setEstado(estado);
+                try {
+                    if (PedidoEstado.EN_PREPARACION.equals(estado))
+                        pedido.setStartTime(new Date().getTime());
+                    if (PedidoEstado.DESPACHADO.equals(estado)) {
+                        pedido.setEndTime(new Date().getTime());
+                        Long totalTimeTakenMillis = pedido.getEndTime() - pedido.getStartTime();
+                        Integer totalTimeTakenMinutes = (int) Math.ceil(totalTimeTakenMillis.doubleValue() / 60000.0);
+                        Integer olderTotalTimes = comercio.getTotalPedidos();
+                        Integer olderTotalTimeTakenMinutes = comercio.getLeadTime() + pedido.getTimeAccordingToDistance();
+                        Integer totalMinutes = (int) Math.ceil((totalTimeTakenMinutes + olderTotalTimes * olderTotalTimeTakenMinutes) / (olderTotalTimes.floatValue() + 1.0));
+                        comercio.setLeadTime(totalMinutes);
+                        comercio.setTotalPedidos(olderTotalTimes + 1);
+                        comercioQuery.saveAndFlush(comercio);
+                    }
 
-            return ResponseEntity.ok(pedido);
-        } else
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorMessage("No se encontró el pedido solicitado"));
+                    try {
+                        DateFormat dateFormat = new SimpleDateFormat("yyyyMMddHHmmss");
+                        Date date = new Date();
+                        pedido.setLastModified(dateFormat.format(date));
+                        pedido = pedidoQuery.savePedido(pedido);
+                        orderDetailService.update(pedido);
+                        String pushMessage = getPushMessageAccordingToEstado(estado);
+                        sendMessageToAndroidDevice(pushMessage, pedidoId, comercio.getNombre());
+
+                        return ResponseEntity.ok(pedido);
+                    } catch (Exception e) {
+                        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ErrorMessage("Error al tratar de guardar el pedido. Error: " + e.getMessage()));
+                    }
+                } catch (Exception e) {
+                    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ErrorMessage("Error al cambiar estado luego de primer paso. Error: " + e.getMessage()));
+                }
+            } else
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorMessage("No se encontró el pedido solicitado"));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ErrorMessage("Error al cambiar estado de pedido. Error: " + e.getMessage()));
+        }
     }
 
     private String getPushMessageAccordingToEstado(String estado) {
