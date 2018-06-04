@@ -105,8 +105,13 @@ public class MobileUserService {
         if (mobileUserOptional.isPresent()) {
             MobileUser mobileUser = mobileUserOptional.get();
             String mobileUserState = mobileUser.getState();
-            MobileUserState mobileUserStateEnum = "deshabilitado".equalsIgnoreCase(mobileUserState) ? MobileUserState.UNAUTHORIZED : MobileUserState.AUTHORIZED;
-            mobileUserStateDto = new MobileUserStateDto(mobileUserStateEnum);
+
+            if("deshabilitado".equalsIgnoreCase(mobileUserState)) {
+                mobileUserStateDto = new MobileUserStateDto(MobileUserState.UNAUTHORIZED);
+                mobileUserStateDto.setDescription(mobileUser.getMotivoDeshabilitacion());
+            } else {
+                mobileUserStateDto = new MobileUserStateDto(MobileUserState.AUTHORIZED);
+            }
         } else
             mobileUserStateDto = new MobileUserStateDto(MobileUserState.NOT_FOUND);
 
