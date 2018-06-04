@@ -154,6 +154,7 @@ public class BackofficeHoyComoService {
         TipoComida tipoComida = tipoComidaRepository.findById(tipoComidaId).get();
         comercio.setTipoComida(tipoComida);
         comercio.setAddress(address);
+        comercio.getTipoComida().setTipo(tipoComida.getTipo());
         comercio = updateComercioWithTipoComercio(comercioHoyComoAddDto, comercio);
         comercio = updateComercioWithRandomPassword(comercio);
         try {

@@ -17,6 +17,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.time.Instant;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -245,7 +247,9 @@ public class MobileUserService {
                 pedido.getOrden().forEach(orden -> {
                     orden.setId(null);
                 });
-                pedido.setFecha(Date.from(Instant.now()).toString());
+                DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm");
+                Date date = new Date();
+                pedido.setFecha(dateFormat.format(date));
                 Integer timeTakenPedido = timeTakenCalculator.timeTakenFromOriginToDestination(postPedidoDto.getLat(), postPedidoDto.getLng(), comercio.getLatitud(), comercio.getLatitud());
                 pedido.setTimeAccordingToDistance(timeTakenPedido);
                 Pedido savedPedido = pedidoQuery.savePedido(pedido);

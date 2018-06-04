@@ -69,7 +69,6 @@ public class OrderDetailService {
         OrderStatusHistory orderStatusHistory = new OrderStatusHistory();
         DateFormat dateFormat = new SimpleDateFormat("yyyyMMddHHmmss");
         Date date = new Date();
-        System.out.println();
         orderStatusHistory.setDate(dateFormat.format(date));
         orderStatusHistory.setStatus(pedido.getEstado());
         orderStatusHistoryList.add(orderStatusHistory);
