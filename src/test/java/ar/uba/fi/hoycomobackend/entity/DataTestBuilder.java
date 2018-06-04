@@ -97,6 +97,7 @@ public class DataTestBuilder {
         CategoriaComida categoriaComida = new CategoriaComida();
         categoriaComida.setId(1L);
         categoriaComida.setTipo("tipo");
+        categoriaComida.setActive(true);
 
         return categoriaComida;
     }
