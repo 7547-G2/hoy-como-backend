@@ -106,9 +106,9 @@ public class ComercioService {
                 Comercio comercio = comercioQuery.getComercioById(pedido.getStoreId()).get();
                 pedido.setEstado(estado);
                 try {
-                    if (PedidoEstado.EN_PREPARACION.equals(estado))
+                    if ("EnPreparacion".equalsIgnoreCase(estado))
                         pedido.setStartTime(new Date().getTime());
-                    if (PedidoEstado.DESPACHADO.equals(estado)) {
+                    if ("Despachado".equalsIgnoreCase(estado)) {
                         pedido.setEndTime(new Date().getTime());
                         Long totalTimeTakenMillis = pedido.getEndTime() - pedido.getStartTime();
                         Integer totalTimeTakenMinutes = (int) Math.ceil(totalTimeTakenMillis.doubleValue() / 60000.0);
