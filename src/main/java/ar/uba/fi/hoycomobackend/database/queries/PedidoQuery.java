@@ -39,4 +39,8 @@ public class PedidoQuery {
     public Optional<Pedido> getPedidoById(Long pedidoId) {
         return pedidoRepository.findById(pedidoId);
     }
+
+    public List<Pedido> findAll() {
+        return pedidoRepository.findAll();
+    }
 }
