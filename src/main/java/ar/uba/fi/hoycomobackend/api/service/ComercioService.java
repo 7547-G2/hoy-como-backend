@@ -1,6 +1,5 @@
 package ar.uba.fi.hoycomobackend.api.service;
 
-import ar.uba.fi.hoycomobackend.api.businesslogic.PedidoEstado;
 import ar.uba.fi.hoycomobackend.api.dto.ErrorMessage;
 import ar.uba.fi.hoycomobackend.api.dto.MessageWithId;
 import ar.uba.fi.hoycomobackend.api.dto.PasswordUpdateDto;
@@ -20,6 +19,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.LinkedList;
@@ -172,5 +172,28 @@ public class ComercioService {
 
         String response = pushNotificationMessage.sendMessage(message);
         LOGGER.info("Message push uri: " + response);
+    }
+
+    public ResponseEntity allPedidos() {
+        List<Pedido> pedidoList = pedidoQuery.findAll();
+        List<PedidoOfComercioDto> pedidoOfComercioDtoList = new LinkedList<>();
+        pedidoList.forEach(pedido -> {
+            PedidoOfComercioDto pedidoOfComercioDto = new PedidoOfComercioDto();
+            pedidoOfComercioDto.setEstado(pedido.getEstado());
+            try {
+                SimpleDateFormat originalPedidoDateFormatter = new SimpleDateFormat("dd/MM/yyyy HH:mm");
+                Date date = originalPedidoDateFormatter.parse(pedido.getFecha());
+                SimpleDateFormat newPedidoDateFormatter = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+                pedidoOfComercioDto.setFecha(newPedidoDateFormatter.format(date));
+            } catch (ParseException e) {
+                LOGGER.error("Error while trying to formate date of pedido. Error: {}" , e.getMessage());
+            }
+            pedidoOfComercioDto.setMonto(pedido.getTotal());
+            pedidoOfComercioDto.setId(pedido.getId());
+            pedidoOfComercioDto.setAddress(pedido.getAddress() + "," + pedido.getFloor() + "," + pedido.getDep());
+            pedidoOfComercioDtoList.add(pedidoOfComercioDto);
+        });
+
+        return ResponseEntity.ok(pedidoOfComercioDtoList);
     }
 }
