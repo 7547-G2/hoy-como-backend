@@ -7,6 +7,7 @@ import ar.uba.fi.hoycomobackend.api.service.menu.MenuDisplayer;
 import ar.uba.fi.hoycomobackend.database.entity.MobileUser;
 import ar.uba.fi.hoycomobackend.database.queries.ComercioQuery;
 import ar.uba.fi.hoycomobackend.database.queries.PedidoQuery;
+import ar.uba.fi.hoycomobackend.database.repository.CommentRepository;
 import ar.uba.fi.hoycomobackend.database.repository.MobileUserRepository;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -33,7 +34,8 @@ public class MobileUserServiceTest {
     private PedidoQuery pedidoQuery = Mockito.mock(PedidoQuery.class);
     private OrderDetailService orderDetailService = Mockito.mock(OrderDetailService.class);
     private TimeTakenCalculator timeTakenCalculator = Mockito.mock(TimeTakenCalculator.class);
-    private MobileUserService mobileUserService = new MobileUserService(mobileUserRepository, comercioQuery, modelMapper, objectMapper, menuDisplayer, pedidoQuery, orderDetailService, timeTakenCalculator);
+    private CommentRepository commentRepository = Mockito.mock(CommentRepository.class);
+    private MobileUserService mobileUserService = new MobileUserService(mobileUserRepository, comercioQuery, modelMapper, objectMapper, menuDisplayer, pedidoQuery, orderDetailService, timeTakenCalculator, commentRepository);
 
     @Test
     public void getMobileUserById_returnsMobileUserDto() {

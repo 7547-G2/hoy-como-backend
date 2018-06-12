@@ -3,7 +3,6 @@ package ar.uba.fi.hoycomobackend.api.service.menu;
 import ar.uba.fi.hoycomobackend.api.dto.ErrorMessage;
 import ar.uba.fi.hoycomobackend.api.dto.MenuDto;
 import ar.uba.fi.hoycomobackend.api.dto.MenuWithLogoDto;
-import ar.uba.fi.hoycomobackend.database.entity.CategoriaComida;
 import ar.uba.fi.hoycomobackend.database.entity.Comercio;
 import ar.uba.fi.hoycomobackend.database.entity.Plato;
 import ar.uba.fi.hoycomobackend.database.entity.PlatoState;
