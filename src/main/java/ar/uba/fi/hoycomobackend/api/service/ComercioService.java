@@ -186,7 +186,7 @@ public class ComercioService {
                 SimpleDateFormat newPedidoDateFormatter = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
                 pedidoOfComercioDto.setFecha(newPedidoDateFormatter.format(date));
             } catch (ParseException e) {
-                LOGGER.error("Error while trying to formate date of pedido. Error: {}" , e.getMessage());
+                LOGGER.error("Error while trying to formate date of pedido. Error: {}", e.getMessage());
             }
             pedidoOfComercioDto.setMonto(pedido.getTotal());
             pedidoOfComercioDto.setId(pedido.getId());

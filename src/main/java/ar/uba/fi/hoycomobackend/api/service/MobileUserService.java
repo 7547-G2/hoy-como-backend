@@ -6,6 +6,7 @@ import ar.uba.fi.hoycomobackend.api.service.menu.MenuDisplayer;
 import ar.uba.fi.hoycomobackend.database.entity.*;
 import ar.uba.fi.hoycomobackend.database.queries.ComercioQuery;
 import ar.uba.fi.hoycomobackend.database.queries.PedidoQuery;
+import ar.uba.fi.hoycomobackend.database.repository.CommentRepository;
 import ar.uba.fi.hoycomobackend.database.repository.MobileUserRepository;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -38,9 +39,10 @@ public class MobileUserService {
     private PedidoQuery pedidoQuery;
     private OrderDetailService orderDetailService;
     private TimeTakenCalculator timeTakenCalculator;
+    private CommentRepository commentRepository;
 
     @Autowired
-    public MobileUserService(MobileUserRepository mobileUserRepository, ComercioQuery comercioQuery, ModelMapper modelMapper, ObjectMapper objectMapper, MenuDisplayer menuDisplayer, PedidoQuery pedidoQuery, OrderDetailService orderDetailService, TimeTakenCalculator timeTakenCalculator) {
+    public MobileUserService(MobileUserRepository mobileUserRepository, ComercioQuery comercioQuery, ModelMapper modelMapper, ObjectMapper objectMapper, MenuDisplayer menuDisplayer, PedidoQuery pedidoQuery, OrderDetailService orderDetailService, TimeTakenCalculator timeTakenCalculator, CommentRepository commentRepository) {
         this.mobileUserRepository = mobileUserRepository;
         this.comercioQuery = comercioQuery;
         this.modelMapper = modelMapper;
@@ -49,6 +51,7 @@ public class MobileUserService {
         this.pedidoQuery = pedidoQuery;
         this.orderDetailService = orderDetailService;
         this.timeTakenCalculator = timeTakenCalculator;
+        this.commentRepository = commentRepository;
     }
 
     public ResponseEntity getMobileUserList() {
@@ -300,6 +303,26 @@ public class MobileUserService {
             orderDetailService.update(pedido);
 
             return ResponseEntity.ok(pedido);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorMessage("No se encontró pedido"));
+        }
+    }
+
+    public ResponseEntity postCommentInPedido(Long mobileUserFacebookId, Long pedidoId, ComentarioDto comentarioDto) {
+        try {
+            Pedido pedido = pedidoQuery.getPedidoById(pedidoId).get();
+            Comment comment = new Comment();
+            comment.setMobileUserFacebookId(mobileUserFacebookId);
+            comment.setComercioId(pedido.getStoreId());
+            comment.setPedidoId(pedidoId);
+            comment.setStars(comentarioDto.getEstrellas());
+            comment.setUserComment(comentarioDto.getComentario());
+            java.sql.Date sqlDate = new java.sql.Date(System.currentTimeMillis());
+            comment.setUserCommentDate(sqlDate);
+
+            comment = commentRepository.saveAndFlush(comment);
+
+            return ResponseEntity.ok(comment);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorMessage("No se encontró pedido"));
         }

@@ -1,6 +1,7 @@
 package ar.uba.fi.hoycomobackend.api.controller;
 
 import ar.uba.fi.hoycomobackend.api.dto.AddressDto;
+import ar.uba.fi.hoycomobackend.api.dto.ComentarioDto;
 import ar.uba.fi.hoycomobackend.api.dto.MobileUserAddDto;
 import ar.uba.fi.hoycomobackend.api.dto.PostPedidoDto;
 import ar.uba.fi.hoycomobackend.api.service.ComidasService;
@@ -89,6 +90,11 @@ public class MobileUserRestController {
     @PostMapping(value = "/mobileUser/pedido/{pedidoId}/cancel")
     public ResponseEntity postPedido(@PathVariable("pedidoId") Long pedidoId) {
         return mobileUserService.cancelPedido(pedidoId);
+    }
+
+    @PostMapping(value = "/mobileUser/{mobileUserId}/pedido/{pedidoId}/comentario")
+    public ResponseEntity postComment(@PathVariable("mobileUserFacebookId") Long mobileUserFacebookId, @PathVariable("pedidoId") Long pedidoId, ComentarioDto comentarioDto) {
+        return mobileUserService.postCommentInPedido(mobileUserFacebookId, pedidoId, comentarioDto);
     }
 
     @GetMapping(value = "/mobileUser/{facebookId}/pedido")
