@@ -68,6 +68,7 @@ public class BackofficeHoyComoService {
             AddressDto addressDto = modelMapper.map(address, AddressDto.class);
             ComercioHoyComoDto comercioHoyComoDto = modelMapper.map(comercio, ComercioHoyComoDto.class);
             comercioHoyComoDto.setAddressDto(addressDto);
+            comercioHoyComoDto.setLeadTime(comercio.getLeadTime());
             comercioHoyComoDtoList.add(comercioHoyComoDto);
         }
         return comercioHoyComoDtoList;
