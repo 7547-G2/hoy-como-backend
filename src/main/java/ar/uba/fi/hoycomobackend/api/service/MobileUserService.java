@@ -93,6 +93,7 @@ public class MobileUserService {
         Address address = modelMapper.map(addressDto, Address.class);
         MobileUser mobileUser = modelMapper.map(mobileUserAddDto, MobileUser.class);
         mobileUser.setAddress(address);
+        mobileUser.setTelephone(mobileUserAddDto.getTelefono());
         try {
             mobileUserRepository.saveAndFlush(mobileUser);
             return ResponseEntity.ok(MOBILE_USER_ADDED_SUCCESSFUL);

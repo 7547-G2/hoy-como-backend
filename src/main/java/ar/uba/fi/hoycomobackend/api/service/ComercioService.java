@@ -6,10 +6,12 @@ import ar.uba.fi.hoycomobackend.api.dto.PasswordUpdateDto;
 import ar.uba.fi.hoycomobackend.api.dto.PedidoOfComercioDto;
 import ar.uba.fi.hoycomobackend.api.service.pushnotification.PushNotificationMessage;
 import ar.uba.fi.hoycomobackend.database.entity.Comercio;
+import ar.uba.fi.hoycomobackend.database.entity.MobileUser;
 import ar.uba.fi.hoycomobackend.database.entity.Pedido;
 import ar.uba.fi.hoycomobackend.database.entity.TipoComida;
 import ar.uba.fi.hoycomobackend.database.queries.ComercioQuery;
 import ar.uba.fi.hoycomobackend.database.queries.PedidoQuery;
+import ar.uba.fi.hoycomobackend.database.repository.MobileUserRepository;
 import com.google.firebase.messaging.Message;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -33,13 +35,15 @@ public class ComercioService {
     Logger LOGGER = LoggerFactory.getLogger(ComercioService.class);
     private ComercioQuery comercioQuery;
     private PedidoQuery pedidoQuery;
+    private MobileUserRepository mobileUserRepository;
     private OrderDetailService orderDetailService;
     private PushNotificationMessage pushNotificationMessage;
 
     @Autowired
-    public ComercioService(ComercioQuery comercioQuery, PedidoQuery pedidoQuery, OrderDetailService orderDetailService, PushNotificationMessage pushNotificationMessage) {
+    public ComercioService(ComercioQuery comercioQuery, PedidoQuery pedidoQuery, MobileUserRepository mobileUserRepository, OrderDetailService orderDetailService, PushNotificationMessage pushNotificationMessage) {
         this.comercioQuery = comercioQuery;
         this.pedidoQuery = pedidoQuery;
+        this.mobileUserRepository = mobileUserRepository;
         this.orderDetailService = orderDetailService;
         this.pushNotificationMessage = pushNotificationMessage;
     }
@@ -87,6 +91,12 @@ public class ComercioService {
         List<PedidoOfComercioDto> pedidoOfComercioDtoList = new LinkedList<>();
         pedidoList.forEach(pedido -> {
             PedidoOfComercioDto pedidoOfComercioDto = new PedidoOfComercioDto();
+            try {
+                MobileUser mobileUser = mobileUserRepository.getOne(pedido.getFacebookId());
+                pedidoOfComercioDto.setTelefono(mobileUser.getTelephone());
+            } catch (Exception e) {
+                LOGGER.warn("No mobile user by facebookId: {} found", pedido.getFacebookId());
+            }
             pedidoOfComercioDto.setEstado(pedido.getEstado());
             pedidoOfComercioDto.setFecha(pedido.getFecha());
             pedidoOfComercioDto.setMonto(pedido.getTotal());

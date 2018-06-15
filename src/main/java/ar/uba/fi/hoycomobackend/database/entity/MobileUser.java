@@ -27,6 +27,8 @@ public class MobileUser {
     @JoinColumn(name = "address_id")
     private Address address;
     private String link;
+    @Column(columnDefinition = "varchar(32) default 'No hay teléfono disponible'")
+    private String telephone = "No hay teléfono disponible";
 
     public List<Comercio> getFavoriteComercios() {
         return favoriteComercios;
@@ -99,5 +101,13 @@ public class MobileUser {
 
     public void setLink(String link) {
         this.link = link;
+    }
+
+    public String getTelephone() {
+        return telephone;
+    }
+
+    public void setTelephone(String telephone) {
+        this.telephone = telephone;
     }
 }
