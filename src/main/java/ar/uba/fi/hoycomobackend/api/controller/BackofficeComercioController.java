@@ -1,10 +1,7 @@
 package ar.uba.fi.hoycomobackend.api.controller;
 
 import ar.uba.fi.hoycomobackend.api.dto.*;
-import ar.uba.fi.hoycomobackend.api.service.BackofficeComercioService;
-import ar.uba.fi.hoycomobackend.api.service.ComercioService;
-import ar.uba.fi.hoycomobackend.api.service.ComidasService;
-import ar.uba.fi.hoycomobackend.api.service.PedidoService;
+import ar.uba.fi.hoycomobackend.api.service.*;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -19,13 +16,15 @@ public class BackofficeComercioController {
     private ComercioService comercioService;
     private ComidasService comidasService;
     private PedidoService pedidoService;
+    private CommentService commentService;
 
     @Autowired
-    public BackofficeComercioController(BackofficeComercioService backofficeComercioSessionService, ComercioService comercioService, ComidasService comidasService, PedidoService pedidoService) {
+    public BackofficeComercioController(BackofficeComercioService backofficeComercioSessionService, ComercioService comercioService, ComidasService comidasService, PedidoService pedidoService, CommentService commentService) {
         this.backofficeComercioService = backofficeComercioSessionService;
         this.comercioService = comercioService;
         this.comidasService = comidasService;
         this.pedidoService = pedidoService;
+        this.commentService = commentService;
     }
 
     @PostMapping(value = "/backofficeComercio/session", produces = {"application/json"})
@@ -141,5 +140,10 @@ public class BackofficeComercioController {
     @GetMapping(value = "/backofficeComercio/{comercioId}/opciones")
     public ResponseEntity getAllOpcionesFromComercio(@PathVariable("comercioId") Long comercioId) {
         return comidasService.getAllOpcionesFromComercioById(comercioId);
+    }
+
+    @GetMapping(value = "/backofficeComercio/{comercioId}/comentarios")
+    public ResponseEntity getComentariosOfComercio(@PathVariable("comercioId") Long comercioId) {
+        return commentService.getComentariosOfComercio(comercioId);
     }
 }
