@@ -92,7 +92,7 @@ public class ComercioService {
         pedidoList.forEach(pedido -> {
             PedidoOfComercioDto pedidoOfComercioDto = new PedidoOfComercioDto();
             try {
-                MobileUser mobileUser = mobileUserRepository.getOne(pedido.getFacebookId());
+                MobileUser mobileUser = mobileUserRepository.getMobileUserByFacebookId(pedido.getFacebookId()).get();
                 pedidoOfComercioDto.setTelefono(mobileUser.getTelephone());
             } catch (Exception e) {
                 LOGGER.warn("No mobile user by facebookId: {} found", pedido.getFacebookId());
