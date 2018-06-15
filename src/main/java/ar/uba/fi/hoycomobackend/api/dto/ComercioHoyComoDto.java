@@ -17,6 +17,7 @@ public class ComercioHoyComoDto {
     private String nombreEncargado;
     private String dniEncargado;
     private String telefonoEncargado;
+    private Integer leadTime;
 
     public String getNombreEncargado() {
         return nombreEncargado;
@@ -136,5 +137,13 @@ public class ComercioHoyComoDto {
 
     public void setMotivoDeshabilitacion(String motivoDeshabilitacion) {
         this.motivoDeshabilitacion = motivoDeshabilitacion;
+    }
+
+    public Integer getLeadTime() {
+        return leadTime;
+    }
+
+    public void setLeadTime(Integer leadTime) {
+        this.leadTime = leadTime;
     }
 }
