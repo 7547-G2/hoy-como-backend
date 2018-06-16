@@ -5,6 +5,7 @@ public class AddressDto {
     private String postalCode;
     private String floor;
     private String department;
+    private String phone;
 
     public String getStreet() {
         return street;
@@ -49,5 +50,13 @@ public class AddressDto {
             department = "";
 
         return this;
+    }
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
     }
 }
