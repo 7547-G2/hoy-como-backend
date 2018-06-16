@@ -92,7 +92,7 @@ public class MobileUserRestController {
         return mobileUserService.cancelPedido(pedidoId);
     }
 
-    @PostMapping(value = "/mobileUser/{mobileUserId}/pedido/{pedidoId}/comentario")
+    @PostMapping(value = "/mobileUser/{mobileUserFacebookId}/pedido/{pedidoId}/comentario")
     public ResponseEntity postComment(@PathVariable("mobileUserFacebookId") Long mobileUserFacebookId, @PathVariable("pedidoId") Long pedidoId, @RequestBody ComentarioDto comentarioDto) {
         return mobileUserService.postCommentInPedido(mobileUserFacebookId, pedidoId, comentarioDto);
     }
