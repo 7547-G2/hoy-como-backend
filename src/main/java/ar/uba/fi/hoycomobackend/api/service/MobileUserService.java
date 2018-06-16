@@ -331,13 +331,29 @@ public class MobileUserService {
             java.sql.Date sqlDate = new java.sql.Date(System.currentTimeMillis());
             comment.setUserCommentDate(sqlDate);
             pedido.setEstado("Calificado");
+            updateRatingOfCommerce(pedido.getStoreId(), comentarioDto.getEstrellas());
 
             pedidoQuery.savePedido(pedido);
             comment = commentRepository.saveAndFlush(comment);
 
             return ResponseEntity.ok(comment);
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorMessage("No se encontró pedido"));
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorMessage("Error al postear comentario: " + e.getMessage()));
         }
+    }
+
+    private void updateRatingOfCommerce(Long comercioId, Integer estrellas) {
+        Optional<Comercio> comercioOptional = comercioQuery.getComercioById(comercioId);
+        if (comercioOptional.isPresent()) {
+            Comercio comercio = comercioOptional.get();
+            if (comercio.getTotalRatings() == null)
+                comercio.setTotalRatings(0L);
+
+            Float newRating = ( estrellas + (comercio.getTotalRatings()*comercio.getRating()) ) / (comercio.getTotalRatings() + 1.0f);
+            comercio.setRating(newRating);
+
+            comercioQuery.saveAndFlush(comercio);
+        } else
+            LOGGER.warn("No commerce found by that ID");
     }
 }

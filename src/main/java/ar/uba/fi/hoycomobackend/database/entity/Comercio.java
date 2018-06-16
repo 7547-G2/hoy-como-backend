@@ -31,8 +31,9 @@ public class Comercio {
     private Float precioMaximo = 0.0f;
     @Column(columnDefinition = "INTEGER default 0")
     private Integer totalPedidos = 0;
-    @Column(columnDefinition = "float(2) default 1.00")
-    private Float rating;
+    @Column(columnDefinition = "float(2) default 0.00")
+    private Float rating = 0.0f;
+    private Long totalRatings = 0L;
     @NotNull
     private String password;
     @Column(columnDefinition = "text default ''")
@@ -254,5 +255,13 @@ public class Comercio {
 
     public void setMotivoDeshabilitacion(String motivoDeshabilitacion) {
         this.motivoDeshabilitacion = motivoDeshabilitacion;
+    }
+
+    public Long getTotalRatings() {
+        return totalRatings;
+    }
+
+    public void setTotalRatings(Long totalRatings) {
+        this.totalRatings = totalRatings;
     }
 }
