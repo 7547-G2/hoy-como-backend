@@ -1,12 +1,13 @@
 package ar.uba.fi.hoycomobackend.api.service.menu;
 
+import ar.uba.fi.hoycomobackend.api.dto.CommentsCommerceDto;
 import ar.uba.fi.hoycomobackend.api.dto.ErrorMessage;
 import ar.uba.fi.hoycomobackend.api.dto.MenuDto;
 import ar.uba.fi.hoycomobackend.api.dto.MenuWithLogoDto;
-import ar.uba.fi.hoycomobackend.database.entity.Comercio;
-import ar.uba.fi.hoycomobackend.database.entity.Plato;
-import ar.uba.fi.hoycomobackend.database.entity.PlatoState;
+import ar.uba.fi.hoycomobackend.database.entity.*;
 import ar.uba.fi.hoycomobackend.database.repository.CategoriaComidaRepository;
+import ar.uba.fi.hoycomobackend.database.repository.CommentRepository;
+import ar.uba.fi.hoycomobackend.database.repository.MobileUserRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +15,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 
+import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -21,10 +23,14 @@ import java.util.stream.Collectors;
 public class MenuDisplayer {
     private static Logger LOGGER = LoggerFactory.getLogger(MenuDisplayer.class);
     private CategoriaComidaRepository categoriaComidaRepository;
+    private CommentRepository commentRepository;
+    private MobileUserRepository mobileUserRepository;
 
     @Autowired
-    public MenuDisplayer(CategoriaComidaRepository categoriaComidaRepository) {
+    public MenuDisplayer(CategoriaComidaRepository categoriaComidaRepository, CommentRepository commentRepository, MobileUserRepository mobileUserRepository) {
         this.categoriaComidaRepository = categoriaComidaRepository;
+        this.commentRepository = commentRepository;
+        this.mobileUserRepository = mobileUserRepository;
     }
 
     public ResponseEntity getMenuFromComercio(Comercio comercio) {
@@ -43,8 +49,30 @@ public class MenuDisplayer {
         menuWithLogoDto.setImagen_comercio(comercio.getImagenComercio());
         menuWithLogoDto.setMenu(menuList);
         menuWithLogoDto.setDescuentoGlobal(comercio.getDescuento());
+        menuWithLogoDto = menuWithComments(comercio.getId(), menuWithLogoDto);
 
         return ResponseEntity.ok(menuWithLogoDto);
+    }
+
+    private MenuWithLogoDto menuWithComments(Long comercioId, MenuWithLogoDto menuWithLogoDto) {
+        List<Comment> commentList = commentRepository.findCommentsByComercioId(comercioId);
+        List<CommentsCommerceDto> commentsCommerceDtoList = new ArrayList<>();
+        commentList.forEach(comment -> {
+            CommentsCommerceDto commentsCommerceDto = new CommentsCommerceDto();
+            commentsCommerceDto.setComment(comment.getUserComment());
+            SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
+            commentsCommerceDto.setDateComment(formatter.format(comment.getUserCommentDate()));
+            commentsCommerceDto.setDateReplica(formatter.format(comment.getCommerceReplyDate()));
+            commentsCommerceDto.setRating(comment.getStars());
+            commentsCommerceDto.setReplica(comment.getCommerceReply());
+            MobileUser mobileUser = mobileUserRepository.getMobileUserByFacebookId(comment.getMobileUserFacebookId()).get();
+            commentsCommerceDto.setUser(mobileUser.getFirstName() + " " + mobileUser.getLastName());
+
+            commentsCommerceDtoList.add(commentsCommerceDto);
+        });
+        menuWithLogoDto.setComentarios(commentsCommerceDtoList);
+
+        return menuWithLogoDto;
     }
 
     private List<MenuDto> getMenuListFromPlatoCategoryMap(Map<Long, List<Plato>> platoCategoryMap) {
