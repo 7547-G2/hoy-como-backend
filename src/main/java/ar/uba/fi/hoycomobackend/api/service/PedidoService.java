@@ -3,9 +3,11 @@ package ar.uba.fi.hoycomobackend.api.service;
 import ar.uba.fi.hoycomobackend.api.dto.ErrorMessage;
 import ar.uba.fi.hoycomobackend.api.dto.PlatoMobileUserDto;
 import ar.uba.fi.hoycomobackend.api.dto.PlatoPedidoComercioDto;
+import ar.uba.fi.hoycomobackend.database.entity.Comercio;
 import ar.uba.fi.hoycomobackend.database.entity.Pedido;
 import ar.uba.fi.hoycomobackend.database.entity.Plato;
 import ar.uba.fi.hoycomobackend.database.entity.orderhistory.OrderDetail;
+import ar.uba.fi.hoycomobackend.database.queries.ComercioQuery;
 import ar.uba.fi.hoycomobackend.database.queries.PedidoQuery;
 import ar.uba.fi.hoycomobackend.database.repository.OpcionRepository;
 import ar.uba.fi.hoycomobackend.database.repository.OrderDetailRepository;
@@ -17,9 +19,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class PedidoService {
@@ -28,13 +30,15 @@ public class PedidoService {
     private PlatoRepository platoRepository;
     private OrderDetailRepository orderDetailRepository;
     private OpcionRepository opcionRepository;
+    private ComercioQuery comercioQuery;
 
     @Autowired
-    public PedidoService(PedidoQuery pedidoQuery, PlatoRepository platoRepository, OrderDetailRepository orderDetailRepository, OpcionRepository opcionRepository) {
+    public PedidoService(PedidoQuery pedidoQuery, PlatoRepository platoRepository, OrderDetailRepository orderDetailRepository, OpcionRepository opcionRepository, ComercioQuery comercioQuery) {
         this.pedidoQuery = pedidoQuery;
         this.platoRepository = platoRepository;
         this.orderDetailRepository = orderDetailRepository;
         this.opcionRepository = opcionRepository;
+        this.comercioQuery = comercioQuery;
     }
 
     public ResponseEntity getPlatoFromPedido(Long pedidoId) {
@@ -106,10 +110,24 @@ public class PedidoService {
     public ResponseEntity getInfoDashboard(Long comercioId) {
         try {
             List<Pedido> pedidoList = pedidoQuery.getPedidosOfComercio(comercioId);
+            Comercio comercio = comercioQuery.getComercioById(comercioId).get();
             InfoDashboard infoDashboard = new InfoDashboard();
 
-            infoDashboard.facturadoDia = pedidoList.stream().filter(pedido -> pedido.getFechaFacturacion().after(DateTime.now().withTimeAtStartOfDay().toDate())).mapToDouble(filteredPedidos -> filteredPedidos.getTotal()).sum();
-            infoDashboard.facturadoMes = pedidoList.stream().filter(pedido -> pedido.getFechaFacturacion().after(DateTime.now().withDayOfMonth(1).withTimeAtStartOfDay().toDate())).mapToDouble(filteredPedidos -> filteredPedidos.getTotal()).sum();
+            infoDashboard.leadTime = comercio.getLeadTime().toString() + "minutos";
+            infoDashboard.rating = comercio.getRating();
+            List<Pedido> pedidoListToday = pedidoList.stream().filter(pedido ->  (pedido.getFechaFacturacion().after(DateTime.now().withTimeAtStartOfDay().toDate()))).collect(Collectors.toList());
+            infoDashboard.facturadoDia = pedidoListToday.stream().
+                    filter(pedido -> ("Entregado".equalsIgnoreCase(pedido.getEstado()) || "Calificado".equalsIgnoreCase(pedido.getEstado()))).
+                    mapToDouble(filteredPedidos -> filteredPedidos.getTotal()).sum();
+            infoDashboard.ingresados = pedidoListToday.stream().filter(pedido -> "Ingresado".equalsIgnoreCase(pedido.getEstado())).count();
+            infoDashboard.enPreparacion = pedidoListToday.stream().filter(pedido -> "EnPreparacion".equalsIgnoreCase(pedido.getEstado())).count();
+            infoDashboard.despachados = pedidoListToday.stream().filter(pedido -> "Despachado".equalsIgnoreCase(pedido.getEstado())).count();
+            infoDashboard.cancelados = pedidoListToday.stream().filter(pedido -> "Cancelado".equalsIgnoreCase(pedido.getEstado())).count();
+            infoDashboard.entregados = pedidoListToday.stream().filter(pedido -> ("Entregado".equalsIgnoreCase(pedido.getEstado()) || "Calificado".equalsIgnoreCase(pedido.getEstado()))).count();
+            infoDashboard.facturadoMes = pedidoList.stream().
+                    filter(pedido -> pedido.getFechaFacturacion().after(DateTime.now().withDayOfMonth(1).withTimeAtStartOfDay().toDate())&&
+                            ("Entregado".equalsIgnoreCase(pedido.getEstado()) || "Calificado".equalsIgnoreCase(pedido.getEstado()))).
+                    mapToDouble(filteredPedidos -> filteredPedidos.getTotal()).sum();
 
             return ResponseEntity.ok(infoDashboard);
         } catch (Exception e) {
@@ -120,5 +138,12 @@ public class PedidoService {
     private class InfoDashboard {
         public Double facturadoDia;
         public Double facturadoMes;
+        public Long ingresados;
+        public Long enPreparacion;
+        public Long despachados;
+        public Long cancelados;
+        public Long entregados;
+        public String leadTime;
+        public Float rating;
     }
 }
