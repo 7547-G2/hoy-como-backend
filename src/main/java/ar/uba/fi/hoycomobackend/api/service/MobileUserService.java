@@ -300,8 +300,11 @@ public class MobileUserService {
     }
 
     private String transformEstadoPedidoToCorrectValue(String estado) {
-        if (estado != null && "EnPreparacion".equalsIgnoreCase(estado)) {
-            return "En Preparación";
+        if (estado != null) {
+            if ("EnPreparacion".equalsIgnoreCase(estado))
+                return "En Preparación";
+            else
+                return estado;
         }
         return null;
     }
