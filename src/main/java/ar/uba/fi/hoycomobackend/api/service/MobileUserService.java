@@ -320,7 +320,9 @@ public class MobileUserService {
             comment.setUserComment(comentarioDto.getComentario());
             java.sql.Date sqlDate = new java.sql.Date(System.currentTimeMillis());
             comment.setUserCommentDate(sqlDate);
+            pedido.setEstado("Calificado");
 
+            pedidoQuery.savePedido(pedido);
             comment = commentRepository.saveAndFlush(comment);
 
             return ResponseEntity.ok(comment);
