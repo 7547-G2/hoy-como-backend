@@ -286,7 +286,8 @@ public class MobileUserService {
             Long comercioId = pedido.getStoreId();
             String storeName = comercioQuery.getComercioById(comercioId).get().getNombre();
             pedidoMobileUserDto.setStore_name(storeName);
-            pedidoMobileUserDto.setStatus(pedido.getEstado());
+            String estadoPedido = transformEstadoPedidoToCorrectValue(pedido.getEstado());
+            pedidoMobileUserDto.setStatus(estadoPedido);
             pedidoMobileUserDto.setOrder_id(pedido.getId());
             pedidoMobileUserDto.setFecha(pedido.getLastModified());
 
@@ -294,6 +295,13 @@ public class MobileUserService {
         });
 
         return pedidoMobileUserDtoList;
+    }
+
+    private String transformEstadoPedidoToCorrectValue(String estado) {
+        if (estado != null && "EnPreparacion".equalsIgnoreCase(estado)) {
+            return "En Preparación";
+        }
+        return null;
     }
 
     public ResponseEntity cancelPedido(Long pedidoId) {

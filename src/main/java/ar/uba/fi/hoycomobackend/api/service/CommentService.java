@@ -2,7 +2,6 @@ package ar.uba.fi.hoycomobackend.api.service;
 
 import ar.uba.fi.hoycomobackend.api.dto.ErrorMessage;
 import ar.uba.fi.hoycomobackend.api.dto.ReplicaDto;
-import ar.uba.fi.hoycomobackend.api.service.pushnotification.FirebaseApplication;
 import ar.uba.fi.hoycomobackend.api.service.pushnotification.PushNotificationMessage;
 import ar.uba.fi.hoycomobackend.database.entity.Comercio;
 import ar.uba.fi.hoycomobackend.database.entity.Comment;
@@ -66,7 +65,7 @@ public class CommentService {
             comment.setCommerceReplyDate(sqlDate);
 
             commentRepository.saveAndFlush(comment);
-            try{
+            try {
                 Comercio comercio = comercioQuery.getComercioById(comercioId).get();
                 sendMessageToAndroidDevice(comercio.getNombre());
             } catch (Exception e) {
