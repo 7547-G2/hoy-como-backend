@@ -10,12 +10,14 @@ import ar.uba.fi.hoycomobackend.database.queries.PedidoQuery;
 import ar.uba.fi.hoycomobackend.database.repository.OpcionRepository;
 import ar.uba.fi.hoycomobackend.database.repository.OrderDetailRepository;
 import ar.uba.fi.hoycomobackend.database.repository.PlatoRepository;
+import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -99,5 +101,24 @@ public class PedidoService {
             return ResponseEntity.ok(orderDetail);
         } else
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorMessage("No se encontró"));
+    }
+
+    public ResponseEntity getInfoDashboard(Long comercioId) {
+        try {
+            List<Pedido> pedidoList = pedidoQuery.getPedidosOfComercio(comercioId);
+            InfoDashboard infoDashboard = new InfoDashboard();
+
+            infoDashboard.facturadoDia = pedidoList.stream().filter(pedido -> pedido.getFechaFacturacion().after(DateTime.now().withTimeAtStartOfDay().toDate())).mapToDouble(filteredPedidos -> filteredPedidos.getTotal()).sum();
+            infoDashboard.facturadoMes = pedidoList.stream().filter(pedido -> pedido.getFechaFacturacion().after(DateTime.now().withDayOfMonth(1).withTimeAtStartOfDay().toDate())).mapToDouble(filteredPedidos -> filteredPedidos.getTotal()).sum();
+
+            return ResponseEntity.ok(infoDashboard);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ErrorMessage("Problema al buscar info para el dashboard, motivo: " + e.getMessage()));
+        }
+    }
+
+    private class InfoDashboard {
+        public Double facturadoDia;
+        public Double facturadoMes;
     }
 }

@@ -151,4 +151,9 @@ public class BackofficeComercioController {
     public ResponseEntity replyToComment(@PathVariable("comercioId") Long comercioId, @PathVariable("comentarioId") Long comentarioId, @RequestBody ReplicaDto replicaDto) {
         return commentService.replyToComment(comercioId, comentarioId, replicaDto);
     }
+
+    @GetMapping(value = "/backofficeComercio/{comercioId}/info")
+    public ResponseEntity getInfoOfCashFlow(@PathVariable("comercioId") Long comercioId) {
+        return pedidoService.getInfoDashboard(comercioId);
+    }
 }
