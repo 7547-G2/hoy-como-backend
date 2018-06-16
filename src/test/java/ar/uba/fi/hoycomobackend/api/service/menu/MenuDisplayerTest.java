@@ -6,6 +6,8 @@ import ar.uba.fi.hoycomobackend.database.entity.Comercio;
 import ar.uba.fi.hoycomobackend.database.entity.Plato;
 import ar.uba.fi.hoycomobackend.database.entity.PlatoState;
 import ar.uba.fi.hoycomobackend.database.repository.CategoriaComidaRepository;
+import ar.uba.fi.hoycomobackend.database.repository.CommentRepository;
+import ar.uba.fi.hoycomobackend.database.repository.MobileUserRepository;
 import org.junit.Test;
 import org.mockito.Mockito;
 import org.springframework.http.ResponseEntity;
@@ -23,7 +25,9 @@ import static org.mockito.ArgumentMatchers.any;
 public class MenuDisplayerTest {
 
     private CategoriaComidaRepository categoriaComidaRepository = Mockito.mock(CategoriaComidaRepository.class);
-    private MenuDisplayer menuDisplayer = new MenuDisplayer(categoriaComidaRepository);
+    private CommentRepository commentRepository = Mockito.mock(CommentRepository.class);
+    private MobileUserRepository mobileUserRepository = Mockito.mock(MobileUserRepository.class);
+    private MenuDisplayer menuDisplayer = new MenuDisplayer(categoriaComidaRepository, commentRepository, mobileUserRepository);
 
     @Test
     public void getMenuFromComercio() {
