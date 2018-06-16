@@ -130,6 +130,7 @@ public class ComercioService {
                         comercio.setLeadTime(totalMinutes);
                         comercio.setTotalPedidos(olderTotalTimes + 1);
                         comercioQuery.saveAndFlush(comercio);
+                        pedido.setFechaFacturacion(new java.sql.Date(System.currentTimeMillis()));
                     }
 
                     try {

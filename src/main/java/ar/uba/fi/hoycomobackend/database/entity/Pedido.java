@@ -1,6 +1,7 @@
 package ar.uba.fi.hoycomobackend.database.entity;
 
 import javax.persistence.*;
+import java.sql.Date;
 import java.util.List;
 
 @Entity
@@ -31,6 +32,7 @@ public class Pedido {
     private Long startTime;
     private Long endTime;
     private String lastModified;
+    private Date fechaFacturacion;
 
     public Double getLatitud() {
         return latitud;
@@ -198,5 +200,13 @@ public class Pedido {
 
     public void setLastModified(String lastModified) {
         this.lastModified = lastModified;
+    }
+
+    public Date getFechaFacturacion() {
+        return fechaFacturacion;
+    }
+
+    public void setFechaFacturacion(Date fechaFacturacion) {
+        this.fechaFacturacion = fechaFacturacion;
     }
 }
