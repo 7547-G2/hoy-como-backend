@@ -146,4 +146,9 @@ public class BackofficeComercioController {
     public ResponseEntity getComentariosOfComercio(@PathVariable("comercioId") Long comercioId) {
         return commentService.getComentariosOfComercio(comercioId);
     }
+
+    @RequestMapping(value = "/backofficeComercio/{comercioId}/comentarios/{comentarioId}", method = {RequestMethod.POST, RequestMethod.PUT})
+    public ResponseEntity replyToComment(@PathVariable("comercioId") Long comercioId, @PathVariable("comentarioId") Long comentarioId, @RequestBody ReplicaDto replicaDto) {
+        return commentService.replyToComment(comercioId, comentarioId, replicaDto);
+    }
 }

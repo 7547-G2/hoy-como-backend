@@ -175,6 +175,7 @@ public class ComercioService {
         LOGGER.info("Starting to send message to android device");
         Message message = Message.builder()
                 .putData("title", "Hoy Como")
+                .putData("origen", "estado")
                 .putData("detail", storeName + ": " + pushMessage)
                 .putData("order-id", pedidoId.toString())
                 .setTopic("/topics/allDevices")
