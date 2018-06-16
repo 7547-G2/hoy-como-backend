@@ -7,7 +7,7 @@ public class MobileUserAddDto {
     private String lastName;
     private AddressDto addressDto;
     private String link;
-    private String telefono;
+    private String phone;
 
     public long getFacebookId() {
         return facebookId;
@@ -57,11 +57,11 @@ public class MobileUserAddDto {
         this.link = link;
     }
 
-    public String getTelefono() {
-        return telefono;
+    public String getPhone() {
+        return phone;
     }
 
-    public void setTelefono(String telefono) {
-        this.telefono = telefono;
+    public void setPhone(String phone) {
+        this.phone = phone;
     }
 }
