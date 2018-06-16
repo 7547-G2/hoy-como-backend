@@ -93,7 +93,7 @@ public class MobileUserRestController {
     }
 
     @PostMapping(value = "/mobileUser/{mobileUserId}/pedido/{pedidoId}/comentario")
-    public ResponseEntity postComment(@PathVariable("mobileUserFacebookId") Long mobileUserFacebookId, @PathVariable("pedidoId") Long pedidoId, ComentarioDto comentarioDto) {
+    public ResponseEntity postComment(@PathVariable("mobileUserFacebookId") Long mobileUserFacebookId, @PathVariable("pedidoId") Long pedidoId, @RequestBody ComentarioDto comentarioDto) {
         return mobileUserService.postCommentInPedido(mobileUserFacebookId, pedidoId, comentarioDto);
     }
 

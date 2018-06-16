@@ -27,7 +27,7 @@ public class CommentService {
     public ResponseEntity getComentariosOfComercio(Long comercioId) {
         List<Comment> commentList = commentRepository.findCommentsByComercioId(comercioId);
         List<CommentDto> commentDtoList = new ArrayList<>();
-        commentList.forEach( comment -> {
+        commentList.forEach(comment -> {
             CommentDto commentDto = new CommentDto();
             commentDto.id = comment.getId();
             MobileUser mobileUser = mobileUserRepository.getMobileUserByFacebookId(comment.getMobileUserFacebookId()).get();
