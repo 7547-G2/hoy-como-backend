@@ -354,7 +354,7 @@ public class MobileUserService {
             if (comercio.getTotalRatings() == null)
                 comercio.setTotalRatings(0L);
 
-            Float newRating = ( estrellas + (comercio.getTotalRatings()*comercio.getRating()) ) / (comercio.getTotalRatings() + 1.0f);
+            Float newRating = (estrellas + (comercio.getTotalRatings() * comercio.getRating())) / (comercio.getTotalRatings() + 1.0f);
             comercio.setRating(newRating);
 
             comercioQuery.saveAndFlush(comercio);

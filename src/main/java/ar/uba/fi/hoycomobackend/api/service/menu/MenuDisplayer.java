@@ -61,10 +61,10 @@ public class MenuDisplayer {
             CommentsCommerceDto commentsCommerceDto = new CommentsCommerceDto();
             commentsCommerceDto.setComment(comment.getUserComment());
             SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
-            if(comment.getUserCommentDate() != null) {
+            if (comment.getUserCommentDate() != null) {
                 commentsCommerceDto.setDateComment(formatter.format(comment.getUserCommentDate()));
             }
-            if(comment.getCommerceReplyDate() != null) {
+            if (comment.getCommerceReplyDate() != null) {
                 commentsCommerceDto.setDateReplica(formatter.format(comment.getCommerceReplyDate()));
             }
             commentsCommerceDto.setRating(comment.getStars());

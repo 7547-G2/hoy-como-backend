@@ -120,7 +120,7 @@ public class PedidoService {
                 return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ErrorMessage("Problema al buscar lead time o rating, motivo: " + e.getMessage()));
             }
             try {
-                List<Pedido> pedidoListToday = pedidoList.stream().filter(pedido ->  (pedido.getFechaInicioFacturacion().after(DateTime.now().withTimeAtStartOfDay().toDate()))).collect(Collectors.toList());
+                List<Pedido> pedidoListToday = pedidoList.stream().filter(pedido -> (pedido.getFechaInicioFacturacion().after(DateTime.now().withTimeAtStartOfDay().toDate()))).collect(Collectors.toList());
                 try {
                     infoDashboard.facturadoDia = pedidoListToday.stream().
                             filter(pedido -> ("Entregado".equalsIgnoreCase(pedido.getEstado()) || "Calificado".equalsIgnoreCase(pedido.getEstado()))).

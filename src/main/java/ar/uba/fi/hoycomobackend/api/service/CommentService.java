@@ -9,6 +9,7 @@ import ar.uba.fi.hoycomobackend.database.entity.MobileUser;
 import ar.uba.fi.hoycomobackend.database.queries.ComercioQuery;
 import ar.uba.fi.hoycomobackend.database.repository.CommentRepository;
 import ar.uba.fi.hoycomobackend.database.repository.MobileUserRepository;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.firebase.messaging.Message;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -27,13 +28,15 @@ public class CommentService {
     private MobileUserRepository mobileUserRepository;
     private PushNotificationMessage pushNotificationMessage;
     private ComercioQuery comercioQuery;
+    private ObjectMapper objectMapper;
 
     @Autowired
-    public CommentService(CommentRepository commentRepository, MobileUserRepository mobileUserRepository, PushNotificationMessage pushNotificationMessage, ComercioQuery comercioQuery) {
+    public CommentService(CommentRepository commentRepository, MobileUserRepository mobileUserRepository, PushNotificationMessage pushNotificationMessage, ComercioQuery comercioQuery, ObjectMapper objectMapper) {
         this.commentRepository = commentRepository;
         this.mobileUserRepository = mobileUserRepository;
         this.pushNotificationMessage = pushNotificationMessage;
         this.comercioQuery = comercioQuery;
+        this.objectMapper = objectMapper;
     }
 
     public ResponseEntity getComentariosOfComercio(Long comercioId) {
@@ -67,7 +70,9 @@ public class CommentService {
             commentRepository.saveAndFlush(comment);
             try {
                 Comercio comercio = comercioQuery.getComercioById(comercioId).get();
-                sendMessageToAndroidDevice(comercio.getNombre());
+                List<Comment> commentsOfComercio = commentRepository.findCommentsByComercioId(comercioId);
+                String commentsOfComercioJson = objectMapper.writeValueAsString(commentsOfComercio);
+                sendMessageToAndroidDevice(comercio.getNombre(), commentsOfComercioJson);
             } catch (Exception e) {
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorMessage("No se ha encontrado comercio bajo ese id"));
             }
@@ -78,10 +83,12 @@ public class CommentService {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ErrorMessage("No se ha encontrado comentario bajo ese id"));
     }
 
-    private void sendMessageToAndroidDevice(String storeName) {
+    private void sendMessageToAndroidDevice(String storeName, String commentsOfComercio) {
         Message message = Message.builder()
                 .putData("title", "Hoy Como")
                 .putData("origen", "replica")
+                .putData("storeName", storeName)
+                .putData("comments", commentsOfComercio)
                 .putData("detail", storeName + ": ha respondido tu comentario")
                 .setTopic("/topics/allDevices")
                 .build();
