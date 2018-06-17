@@ -32,7 +32,7 @@ public class Pedido {
     private Long startTime;
     private Long endTime;
     private String lastModified;
-    private Date fechaFacturacion;
+    private Date fechaInicioFacturacion;
 
     public Double getLatitud() {
         return latitud;
@@ -202,11 +202,11 @@ public class Pedido {
         this.lastModified = lastModified;
     }
 
-    public Date getFechaFacturacion() {
-        return fechaFacturacion;
+    public Date getFechaInicioFacturacion() {
+        return fechaInicioFacturacion;
     }
 
-    public void setFechaFacturacion(Date fechaFacturacion) {
-        this.fechaFacturacion = fechaFacturacion;
+    public void setFechaInicioFacturacion(Date fechaInicioFacturacion) {
+        this.fechaInicioFacturacion = fechaInicioFacturacion;
     }
 }
