@@ -121,16 +121,20 @@ public class PedidoService {
             }
             try {
                 List<Pedido> pedidoListToday = pedidoList.stream().filter(pedido ->  (pedido.getFechaFacturacion().after(DateTime.now().withTimeAtStartOfDay().toDate()))).collect(Collectors.toList());
-                infoDashboard.facturadoDia = pedidoListToday.stream().
-                        filter(pedido -> ("Entregado".equalsIgnoreCase(pedido.getEstado()) || "Calificado".equalsIgnoreCase(pedido.getEstado()))).
-                        mapToDouble(filteredPedidos -> filteredPedidos.getTotal()).sum();
-                infoDashboard.ingresados = pedidoListToday.stream().filter(pedido -> "Ingresado".equalsIgnoreCase(pedido.getEstado())).count();
-                infoDashboard.enPreparacion = pedidoListToday.stream().filter(pedido -> "EnPreparacion".equalsIgnoreCase(pedido.getEstado())).count();
-                infoDashboard.despachados = pedidoListToday.stream().filter(pedido -> "Despachado".equalsIgnoreCase(pedido.getEstado())).count();
-                infoDashboard.cancelados = pedidoListToday.stream().filter(pedido -> "Cancelado".equalsIgnoreCase(pedido.getEstado())).count();
-                infoDashboard.entregados = pedidoListToday.stream().filter(pedido -> ("Entregado".equalsIgnoreCase(pedido.getEstado()) || "Calificado".equalsIgnoreCase(pedido.getEstado()))).count();
+                try {
+                    infoDashboard.facturadoDia = pedidoListToday.stream().
+                            filter(pedido -> ("Entregado".equalsIgnoreCase(pedido.getEstado()) || "Calificado".equalsIgnoreCase(pedido.getEstado()))).
+                            mapToDouble(filteredPedidos -> filteredPedidos.getTotal()).sum();
+                    infoDashboard.ingresados = pedidoListToday.stream().filter(pedido -> "Ingresado".equalsIgnoreCase(pedido.getEstado())).count();
+                    infoDashboard.enPreparacion = pedidoListToday.stream().filter(pedido -> "EnPreparacion".equalsIgnoreCase(pedido.getEstado())).count();
+                    infoDashboard.despachados = pedidoListToday.stream().filter(pedido -> "Despachado".equalsIgnoreCase(pedido.getEstado())).count();
+                    infoDashboard.cancelados = pedidoListToday.stream().filter(pedido -> "Cancelado".equalsIgnoreCase(pedido.getEstado())).count();
+                    infoDashboard.entregados = pedidoListToday.stream().filter(pedido -> ("Entregado".equalsIgnoreCase(pedido.getEstado()) || "Calificado".equalsIgnoreCase(pedido.getEstado()))).count();
+                } catch (Exception e) {
+                    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ErrorMessage("fallo luego de obtener lista de pedidos filtrados: " + e.getMessage()));
+                }
             } catch (Exception e) {
-                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ErrorMessage("Problema al buscar info de pedidos del día, motivo: " + e.getMessage()));
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ErrorMessage("Problema al buscar info de pedidos del día filtrados, motivo: " + e.getMessage()));
             }
             try {
                 infoDashboard.facturadoMes = pedidoList.stream().
