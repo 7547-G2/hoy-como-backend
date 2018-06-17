@@ -60,7 +60,7 @@ public class MenuDisplayer {
         commentList.forEach(comment -> {
             CommentsCommerceDto commentsCommerceDto = new CommentsCommerceDto();
             commentsCommerceDto.setComment(comment.getUserComment());
-            SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
+            SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMddHHmmss");
             if (comment.getUserCommentDate() != null) {
                 commentsCommerceDto.setDateComment(formatter.format(comment.getUserCommentDate()));
             }

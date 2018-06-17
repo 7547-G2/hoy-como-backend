@@ -9,6 +9,7 @@ import ar.uba.fi.hoycomobackend.database.entity.Plato;
 import ar.uba.fi.hoycomobackend.database.entity.orderhistory.OrderDetail;
 import ar.uba.fi.hoycomobackend.database.queries.ComercioQuery;
 import ar.uba.fi.hoycomobackend.database.queries.PedidoQuery;
+import ar.uba.fi.hoycomobackend.database.repository.CommentRepository;
 import ar.uba.fi.hoycomobackend.database.repository.OpcionRepository;
 import ar.uba.fi.hoycomobackend.database.repository.OrderDetailRepository;
 import ar.uba.fi.hoycomobackend.database.repository.PlatoRepository;
@@ -31,14 +32,16 @@ public class PedidoService {
     private OrderDetailRepository orderDetailRepository;
     private OpcionRepository opcionRepository;
     private ComercioQuery comercioQuery;
+    private CommentRepository commentRepository;
 
     @Autowired
-    public PedidoService(PedidoQuery pedidoQuery, PlatoRepository platoRepository, OrderDetailRepository orderDetailRepository, OpcionRepository opcionRepository, ComercioQuery comercioQuery) {
+    public PedidoService(PedidoQuery pedidoQuery, PlatoRepository platoRepository, OrderDetailRepository orderDetailRepository, OpcionRepository opcionRepository, ComercioQuery comercioQuery, CommentRepository commentRepository) {
         this.pedidoQuery = pedidoQuery;
         this.platoRepository = platoRepository;
         this.orderDetailRepository = orderDetailRepository;
         this.opcionRepository = opcionRepository;
         this.comercioQuery = comercioQuery;
+        this.commentRepository = commentRepository;
     }
 
     public ResponseEntity getPlatoFromPedido(Long pedidoId) {
@@ -114,10 +117,15 @@ public class PedidoService {
             InfoDashboard infoDashboard = new InfoDashboard();
 
             try {
-                infoDashboard.leadTime = comercio.getLeadTime().toString() + "minutos";
+                infoDashboard.leadTime = comercio.getLeadTime().toString();
                 infoDashboard.rating = comercio.getRating();
             } catch (Exception e) {
                 return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ErrorMessage("Problema al buscar lead time o rating, motivo: " + e.getMessage()));
+            }
+            try {
+                infoDashboard.cantidadComentarios = commentRepository.countCommentsByComercioId(comercioId);
+            } catch (Exception e) {
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ErrorMessage("Problema al buscar cantidad de comentarios, motivo: " + e.getMessage()));
             }
             try {
                 List<Pedido> pedidoListToday = pedidoList.stream().filter(pedido -> (pedido.getFechaInicioFacturacion().after(DateTime.now().withTimeAtStartOfDay().toDate()))).collect(Collectors.toList());
@@ -160,5 +168,6 @@ public class PedidoService {
         public Long entregados;
         public String leadTime;
         public Float rating;
+        public Integer cantidadComentarios;
     }
 }
