@@ -338,6 +338,7 @@ public class MobileUserService {
             updateRatingOfCommerce(pedido.getStoreId(), comentarioDto.getEstrellas());
 
             pedidoQuery.savePedido(pedido);
+            orderDetailService.update(pedido);
             comment = commentRepository.saveAndFlush(comment);
 
             return ResponseEntity.ok(comment);
