@@ -61,8 +61,12 @@ public class MenuDisplayer {
             CommentsCommerceDto commentsCommerceDto = new CommentsCommerceDto();
             commentsCommerceDto.setComment(comment.getUserComment());
             SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
-            commentsCommerceDto.setDateComment(formatter.format(comment.getUserCommentDate()));
-            commentsCommerceDto.setDateReplica(formatter.format(comment.getCommerceReplyDate()));
+            if(comment.getUserCommentDate() != null) {
+                commentsCommerceDto.setDateComment(formatter.format(comment.getUserCommentDate()));
+            }
+            if(comment.getCommerceReplyDate() != null) {
+                commentsCommerceDto.setDateReplica(formatter.format(comment.getCommerceReplyDate()));
+            }
             commentsCommerceDto.setRating(comment.getStars());
             commentsCommerceDto.setReplica(comment.getCommerceReply());
             MobileUser mobileUser = mobileUserRepository.getMobileUserByFacebookId(comment.getMobileUserFacebookId()).get();
