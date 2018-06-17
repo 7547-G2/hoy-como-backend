@@ -113,22 +113,33 @@ public class PedidoService {
             Comercio comercio = comercioQuery.getComercioById(comercioId).get();
             InfoDashboard infoDashboard = new InfoDashboard();
 
-            infoDashboard.leadTime = comercio.getLeadTime().toString() + "minutos";
-            infoDashboard.rating = comercio.getRating();
-            List<Pedido> pedidoListToday = pedidoList.stream().filter(pedido ->  (pedido.getFechaFacturacion().after(DateTime.now().withTimeAtStartOfDay().toDate()))).collect(Collectors.toList());
-            infoDashboard.facturadoDia = pedidoListToday.stream().
-                    filter(pedido -> ("Entregado".equalsIgnoreCase(pedido.getEstado()) || "Calificado".equalsIgnoreCase(pedido.getEstado()))).
-                    mapToDouble(filteredPedidos -> filteredPedidos.getTotal()).sum();
-            infoDashboard.ingresados = pedidoListToday.stream().filter(pedido -> "Ingresado".equalsIgnoreCase(pedido.getEstado())).count();
-            infoDashboard.enPreparacion = pedidoListToday.stream().filter(pedido -> "EnPreparacion".equalsIgnoreCase(pedido.getEstado())).count();
-            infoDashboard.despachados = pedidoListToday.stream().filter(pedido -> "Despachado".equalsIgnoreCase(pedido.getEstado())).count();
-            infoDashboard.cancelados = pedidoListToday.stream().filter(pedido -> "Cancelado".equalsIgnoreCase(pedido.getEstado())).count();
-            infoDashboard.entregados = pedidoListToday.stream().filter(pedido -> ("Entregado".equalsIgnoreCase(pedido.getEstado()) || "Calificado".equalsIgnoreCase(pedido.getEstado()))).count();
-            infoDashboard.facturadoMes = pedidoList.stream().
-                    filter(pedido -> pedido.getFechaFacturacion().after(DateTime.now().withDayOfMonth(1).withTimeAtStartOfDay().toDate())&&
-                            ("Entregado".equalsIgnoreCase(pedido.getEstado()) || "Calificado".equalsIgnoreCase(pedido.getEstado()))).
-                    mapToDouble(filteredPedidos -> filteredPedidos.getTotal()).sum();
-
+            try {
+                infoDashboard.leadTime = comercio.getLeadTime().toString() + "minutos";
+                infoDashboard.rating = comercio.getRating();
+            } catch (Exception e) {
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ErrorMessage("Problema al buscar lead time o rating, motivo: " + e.getMessage()));
+            }
+            try {
+                List<Pedido> pedidoListToday = pedidoList.stream().filter(pedido ->  (pedido.getFechaFacturacion().after(DateTime.now().withTimeAtStartOfDay().toDate()))).collect(Collectors.toList());
+                infoDashboard.facturadoDia = pedidoListToday.stream().
+                        filter(pedido -> ("Entregado".equalsIgnoreCase(pedido.getEstado()) || "Calificado".equalsIgnoreCase(pedido.getEstado()))).
+                        mapToDouble(filteredPedidos -> filteredPedidos.getTotal()).sum();
+                infoDashboard.ingresados = pedidoListToday.stream().filter(pedido -> "Ingresado".equalsIgnoreCase(pedido.getEstado())).count();
+                infoDashboard.enPreparacion = pedidoListToday.stream().filter(pedido -> "EnPreparacion".equalsIgnoreCase(pedido.getEstado())).count();
+                infoDashboard.despachados = pedidoListToday.stream().filter(pedido -> "Despachado".equalsIgnoreCase(pedido.getEstado())).count();
+                infoDashboard.cancelados = pedidoListToday.stream().filter(pedido -> "Cancelado".equalsIgnoreCase(pedido.getEstado())).count();
+                infoDashboard.entregados = pedidoListToday.stream().filter(pedido -> ("Entregado".equalsIgnoreCase(pedido.getEstado()) || "Calificado".equalsIgnoreCase(pedido.getEstado()))).count();
+            } catch (Exception e) {
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ErrorMessage("Problema al buscar info de pedidos del día, motivo: " + e.getMessage()));
+            }
+            try {
+                infoDashboard.facturadoMes = pedidoList.stream().
+                        filter(pedido -> pedido.getFechaFacturacion().after(DateTime.now().withDayOfMonth(1).withTimeAtStartOfDay().toDate()) &&
+                                ("Entregado".equalsIgnoreCase(pedido.getEstado()) || "Calificado".equalsIgnoreCase(pedido.getEstado()))).
+                        mapToDouble(filteredPedidos -> filteredPedidos.getTotal()).sum();
+            } catch (Exception e) {
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ErrorMessage("Problema al buscar info para el mes, motivo: " + e.getMessage()));
+            }
             return ResponseEntity.ok(infoDashboard);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ErrorMessage("Problema al buscar info para el dashboard, motivo: " + e.getMessage()));
