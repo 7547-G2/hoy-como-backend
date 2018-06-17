@@ -71,7 +71,8 @@ public class CommentService {
             try {
                 Comercio comercio = comercioQuery.getComercioById(comercioId).get();
                 List<Comment> commentsOfComercio = commentRepository.findCommentsByComercioId(comercioId);
-                String commentsOfComercioJson = objectMapper.writeValueAsString(commentsOfComercio);
+                List<MobileComment> mobileCommentList = transformCommentsOfComercioToMobileComment(commentsOfComercio);
+                String commentsOfComercioJson = objectMapper.writeValueAsString(mobileCommentList);
                 sendMessageToAndroidDevice(comercio.getNombre(), commentsOfComercioJson);
             } catch (Exception e) {
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorMessage("No se ha encontrado comercio bajo ese id"));
@@ -81,6 +82,26 @@ public class CommentService {
 
         } else
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ErrorMessage("No se ha encontrado comentario bajo ese id"));
+    }
+
+    private List<MobileComment> transformCommentsOfComercioToMobileComment(List<Comment> commentsOfComercio) {
+        List<MobileComment> mobileCommentList = new ArrayList<>();
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMddHHmmss");
+        commentsOfComercio.forEach(comment -> {
+            MobileComment mobileComment = new MobileComment();
+            mobileComment.comment = comment.getUserComment();
+            mobileComment.rating = comment.getStars();
+            mobileComment.replica = comment.getCommerceReply();
+            MobileUser mobileUser = mobileUserRepository.getMobileUserByFacebookId(comment.getMobileUserFacebookId()).get();
+            mobileComment.user = mobileUser.getFirstName();
+            if (comment.getUserCommentDate() != null)
+                mobileComment.dateComment = formatter.format(comment.getUserCommentDate());
+            if (comment.getCommerceReplyDate() != null)
+                mobileComment.dateReplica = formatter.format(comment.getCommerceReplyDate());
+            mobileCommentList.add(mobileComment);
+        });
+
+        return mobileCommentList;
     }
 
     private void sendMessageToAndroidDevice(String storeName, String commentsOfComercio) {
@@ -102,6 +123,15 @@ public class CommentService {
         public Integer puntaje;
         public String fecha;
         public String comentario;
+        public String replica;
+    }
+
+    private class MobileComment {
+        public String dateComment;
+        public Integer rating;
+        public String user;
+        public String comment;
+        public String dateReplica;
         public String replica;
     }
 }
