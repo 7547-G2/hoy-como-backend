@@ -49,7 +49,7 @@ public class CommentService {
             commentDto.usuario = mobileUser.getFirstName() + " " + mobileUser.getLastName();
             commentDto.puntaje = comment.getStars();
             SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
-            commentDto.fecha = formatter.format(comment.getUserCommentDate());
+            commentDto.fecha = formatter.format(comment.getUserCommentTimestamp());
             commentDto.comentario = comment.getUserComment();
             commentDto.replica = comment.getCommerceReply();
 
@@ -64,8 +64,8 @@ public class CommentService {
         if (commentOptional.isPresent()) {
             Comment comment = commentOptional.get();
             comment.setCommerceReply(replicaDto.getReplica());
-            java.sql.Date sqlDate = new java.sql.Date(System.currentTimeMillis());
-            comment.setCommerceReplyDate(sqlDate);
+            java.sql.Timestamp sqlTimestamp = new java.sql.Timestamp(System.currentTimeMillis());
+            comment.setCommerceReplyTimestamp(sqlTimestamp);
 
             commentRepository.saveAndFlush(comment);
             try {
@@ -94,10 +94,10 @@ public class CommentService {
             mobileComment.replica = comment.getCommerceReply();
             MobileUser mobileUser = mobileUserRepository.getMobileUserByFacebookId(comment.getMobileUserFacebookId()).get();
             mobileComment.user = mobileUser.getFirstName();
-            if (comment.getUserCommentDate() != null)
-                mobileComment.dateComment = formatter.format(comment.getUserCommentDate().getTime());
-            if (comment.getCommerceReplyDate() != null)
-                mobileComment.dateReplica = formatter.format(comment.getCommerceReplyDate().getTime());
+            if (comment.getUserCommentTimestamp() != null)
+                mobileComment.dateComment = formatter.format(comment.getUserCommentTimestamp());
+            if (comment.getCommerceReplyTimestamp() != null)
+                mobileComment.dateReplica = formatter.format(comment.getCommerceReplyTimestamp());
             mobileCommentList.add(mobileComment);
         });
 

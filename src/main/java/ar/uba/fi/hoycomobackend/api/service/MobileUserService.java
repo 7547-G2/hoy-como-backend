@@ -332,8 +332,8 @@ public class MobileUserService {
             comment.setPedidoId(pedidoId);
             comment.setStars(comentarioDto.getEstrellas());
             comment.setUserComment(comentarioDto.getComentario());
-            java.sql.Date sqlDate = new java.sql.Date(System.currentTimeMillis());
-            comment.setUserCommentDate(sqlDate);
+            java.sql.Timestamp sqlTimestamp = new java.sql.Timestamp(System.currentTimeMillis());
+            comment.setUserCommentTimestamp(sqlTimestamp);
             pedido.setEstado("Calificado");
             updateRatingOfCommerce(pedido.getStoreId(), comentarioDto.getEstrellas());
 

@@ -1,7 +1,7 @@
 package ar.uba.fi.hoycomobackend.database.entity;
 
 import javax.persistence.*;
-import java.sql.Date;
+import java.sql.Timestamp;
 
 @Entity
 @Table(name = "comentario")
@@ -14,12 +14,12 @@ public class Comment {
     private Integer stars;
     @Column(columnDefinition = "varchar(300)")
     private String userComment;
-    private Date userCommentDate;
+    private Timestamp userCommentTimestamp;
     private Long pedidoId;
     private Long comercioId;
     @Column(columnDefinition = "varchar(300)")
     private String commerceReply;
-    private Date commerceReplyDate;
+    private Timestamp commerceReplyTimestamp;
 
     public Long getId() {
         return id;
@@ -45,12 +45,12 @@ public class Comment {
         this.userComment = userComment;
     }
 
-    public Date getUserCommentDate() {
-        return userCommentDate;
+    public Timestamp getUserCommentTimestamp() {
+        return userCommentTimestamp;
     }
 
-    public void setUserCommentDate(Date userCommentDate) {
-        this.userCommentDate = userCommentDate;
+    public void setUserCommentTimestamp(Timestamp userCommentTimestamp) {
+        this.userCommentTimestamp = userCommentTimestamp;
     }
 
     public Long getPedidoId() {
@@ -77,12 +77,12 @@ public class Comment {
         this.commerceReply = commerceReply;
     }
 
-    public Date getCommerceReplyDate() {
-        return commerceReplyDate;
+    public Timestamp getCommerceReplyTimestamp() {
+        return commerceReplyTimestamp;
     }
 
-    public void setCommerceReplyDate(Date commerceReplyDate) {
-        this.commerceReplyDate = commerceReplyDate;
+    public void setCommerceReplyTimestamp(Timestamp commerceReplyTimestamp) {
+        this.commerceReplyTimestamp = commerceReplyTimestamp;
     }
 
     public Long getMobileUserFacebookId() {
