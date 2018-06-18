@@ -97,14 +97,25 @@ public class PedidoService {
     }
 
     public ResponseEntity getDetallePedido() {
-        List<OrderDetail> orderDetail = orderDetailRepository.findAll();
-        return ResponseEntity.ok(orderDetail);
+        List<OrderDetail> orderDetailList = orderDetailRepository.findAll();
+        orderDetailList.forEach(orderDetail ->
+            orderDetail.getStatusHistory().forEach(orderStatusHistory -> {
+                if ("EnPreparacion".equalsIgnoreCase(orderStatusHistory.getStatus()))
+                    orderStatusHistory.setStatus("En Preparación");
+            })
+        );
+        return ResponseEntity.ok(orderDetailList);
     }
 
     public ResponseEntity getDetallePedidoById(Long detallePedidoId) {
         Optional<OrderDetail> orderDetailOptional = orderDetailRepository.findByPedidoId(detallePedidoId);
         if (orderDetailOptional.isPresent()) {
             OrderDetail orderDetail = orderDetailOptional.get();
+            orderDetail.getStatusHistory().forEach(orderStatusHistory -> {
+                if ("EnPreparacion".equalsIgnoreCase(orderStatusHistory.getStatus()))
+                    orderStatusHistory.setStatus("En Preparación");
+            });
+
             return ResponseEntity.ok(orderDetail);
         } else
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorMessage("No se encontró"));
