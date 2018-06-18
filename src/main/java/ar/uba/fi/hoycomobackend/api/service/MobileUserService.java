@@ -253,7 +253,8 @@ public class MobileUserService {
                 pedido.getOrden().forEach(orden -> orden.setId(null));
                 DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm");
                 Date date = new Date();
-                pedido.setLastModified(dateFormat.format(date));
+                SimpleDateFormat formatterCharly = new SimpleDateFormat("yyyyMMddHHmmss");
+                pedido.setLastModified(formatterCharly.format(date));
                 pedido.setFecha(dateFormat.format(date));
                 pedido.setFechaInicioFacturacion(new java.sql.Date(System.currentTimeMillis()));
                 Integer timeTakenPedido = timeTakenCalculator.timeTakenFromOriginToDestination(postPedidoDto.getLat(), postPedidoDto.getLng(), comercio.getLatitud(), comercio.getLongitud());
