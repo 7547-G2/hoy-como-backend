@@ -124,9 +124,12 @@ public class BackofficeHoyComoService {
 
     private Comercio getUpdatedComercio(ComercioHoyComoAddDto comercioHoyComoAddDto, Comercio comercio) {
         TipoComida previousTipoComida = comercio.getTipoComida();
-        if (previousTipoComida != null)
-            previousTipoComida = tipoComidaRepository.findById(previousTipoComida.getId()).get();
-        modelMapper.map(comercioHoyComoAddDto, comercio);
+        if (previousTipoComida != null) {
+            String nameOfTipoComida = previousTipoComida.getTipo();
+            modelMapper.map(comercioHoyComoAddDto, comercio);
+            comercio.getTipoComida().setTipo(nameOfTipoComida);
+        } else
+            modelMapper.map(comercioHoyComoAddDto, comercio);
         comercio.setTipoComida(previousTipoComida);
         AddressDto addressDto = comercioHoyComoAddDto.getAddressDto();
         if (addressDto != null) {
