@@ -14,14 +14,17 @@ import ar.uba.fi.hoycomobackend.database.repository.OpcionRepository;
 import ar.uba.fi.hoycomobackend.database.repository.OrderDetailRepository;
 import ar.uba.fi.hoycomobackend.database.repository.PlatoRepository;
 import org.joda.time.DateTime;
+import org.joda.time.DateTimeZone;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.TimeZone;
 import java.util.stream.Collectors;
 
 @Service
@@ -138,8 +141,9 @@ public class PedidoService {
             } catch (Exception e) {
                 return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ErrorMessage("Problema al buscar cantidad de comentarios, motivo: " + e.getMessage()));
             }
+            DateTimeZone dateTimeZone = DateTimeZone.forTimeZone(TimeZone.getTimeZone(ZoneId.of("America/Argentina/Buenos_Aires")));
             try {
-                List<Pedido> pedidoListToday = pedidoList.stream().filter(pedido -> (pedido.getFechaInicioFacturacion().after(DateTime.now().withTimeAtStartOfDay().toDate()))).collect(Collectors.toList());
+                List<Pedido> pedidoListToday = pedidoList.stream().filter(pedido -> (pedido.getFechaInicioFacturacion().after(DateTime.now(dateTimeZone).withTimeAtStartOfDay().toDate()))).collect(Collectors.toList());
                 try {
                     infoDashboard.facturadoDia = pedidoListToday.stream().
                             filter(pedido -> ("Entregado".equalsIgnoreCase(pedido.getEstado()) || "Calificado".equalsIgnoreCase(pedido.getEstado()))).
@@ -157,7 +161,7 @@ public class PedidoService {
             }
             try {
                 infoDashboard.facturadoMes = pedidoList.stream().
-                        filter(pedido -> pedido.getFechaInicioFacturacion().after(DateTime.now().withDayOfMonth(1).withTimeAtStartOfDay().toDate()) &&
+                        filter(pedido -> pedido.getFechaInicioFacturacion().after(DateTime.now(dateTimeZone).withDayOfMonth(1).withTimeAtStartOfDay().toDate()) &&
                                 ("Entregado".equalsIgnoreCase(pedido.getEstado()) || "Calificado".equalsIgnoreCase(pedido.getEstado()))).
                         mapToDouble(filteredPedidos -> filteredPedidos.getTotal()).sum();
             } catch (Exception e) {
