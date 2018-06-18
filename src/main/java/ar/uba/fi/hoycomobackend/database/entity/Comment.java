@@ -12,10 +12,12 @@ public class Comment {
     private Long id;
     private Long mobileUserFacebookId;
     private Integer stars;
+    @Column(columnDefinition = "varchar(300)")
     private String userComment;
     private Date userCommentDate;
     private Long pedidoId;
     private Long comercioId;
+    @Column(columnDefinition = "varchar(300)")
     private String commerceReply;
     private Date commerceReplyDate;
 
