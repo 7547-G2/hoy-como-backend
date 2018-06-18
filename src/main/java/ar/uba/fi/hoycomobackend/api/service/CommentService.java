@@ -95,9 +95,9 @@ public class CommentService {
             MobileUser mobileUser = mobileUserRepository.getMobileUserByFacebookId(comment.getMobileUserFacebookId()).get();
             mobileComment.user = mobileUser.getFirstName();
             if (comment.getUserCommentDate() != null)
-                mobileComment.dateComment = formatter.format(comment.getUserCommentDate());
+                mobileComment.dateComment = formatter.format(comment.getUserCommentDate().getTime());
             if (comment.getCommerceReplyDate() != null)
-                mobileComment.dateReplica = formatter.format(comment.getCommerceReplyDate());
+                mobileComment.dateReplica = formatter.format(comment.getCommerceReplyDate().getTime());
             mobileCommentList.add(mobileComment);
         });
 
