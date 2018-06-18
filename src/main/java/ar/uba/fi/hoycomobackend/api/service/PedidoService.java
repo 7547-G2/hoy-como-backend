@@ -143,7 +143,11 @@ public class PedidoService {
             }
             DateTimeZone dateTimeZone = DateTimeZone.forTimeZone(TimeZone.getTimeZone(ZoneId.of("America/Argentina/Buenos_Aires")));
             try {
-                List<Pedido> pedidoListToday = pedidoList.stream().filter(pedido -> (pedido.getFechaInicioFacturacion().after(DateTime.now(dateTimeZone).withTimeAtStartOfDay().toDate()))).collect(Collectors.toList());
+                List<Pedido> pedidoListToday = pedidoList.stream().filter(pedido ->
+                        (pedido.getFechaInicioFacturacion().
+                                after(DateTime.
+                                        now(dateTimeZone).
+                                        withTimeAtStartOfDay().minusDays(1).toDate()))).collect(Collectors.toList());
                 try {
                     infoDashboard.facturadoDia = pedidoListToday.stream().
                             filter(pedido -> ("Entregado".equalsIgnoreCase(pedido.getEstado()) || "Calificado".equalsIgnoreCase(pedido.getEstado()))).
@@ -161,7 +165,7 @@ public class PedidoService {
             }
             try {
                 infoDashboard.facturadoMes = pedidoList.stream().
-                        filter(pedido -> pedido.getFechaInicioFacturacion().after(DateTime.now(dateTimeZone).withDayOfMonth(1).withTimeAtStartOfDay().toDate()) &&
+                        filter(pedido -> pedido.getFechaInicioFacturacion().after(DateTime.now(dateTimeZone).withDayOfMonth(1).withTimeAtStartOfDay().minusDays(1).toDate()) &&
                                 ("Entregado".equalsIgnoreCase(pedido.getEstado()) || "Calificado".equalsIgnoreCase(pedido.getEstado()))).
                         mapToDouble(filteredPedidos -> filteredPedidos.getTotal()).sum();
             } catch (Exception e) {
