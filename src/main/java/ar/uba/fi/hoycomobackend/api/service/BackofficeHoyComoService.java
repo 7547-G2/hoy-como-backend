@@ -123,20 +123,63 @@ public class BackofficeHoyComoService {
     }
 
     private Comercio getUpdatedComercio(ComercioHoyComoAddDto comercioHoyComoAddDto, Comercio comercio) {
-        TipoComida previousTipoComida = comercio.getTipoComida();
-        if (previousTipoComida != null) {
-            String nameOfTipoComida = previousTipoComida.getTipo();
-            modelMapper.map(comercioHoyComoAddDto, comercio);
-            comercio.getTipoComida().setTipo(nameOfTipoComida);
-        } else
-            modelMapper.map(comercioHoyComoAddDto, comercio);
-        comercio.setTipoComida(previousTipoComida);
-        AddressDto addressDto = comercioHoyComoAddDto.getAddressDto();
-        if (addressDto != null) {
-            Address address = modelMapper.map(addressDto, Address.class);
+        comercio = mapComercioHoyComoAddDtoToComercio(comercioHoyComoAddDto, comercio);
+
+        return comercio;
+    }
+
+    private Comercio mapComercioHoyComoAddDtoToComercio(ComercioHoyComoAddDto comercioHoyComoAddDto, Comercio comercio) {
+        if(comercioHoyComoAddDto.getEmail() != null) {
+            comercio.setEmail(comercioHoyComoAddDto.getEmail());
+        }
+        if(comercioHoyComoAddDto.getNombre() != null) {
+            comercio.setNombre(comercioHoyComoAddDto.getNombre());
+        }
+        if(comercioHoyComoAddDto.getRazonSocial() != null) {
+            comercio.setRazonSocial(comercioHoyComoAddDto.getRazonSocial());
+        }
+        if(comercioHoyComoAddDto.getPassword() != null) {
+            comercio.setPassword(comercioHoyComoAddDto.getPassword());
+        }
+        if(comercioHoyComoAddDto.getImagenLogo() != null) {
+            comercio.setImagenLogo(comercioHoyComoAddDto.getImagenLogo());
+        }
+        if(comercioHoyComoAddDto.getEstado() != null) {
+            comercio.setEstado(comercioHoyComoAddDto.getEstado());
+        }
+        if(comercioHoyComoAddDto.getMotivoDeshabilitacion() != null) {
+            comercio.setMotivoDeshabilitacion(comercioHoyComoAddDto.getMotivoDeshabilitacion());
+        }
+        if(comercioHoyComoAddDto.getAddressDto() != null) {
+            Address address = modelMapper.map(comercioHoyComoAddDto.getAddressDto(), Address.class);
             comercio.setAddress(address);
         }
-        comercio = updateComercioWithTipoComercio(comercioHoyComoAddDto, comercio);
+        if(comercioHoyComoAddDto.getTipoComidaId() != null) {
+            TipoComida tipoComida = tipoComidaRepository.getOne(comercioHoyComoAddDto.getTipoComidaId());
+            comercio.setTipoComida(tipoComida);
+        }
+        if(comercioHoyComoAddDto.getLatitud() != null) {
+            comercio.setLatitud(comercioHoyComoAddDto.getLatitud());
+        }
+        if(comercioHoyComoAddDto.getLongitud() != null) {
+            comercio.setLongitud(comercioHoyComoAddDto.getLongitud());
+        }
+        if(comercioHoyComoAddDto.getDescuento() != null) {
+            comercio.setDescuento(comercioHoyComoAddDto.getDescuento());
+        }
+        if(comercioHoyComoAddDto.getImagenComercio() != null) {
+            comercio.setImagenComercio(comercioHoyComoAddDto.getImagenComercio());
+        }
+        if(comercioHoyComoAddDto.getNombreEncargado() != null) {
+            comercio.setNombreEncargado(comercioHoyComoAddDto.getNombreEncargado());
+        }
+        if(comercioHoyComoAddDto.getDniEncargado() != null) {
+            comercio.setDniEncargado(comercioHoyComoAddDto.getDniEncargado());
+        }
+        if(comercioHoyComoAddDto.getTelefonoEncargado() != null) {
+            comercio.setTelefonoEncargado(comercioHoyComoAddDto.getTelefonoEncargado());
+        }
+
         return comercio;
     }
 

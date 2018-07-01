@@ -182,9 +182,13 @@ public class BackofficeHoyComoRestControllerIntegrationTest {
 
     @Test
     public void updateExistingComercioWithNullValuesDoesntUpdateNullValues() throws Exception {
-        Comercio comercio = createTestComercio();
-        comercio = comercioRepository.saveAndFlush(comercio);
         TipoComida tipoComida = new TipoComida();
+        tipoComida.setTipo("tipoDos");
+        tipoComida = tipoComidaRepository.saveAndFlush(tipoComida);
+        Comercio comercio = createTestComercio();
+        comercio.setTipoComida(tipoComida);
+        comercio = comercioRepository.saveAndFlush(comercio);
+        tipoComida = new TipoComida();
         tipoComida.setTipo("tipo");
         tipoComida = tipoComidaRepository.saveAndFlush(tipoComida);
         Long comercioId = comercio.getId();
@@ -193,7 +197,6 @@ public class BackofficeHoyComoRestControllerIntegrationTest {
         comercioHoyComoAddDto.setEstado(null);
         comercioHoyComoAddDto.setTipoComidaId(tipoComida.getId());
         String comercioHoyComoDtoJson = objectMapper.writeValueAsString(comercioHoyComoAddDto);
-
 
         mockMvc.perform(put("/api/comercios/" + comercioId)
                 .contentType(MediaType.APPLICATION_JSON)
@@ -218,6 +221,7 @@ public class BackofficeHoyComoRestControllerIntegrationTest {
                 .andExpect(jsonPath("$[0].addressDto.department", is("department")))
                 .andExpect(jsonPath("$[0].latitud", is(12.34)))
                 .andExpect(jsonPath("$[0].longitud", is(12.34)));
+
     }
 
     @Test
